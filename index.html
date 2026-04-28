@@ -7,40 +7,39 @@
   <meta name="description" content="KISS Sorcar is a free, open-source general-purpose AI assistant and IDE built on the KISS Agent Framework. Scores 62.2% on Terminal Bench 2.0.">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:opsz,wght@8..60,400;8..60,600;8..60,700&family=DM+Sans:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
   <style>
     *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
 
     :root {
-      --bg: #0a0a0f;
-      --surface: #12121a;
-      --border: #1e1e2e;
-      --text: #e4e4ef;
-      --text-dim: #8888a0;
-      --accent: #6c63ff;
-      --accent-glow: rgba(108, 99, 255, 0.15);
-      --green: #34d399;
-      --amber: #fbbf24;
+      --bg: #111;
+      --surface: #1a1a1a;
+      --border: #2a2a2a;
+      --text: #d9d9d9;
+      --text-dim: #888;
+      --accent: #c9a227;
+      --accent-soft: rgba(201, 162, 39, 0.12);
+      --green: #5cb85c;
     }
 
     html { scroll-behavior: smooth; }
 
     body {
-      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      font-family: 'DM Sans', -apple-system, BlinkMacSystemFont, sans-serif;
       background: var(--bg);
       color: var(--text);
-      line-height: 1.7;
+      line-height: 1.75;
       -webkit-font-smoothing: antialiased;
     }
 
-    /* Navigation */
+    /* Nav */
     nav {
       position: fixed;
       top: 0;
       width: 100%;
       z-index: 100;
-      background: rgba(10, 10, 15, 0.85);
-      backdrop-filter: blur(20px);
+      background: rgba(17, 17, 17, 0.92);
+      backdrop-filter: blur(12px);
       border-bottom: 1px solid var(--border);
     }
 
@@ -48,20 +47,18 @@
       display: flex;
       justify-content: space-between;
       align-items: center;
-      padding: 0.9rem 2rem;
-      max-width: 1200px;
+      padding: 0.85rem 2rem;
+      max-width: 1100px;
       margin: 0 auto;
     }
 
     nav .logo {
+      font-family: 'Source Serif 4', Georgia, serif;
       font-weight: 700;
-      font-size: 1.1rem;
+      font-size: 1.15rem;
       color: var(--text);
       text-decoration: none;
-      letter-spacing: -0.02em;
     }
-
-    nav .logo span { color: var(--accent); }
 
     nav .links {
       display: flex;
@@ -72,7 +69,7 @@
     nav .links a {
       color: var(--text-dim);
       text-decoration: none;
-      font-size: 0.88rem;
+      font-size: 0.87rem;
       font-weight: 500;
       transition: color 0.2s;
     }
@@ -81,50 +78,49 @@
 
     /* Hero */
     .hero {
-      padding: 10rem 2rem 5rem;
-      text-align: center;
-      max-width: 900px;
+      padding: 10rem 2rem 4.5rem;
+      max-width: 820px;
       margin: 0 auto;
+      text-align: center;
     }
 
-    .hero .badge {
+    .hero .tag {
       display: inline-block;
-      padding: 0.35rem 1rem;
-      background: var(--accent-glow);
-      border: 1px solid rgba(108, 99, 255, 0.3);
-      border-radius: 100px;
-      font-size: 0.82rem;
-      font-weight: 500;
+      font-size: 0.78rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
       color: var(--accent);
       margin-bottom: 1.5rem;
     }
 
     .hero h1 {
-      font-size: clamp(2.2rem, 5vw, 3.5rem);
+      font-family: 'Source Serif 4', Georgia, serif;
+      font-size: clamp(2rem, 5vw, 3.2rem);
       font-weight: 700;
-      letter-spacing: -0.03em;
-      line-height: 1.15;
+      line-height: 1.2;
+      letter-spacing: -0.02em;
       margin-bottom: 1.5rem;
+      color: #f0f0f0;
     }
 
-    .hero h1 .highlight { color: var(--accent); }
-
-    .hero .subtitle {
-      font-size: 1.15rem;
+    .hero .desc {
+      font-size: 1.08rem;
       color: var(--text-dim);
-      max-width: 650px;
-      margin: 0 auto 2.5rem;
+      max-width: 600px;
+      margin: 0 auto 1.5rem;
       line-height: 1.8;
     }
 
     .hero .quote {
+      font-family: 'Source Serif 4', Georgia, serif;
       font-style: italic;
       color: var(--text-dim);
-      font-size: 0.92rem;
+      font-size: 0.95rem;
       margin-bottom: 2.5rem;
     }
 
-    .hero .cta-row {
+    .hero .actions {
       display: flex;
       gap: 1rem;
       justify-content: center;
@@ -134,236 +130,146 @@
     .btn {
       display: inline-flex;
       align-items: center;
-      gap: 0.5rem;
-      padding: 0.75rem 1.6rem;
-      border-radius: 8px;
-      font-size: 0.92rem;
+      gap: 0.45rem;
+      padding: 0.7rem 1.5rem;
+      border-radius: 6px;
+      font-size: 0.9rem;
       font-weight: 600;
       text-decoration: none;
-      transition: all 0.2s;
+      transition: background 0.15s, border-color 0.15s;
       cursor: pointer;
       border: none;
     }
 
-    .btn-primary {
+    .btn-main {
       background: var(--accent);
-      color: #fff;
+      color: #111;
     }
 
-    .btn-primary:hover {
-      background: #5b52e0;
-      transform: translateY(-1px);
-      box-shadow: 0 8px 30px rgba(108, 99, 255, 0.3);
-    }
+    .btn-main:hover { background: #b8921f; }
 
-    .btn-secondary {
-      background: var(--surface);
+    .btn-ghost {
+      background: transparent;
       color: var(--text);
       border: 1px solid var(--border);
     }
 
-    .btn-secondary:hover {
-      border-color: var(--accent);
-      transform: translateY(-1px);
-    }
+    .btn-ghost:hover { border-color: #555; }
 
-    /* Benchmark Banner */
-    .benchmark-banner {
-      max-width: 700px;
+    /* Benchmark */
+    .benchmark {
+      max-width: 600px;
       margin: 0 auto 3rem;
-      padding: 1.5rem 2rem;
-      background: linear-gradient(135deg, rgba(108, 99, 255, 0.08), rgba(52, 211, 153, 0.06));
-      border: 1px solid rgba(108, 99, 255, 0.2);
-      border-radius: 12px;
+      padding: 1.4rem 2rem;
+      border: 1px solid var(--border);
+      border-radius: 8px;
       text-align: center;
+      background: var(--surface);
     }
 
-    .benchmark-banner .score {
-      font-size: 2.8rem;
+    .benchmark .score {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 2.6rem;
       font-weight: 700;
       color: var(--green);
-      letter-spacing: -0.02em;
     }
 
-    .benchmark-banner .label {
-      font-size: 0.95rem;
+    .benchmark .label {
+      font-size: 0.9rem;
       color: var(--text-dim);
-      margin-top: 0.3rem;
+      margin-top: 0.2rem;
     }
 
-    .benchmark-banner .comparison {
+    .benchmark .vs {
       display: flex;
       justify-content: center;
-      gap: 2.5rem;
-      margin-top: 1rem;
-      font-size: 0.85rem;
+      gap: 2rem;
+      margin-top: 0.8rem;
+      font-size: 0.83rem;
       color: var(--text-dim);
     }
 
-    .benchmark-banner .comparison strong {
-      color: var(--text);
-    }
+    .benchmark .vs strong { color: var(--text); }
 
     /* Screenshot */
-    .screenshot-section {
-      max-width: 1000px;
+    .screenshot {
+      max-width: 960px;
       margin: 0 auto 5rem;
       padding: 0 2rem;
     }
 
-    .screenshot-section img {
+    .screenshot img {
       width: 100%;
-      border-radius: 12px;
+      border-radius: 8px;
       border: 1px solid var(--border);
-      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.4);
     }
 
     /* Sections */
     section {
-      max-width: 1100px;
+      max-width: 1000px;
       margin: 0 auto;
       padding: 5rem 2rem;
     }
 
     section h2 {
-      font-size: 2rem;
+      font-family: 'Source Serif 4', Georgia, serif;
+      font-size: 1.8rem;
       font-weight: 700;
-      letter-spacing: -0.02em;
-      margin-bottom: 1rem;
-      text-align: center;
-    }
-
-    section .section-subtitle {
-      text-align: center;
-      color: var(--text-dim);
-      max-width: 600px;
-      margin: 0 auto 3rem;
-      font-size: 1.02rem;
-    }
-
-    /* Feature Grid */
-    .features-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-      gap: 1.5rem;
-    }
-
-    .feature-card {
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: 12px;
-      padding: 2rem;
-      transition: border-color 0.2s, transform 0.2s;
-    }
-
-    .feature-card:hover {
-      border-color: var(--accent);
-      transform: translateY(-2px);
-    }
-
-    .feature-card .icon {
-      font-size: 1.5rem;
-      margin-bottom: 1rem;
-    }
-
-    .feature-card h3 {
-      font-size: 1.08rem;
-      font-weight: 600;
+      letter-spacing: -0.01em;
       margin-bottom: 0.6rem;
+      text-align: center;
+      color: #f0f0f0;
     }
 
-    .feature-card p {
+    section .sub {
+      text-align: center;
       color: var(--text-dim);
-      font-size: 0.92rem;
-      line-height: 1.7;
-    }
-
-    /* Architecture */
-    .arch-layers {
-      display: flex;
-      flex-direction: column;
-      gap: 0.75rem;
-      max-width: 700px;
-      margin: 0 auto;
-    }
-
-    .arch-layer {
-      display: flex;
-      align-items: center;
-      gap: 1.2rem;
-      padding: 1.2rem 1.5rem;
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: 10px;
-      transition: border-color 0.2s;
-    }
-
-    .arch-layer:hover { border-color: var(--accent); }
-
-    .arch-layer .num {
-      width: 36px;
-      height: 36px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      background: var(--accent-glow);
-      color: var(--accent);
-      border-radius: 8px;
-      font-weight: 700;
-      font-size: 0.9rem;
-      flex-shrink: 0;
-    }
-
-    .arch-layer .info h4 {
+      max-width: 550px;
+      margin: 0 auto 2.5rem;
       font-size: 0.98rem;
-      font-weight: 600;
-      margin-bottom: 0.2rem;
-    }
-
-    .arch-layer .info p {
-      font-size: 0.85rem;
-      color: var(--text-dim);
     }
 
     /* Install */
     .install-box {
-      max-width: 700px;
+      max-width: 660px;
       margin: 0 auto;
       text-align: center;
     }
 
     .install-box h3 {
-      font-size: 1.1rem;
+      font-size: 0.95rem;
       font-weight: 600;
-      margin-bottom: 0.8rem;
+      margin-bottom: 0.6rem;
       color: var(--text-dim);
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
     }
 
     .install-code {
       background: var(--surface);
       border: 1px solid var(--border);
-      border-radius: 10px;
-      padding: 1.2rem 1.5rem;
+      border-radius: 6px;
+      padding: 1rem 1.3rem;
       font-family: 'JetBrains Mono', monospace;
-      font-size: 0.88rem;
+      font-size: 0.86rem;
       color: var(--green);
-      margin-bottom: 2rem;
+      margin-bottom: 1.8rem;
       overflow-x: auto;
       text-align: left;
     }
 
-    .install-code .prompt-char { color: var(--text-dim); }
+    .install-code .prompt { color: var(--text-dim); }
 
-    .install-separator {
+    .install-or {
       color: var(--text-dim);
-      font-size: 0.9rem;
-      margin-bottom: 1.5rem;
+      font-size: 0.85rem;
+      margin-bottom: 1.2rem;
     }
 
     .install-alt {
       color: var(--text-dim);
-      font-size: 0.92rem;
-      line-height: 1.7;
+      font-size: 0.9rem;
+      line-height: 1.8;
     }
 
     .install-alt a {
@@ -373,108 +279,181 @@
 
     .install-alt a:hover { text-decoration: underline; }
 
-    /* CLI Examples */
-    .cli-examples {
-      max-width: 750px;
-      margin: 2.5rem auto 0;
+    /* CLI */
+    .cli-block {
+      max-width: 660px;
+      margin: 2rem auto 0;
     }
 
-    .cli-example {
+    .cli-block h3 {
+      font-size: 0.95rem;
+      font-weight: 600;
+      margin-bottom: 0.8rem;
+      color: var(--text-dim);
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      text-align: center;
+    }
+
+    .cli-line {
       background: var(--surface);
       border: 1px solid var(--border);
-      border-radius: 10px;
-      padding: 1rem 1.3rem;
-      margin-bottom: 0.75rem;
+      border-radius: 6px;
+      padding: 0.8rem 1.2rem;
+      margin-bottom: 0.6rem;
       font-family: 'JetBrains Mono', monospace;
-      font-size: 0.82rem;
+      font-size: 0.8rem;
       color: var(--text-dim);
       overflow-x: auto;
     }
 
-    .cli-example .cmd { color: var(--green); }
-    .cli-example .flag { color: var(--amber); }
-    .cli-example .str { color: #c084fc; }
+    .cli-line .c { color: var(--green); }
+    .cli-line .f { color: var(--accent); }
+    .cli-line .s { color: #b09cd8; }
+
+    /* Architecture */
+    .layers {
+      display: flex;
+      flex-direction: column;
+      gap: 0.6rem;
+      max-width: 640px;
+      margin: 0 auto;
+    }
+
+    .layer {
+      display: flex;
+      align-items: center;
+      gap: 1.1rem;
+      padding: 1.1rem 1.3rem;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+    }
+
+    .layer .n {
+      font-family: 'JetBrains Mono', monospace;
+      font-weight: 700;
+      font-size: 0.85rem;
+      color: var(--accent);
+      width: 28px;
+      text-align: center;
+      flex-shrink: 0;
+    }
+
+    .layer .info h4 {
+      font-size: 0.95rem;
+      font-weight: 600;
+      margin-bottom: 0.15rem;
+      color: var(--text);
+    }
+
+    .layer .info p {
+      font-size: 0.83rem;
+      color: var(--text-dim);
+    }
+
+    /* Features */
+    .feats {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1.2rem;
+    }
+
+    .feat {
+      padding: 1.6rem;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+    }
+
+    .feat h3 {
+      font-size: 0.98rem;
+      font-weight: 600;
+      margin-bottom: 0.5rem;
+      color: var(--text);
+    }
+
+    .feat p {
+      color: var(--text-dim);
+      font-size: 0.87rem;
+      line-height: 1.7;
+    }
 
     /* Models */
-    .models-grid {
+    .models {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
       gap: 1rem;
     }
 
-    .model-card {
+    .model {
       background: var(--surface);
       border: 1px solid var(--border);
-      border-radius: 10px;
-      padding: 1.3rem 1.5rem;
+      border-radius: 8px;
+      padding: 1.2rem 1.3rem;
     }
 
-    .model-card h4 {
-      font-size: 0.95rem;
+    .model h4 {
+      font-size: 0.92rem;
       font-weight: 600;
-      margin-bottom: 0.5rem;
+      margin-bottom: 0.35rem;
     }
 
-    .model-card p {
-      font-size: 0.82rem;
+    .model p {
+      font-size: 0.8rem;
       color: var(--text-dim);
       line-height: 1.6;
     }
 
-    /* Authors */
-    .authors-grid {
-      display: flex;
-      justify-content: center;
-      gap: 2rem;
-      flex-wrap: wrap;
+    /* Video */
+    .video-wrap {
+      max-width: 660px;
+      margin: 0 auto;
+      aspect-ratio: 16/9;
     }
 
-    .author-card {
-      background: var(--surface);
+    .video-wrap iframe {
+      width: 100%;
+      height: 100%;
+      border-radius: 8px;
       border: 1px solid var(--border);
-      border-radius: 12px;
-      padding: 2rem;
+    }
+
+    /* Author */
+    .author-box {
       text-align: center;
-      min-width: 220px;
-      transition: border-color 0.2s;
     }
 
-    .author-card:hover { border-color: var(--accent); }
-
-    .author-card .name {
+    .author-box .name {
+      font-family: 'Source Serif 4', Georgia, serif;
+      font-size: 1.2rem;
       font-weight: 600;
-      font-size: 1.05rem;
-      margin-bottom: 0.3rem;
+      margin-bottom: 0.25rem;
+      color: #f0f0f0;
     }
 
-    .author-card .affiliation {
-      font-size: 0.85rem;
+    .author-box .affil {
+      font-size: 0.9rem;
       color: var(--text-dim);
-      margin-bottom: 0.8rem;
+      margin-bottom: 0.7rem;
     }
 
-    .author-card .links {
-      display: flex;
-      gap: 0.8rem;
-      justify-content: center;
-    }
-
-    .author-card .links a {
+    .author-box .links a {
       color: var(--accent);
       text-decoration: none;
-      font-size: 0.82rem;
-      font-weight: 500;
+      font-size: 0.85rem;
+      margin: 0 0.6rem;
     }
 
-    .author-card .links a:hover { text-decoration: underline; }
+    .author-box .links a:hover { text-decoration: underline; }
 
     /* Footer */
     footer {
       border-top: 1px solid var(--border);
-      padding: 2.5rem 2rem;
+      padding: 2rem;
       text-align: center;
       color: var(--text-dim);
-      font-size: 0.85rem;
+      font-size: 0.82rem;
     }
 
     footer a {
@@ -485,26 +464,25 @@
     footer a:hover { text-decoration: underline; }
 
     /* Mobile */
-    @media (max-width: 640px) {
+    @media (max-width: 720px) {
       nav .links { gap: 1rem; }
       nav .links a { font-size: 0.8rem; }
       .hero { padding: 7rem 1.5rem 3rem; }
-      .benchmark-banner .comparison { flex-direction: column; gap: 0.5rem; }
+      .benchmark .vs { flex-direction: column; gap: 0.3rem; }
       section { padding: 3rem 1.5rem; }
-      .features-grid { grid-template-columns: 1fr; }
+      .feats { grid-template-columns: 1fr; }
     }
   </style>
 </head>
 <body>
 
-  <!-- Nav -->
   <nav>
     <div class="container">
-      <a href="#" class="logo">KISS <span>Sorcar</span></a>
+      <a href="#" class="logo">KISS Sorcar</a>
       <ul class="links">
-        <li><a href="#features">Features</a></li>
-        <li><a href="#architecture">Architecture</a></li>
         <li><a href="#install">Install</a></li>
+        <li><a href="#architecture">Architecture</a></li>
+        <li><a href="#features">Features</a></li>
         <li><a href="#models">Models</a></li>
         <li><a href="https://github.com/ksenxx/kiss_ai">GitHub</a></li>
       </ul>
@@ -513,85 +491,57 @@
 
   <!-- Hero -->
   <div class="hero">
-    <div class="badge">Free &amp; Open Source · Apache 2.0</div>
-    <h1>When Simplicity Becomes<br>Your <span class="highlight">Superpower</span></h1>
-    <p class="subtitle">
+    <div class="tag">Open Source · Apache 2.0</div>
+    <h1>An AI Assistant That Keeps It Simple</h1>
+    <p class="desc">
       KISS Sorcar is a general-purpose AI assistant and IDE built on the
-      KISS Agent Framework — a stupidly-simple agentic framework of ~1,850 lines of code.
+      KISS Agent Framework&mdash;a stupidly-simple agentic framework of ~1,850 lines of Python.
       It codes really well and works pretty fast.
     </p>
-    <p class="quote">"Everything should be made as simple as possible, but not simpler." — Albert Einstein</p>
-    <div class="cta-row">
-      <a href="#install" class="btn btn-primary">Get Started</a>
-      <a href="assets/kiss_sorcar.pdf" class="btn btn-secondary">📄 Read the Paper</a>
-      <a href="https://github.com/ksenxx/kiss_ai" class="btn btn-secondary">GitHub</a>
+    <p class="quote">&ldquo;Everything should be made as simple as possible, but not simpler.&rdquo;</p>
+    <div class="actions">
+      <a href="#install" class="btn btn-main">Get Started</a>
+      <a href="assets/kiss_sorcar.pdf" class="btn btn-ghost">Read the Paper</a>
+      <a href="https://github.com/ksenxx/kiss_ai" class="btn btn-ghost">GitHub</a>
     </div>
   </div>
 
   <!-- Benchmark -->
-  <div class="benchmark-banner">
+  <div class="benchmark">
     <div class="score">62.2%</div>
     <div class="label">Terminal Bench 2.0 — Claude Opus 4.6</div>
-    <div class="comparison">
-      <span>vs. <strong>Cursor Composer 2</strong>: 61.7%</span>
-      <span>vs. <strong>Claude Code</strong>: 58%</span>
+    <div class="vs">
+      <span>vs <strong>Cursor Composer 2</strong>: 61.7%</span>
+      <span>vs <strong>Claude Code</strong>: 58%</span>
     </div>
   </div>
 
   <!-- Screenshot -->
-  <div class="screenshot-section">
-    <img src="assets/KISS-Sorcar-UI.png" alt="KISS Sorcar running in VS Code">
+  <div class="screenshot">
+    <img src="assets/KISS-Sorcar-UI.png" alt="KISS Sorcar in VS Code">
   </div>
 
-  <!-- Features -->
-  <section id="features">
-    <h2>Features</h2>
-    <p class="section-subtitle">Everything you need for real-world software engineering and general-purpose automation.</p>
-    <div class="features-grid">
-      <div class="feature-card">
-        <div class="icon">🧠</div>
-        <h3>Runs Relentlessly for Hours</h3>
-        <p>Automatic summarization and continuation across sub-sessions means the agent never gives up — it keeps working until the task is done.</p>
+  <!-- Install -->
+  <section id="install">
+    <h2>Get Started</h2>
+    <p class="sub">All you need is an API key from a major LLM provider.</p>
+    <div class="install-box">
+      <h3>Install</h3>
+      <div class="install-code">
+        <span class="prompt">$ </span>curl -fsSL https://github.com/ksenxx/kiss_ai/scripts/install.sh | bash
       </div>
-      <div class="feature-card">
-        <div class="icon">🌐</div>
-        <h3>Full Browser Automation</h3>
-        <p>Built-in Chromium browser via Playwright. Navigate pages, click elements, fill forms, take screenshots — all programmatically.</p>
-      </div>
-      <div class="feature-card">
-        <div class="icon">🔀</div>
-        <h3>Git Worktree Isolation</h3>
-        <p>Every task runs on its own branch in a separate worktree. Your working tree stays untouched until you merge.</p>
-      </div>
-      <div class="feature-card">
-        <div class="icon">🐳</div>
-        <h3>Docker Container Support</h3>
-        <p>Execute tasks inside Docker containers for sandboxed, reproducible environments. Perfect for untrusted or experimental code.</p>
-      </div>
-      <div class="feature-card">
-        <div class="icon">👁️</div>
-        <h3>Multimodal Input</h3>
-        <p>Understands images, screenshots, and text. Attach visual context to your prompts for richer interactions.</p>
-      </div>
-      <div class="feature-card">
-        <div class="icon">💰</div>
-        <h3>Real-Time Budget Tracking</h3>
-        <p>See tokens, cost, and elapsed time at every step. Hard budget ceilings prevent runaway spending.</p>
-      </div>
-      <div class="feature-card">
-        <div class="icon">📝</div>
-        <h3>Cross-Session Learning</h3>
-        <p>Automatically learns your preferences and project invariants across sessions via USER_PREFS.md. Gets better over time.</p>
-      </div>
-      <div class="feature-card">
-        <div class="icon">💻</div>
-        <h3>CLI + VS Code</h3>
-        <p>Use it as a VS Code extension with a rich UI, or as a command-line tool. Same powerful agent, your choice of interface.</p>
-      </div>
-      <div class="feature-card">
-        <div class="icon">✅</div>
-        <h3>Quality Over Speed</h3>
-        <p>Runs linters, type checkers, and tests before declaring success. No AI slop — just clean, idiomatic, well-tested code.</p>
+      <p class="install-or">&mdash; or &mdash;</p>
+      <h3>VS Code Extension</h3>
+      <p class="install-alt">
+        Open VS Code, search <strong>KISS Sorcar</strong> in the Extension Marketplace, and install.<br>
+        Or grab the <a href="https://github.com/ksenxx/kiss_ai/blob/main/src/kiss/agents/vscode/kiss-sorcar.vsix">.vsix</a> directly.
+      </p>
+      <div class="cli-block">
+        <h3>CLI Examples</h3>
+        <div class="cli-line"><span class="c">sorcar</span> <span class="f">-t</span> <span class="s">"What is 2435*234"</span></div>
+        <div class="cli-line"><span class="c">sorcar</span> <span class="f">-n -t --use-chat</span> <span class="s">"What is 2435*234?"</span></div>
+        <div class="cli-line"><span class="c">sorcar</span> <span class="f">-m</span> <span class="s">"claude-sonnet-4-6"</span> <span class="f">-t</span> <span class="s">"What is 2435*234?"</span></div>
+        <div class="cli-line"><span class="c">sorcar</span> <span class="f">-t</span> <span class="s">'Can you send "Hello from Sorcar!" to ksen via the desktop slack app?'</span></div>
       </div>
     </div>
   </section>
@@ -599,38 +549,38 @@
   <!-- Architecture -->
   <section id="architecture">
     <h2>Five-Layer Architecture</h2>
-    <p class="section-subtitle">Each layer adds exactly one concern. ~1,850 lines of Python total.</p>
-    <div class="arch-layers">
-      <div class="arch-layer">
-        <div class="num">1</div>
+    <p class="sub">Each layer adds exactly one concern. ~1,850 lines of Python total.</p>
+    <div class="layers">
+      <div class="layer">
+        <div class="n">1</div>
         <div class="info">
           <h4>KISS Agent</h4>
           <p>Budget-tracked ReAct loop with native function calling. 409 lines.</p>
         </div>
       </div>
-      <div class="arch-layer">
-        <div class="num">2</div>
+      <div class="layer">
+        <div class="n">2</div>
         <div class="info">
           <h4>Relentless Agent</h4>
           <p>Automatic summarization and continuation across sub-sessions. 297 lines.</p>
         </div>
       </div>
-      <div class="arch-layer">
-        <div class="num">3</div>
+      <div class="layer">
+        <div class="n">3</div>
         <div class="info">
           <h4>Sorcar Agent</h4>
           <p>Coding tools, browser automation, and parallel sub-agent execution. 323 lines.</p>
         </div>
       </div>
-      <div class="arch-layer">
-        <div class="num">4</div>
+      <div class="layer">
+        <div class="n">4</div>
         <div class="info">
           <h4>Chat Sorcar Agent</h4>
           <p>Persistent multi-turn chat sessions with history recall. 120 lines.</p>
         </div>
       </div>
-      <div class="arch-layer">
-        <div class="num">5</div>
+      <div class="layer">
+        <div class="n">5</div>
         <div class="info">
           <h4>Worktree Sorcar Agent</h4>
           <p>Git worktree isolation — every task on its own branch. 692 lines.</p>
@@ -639,69 +589,76 @@
     </div>
   </section>
 
-  <!-- Install -->
-  <section id="install">
-    <h2>Get Started</h2>
-    <p class="section-subtitle">All you need is a model API key from a major LLM provider.</p>
-    <div class="install-box">
-
-      <h3>Full Installation</h3>
-      <div class="install-code">
-        <span class="prompt-char">$ </span>curl -fsSL https://github.com/ksenxx/kiss_ai/scripts/install.sh | bash
+  <!-- Features -->
+  <section id="features">
+    <h2>Features</h2>
+    <p class="sub">Everything you need for software engineering and general-purpose automation.</p>
+    <div class="feats">
+      <div class="feat">
+        <h3>Runs Relentlessly</h3>
+        <p>Automatic summarization and continuation across sub-sessions. Never gives up until the task is done.</p>
       </div>
-
-      <p class="install-separator">— or —</p>
-
-      <h3>VS Code Extension</h3>
-      <p class="install-alt">
-        Open VS Code → search <strong>"KISS Sorcar"</strong> in the Extension Marketplace → Install → Relaunch.<br>
-        Or download the <a href="https://github.com/ksenxx/kiss_ai/blob/main/src/kiss/agents/vscode/kiss-sorcar.vsix">.vsix file</a> directly.
-      </p>
-
-      <div class="cli-examples">
-        <h3 style="text-align:center; margin-bottom: 1rem;">CLI Examples</h3>
-        <div class="cli-example">
-          <span class="cmd">sorcar</span> <span class="flag">-t</span> <span class="str">"What is 2435*234"</span>
-        </div>
-        <div class="cli-example">
-          <span class="cmd">sorcar</span> <span class="flag">-n -t --use-chat</span> <span class="str">"What is 2435*234?"</span>
-        </div>
-        <div class="cli-example">
-          <span class="cmd">sorcar</span> <span class="flag">-m</span> <span class="str">"claude-sonnet-4-6"</span> <span class="flag">-t</span> <span class="str">"What is 2435*234?"</span>
-        </div>
-        <div class="cli-example">
-          <span class="cmd">sorcar</span> <span class="flag">-t</span> <span class="str">'Can you send "Hello from Sorcar!" to ksen via the desktop slack app?'</span>
-        </div>
+      <div class="feat">
+        <h3>Browser Automation</h3>
+        <p>Built-in Chromium via Playwright. Navigate, click, fill forms, take screenshots — all programmatically.</p>
+      </div>
+      <div class="feat">
+        <h3>Git Worktree Isolation</h3>
+        <p>Every task runs on its own branch in a separate worktree. Your working tree stays untouched.</p>
+      </div>
+      <div class="feat">
+        <h3>Docker Support</h3>
+        <p>Execute tasks inside Docker containers for sandboxed, reproducible environments.</p>
+      </div>
+      <div class="feat">
+        <h3>Multimodal Input</h3>
+        <p>Understands images, screenshots, and text. Attach visual context to your prompts.</p>
+      </div>
+      <div class="feat">
+        <h3>Budget Tracking</h3>
+        <p>Tokens, cost, and time at every step. Hard budget ceilings prevent runaway spending.</p>
+      </div>
+      <div class="feat">
+        <h3>Cross-Session Learning</h3>
+        <p>Learns your preferences and project invariants via USER_PREFS.md. Gets better over time.</p>
+      </div>
+      <div class="feat">
+        <h3>CLI + VS Code</h3>
+        <p>Rich VS Code extension or command-line tool. Same agent, your choice of interface.</p>
+      </div>
+      <div class="feat">
+        <h3>Quality Over Speed</h3>
+        <p>Runs linters, type checkers, and tests before declaring success. Clean, well-tested code.</p>
       </div>
     </div>
   </section>
 
   <!-- Models -->
   <section id="models">
-    <h2>Models Supported</h2>
-    <p class="section-subtitle">Bring your own API key. Works with all major LLM providers.</p>
-    <div class="models-grid">
-      <div class="model-card">
+    <h2>Supported Models</h2>
+    <p class="sub">Bring your own API key. Works with all major providers.</p>
+    <div class="models">
+      <div class="model">
         <h4>Anthropic</h4>
         <p>Claude Opus 4.7, Opus 4.6, Sonnet 4.6, Sonnet 4, Haiku 4.5 and more</p>
       </div>
-      <div class="model-card">
+      <div class="model">
         <h4>OpenAI</h4>
         <p>GPT-5.5, GPT-5.4, o4-mini, o3-pro, Codex series and more</p>
       </div>
-      <div class="model-card">
+      <div class="model">
         <h4>Google Gemini</h4>
         <p>Gemini 3.1 Pro, 3 Flash, 2.5 Pro, 2.5 Flash and more</p>
       </div>
-      <div class="model-card">
+      <div class="model">
         <h4>Together AI</h4>
         <p>Llama 4, Qwen 3.5, DeepSeek V4, Kimi K2.6, GLM-5.1 and more</p>
       </div>
-      <div class="model-card">
+      <div class="model">
         <h4>OpenRouter</h4>
         <p>330+ models from 50+ providers via a unified API</p>
       </div>
-      <div class="model-card">
+      <div class="model">
         <h4>Embeddings</h4>
         <p>OpenAI, Google, Together AI embedding models for RAG and search</p>
       </div>
@@ -711,54 +668,33 @@
   <!-- Video -->
   <section>
     <h2>See It in Action</h2>
-    <p class="section-subtitle">An overview of KISS Sorcar's capabilities.</p>
-    <div style="max-width:700px; margin:0 auto; aspect-ratio:16/9;">
-      <iframe width="100%" height="100%" src="https://www.youtube.com/embed/xnYxWvRqACE" title="KISS Sorcar Demo" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen style="border-radius:12px; border:1px solid var(--border);"></iframe>
+    <p class="sub">An overview of KISS Sorcar.</p>
+    <div class="video-wrap">
+      <iframe src="https://www.youtube.com/embed/xnYxWvRqACE" title="KISS Sorcar Demo" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
     </div>
   </section>
 
-  <!-- Authors -->
-  <section id="authors">
-    <h2>Authors</h2>
-    <p class="section-subtitle"></p>
-    <div class="authors-grid">
-      <div class="author-card">
-        <div class="name">Koushik Sen</div>
-        <div class="affiliation">EECS, UC Berkeley</div>
-        <div class="links">
-          <a href="mailto:ksen@berkeley.edu">Email</a>
-          <a href="https://www.linkedin.com/in/koushik-sen-80b99a/">LinkedIn</a>
-          <a href="https://x.com/koushik77">𝕏</a>
-        </div>
-      </div>
-      <div class="author-card">
-        <div class="name">Marius Momeu</div>
-        <div class="affiliation">UC Berkeley</div>
-        <div class="links">
-          <a href="mailto:marius.momeu@berkeley.edu">Email</a>
-          <a href="https://www.linkedin.com/in/mariusmomeu/">LinkedIn</a>
-          <a href="https://x.com/MariusMomeu">𝕏</a>
-        </div>
-      </div>
-      <div class="author-card">
-        <div class="name">Yogya Mehrotra</div>
-        <div class="affiliation">UC Santa Cruz</div>
-        <div class="links">
-          <a href="mailto:ymehrotr@ucsc.edu">Email</a>
-          <a href="https://www.linkedin.com/in/yogyamehrotra/">LinkedIn</a>
-        </div>
+  <!-- Author -->
+  <section id="author">
+    <h2>Author</h2>
+    <div class="author-box">
+      <div class="name">Koushik Sen</div>
+      <div class="affil">EECS, UC Berkeley</div>
+      <div class="links">
+        <a href="mailto:ksen@berkeley.edu">Email</a>
+        <a href="https://www.linkedin.com/in/koushik-sen-80b99a/">LinkedIn</a>
+        <a href="https://x.com/koushik77">𝕏</a>
       </div>
     </div>
   </section>
 
-  <!-- Footer -->
   <footer>
     <p>
-      KISS Sorcar · Apache 2.0 License ·
-      <a href="https://github.com/ksenxx/kiss_ai">GitHub</a> ·
+      KISS Sorcar &middot; Apache 2.0 &middot;
+      <a href="https://github.com/ksenxx/kiss_ai">GitHub</a> &middot;
       <a href="assets/kiss_sorcar.pdf">Paper</a>
     </p>
-    <p style="margin-top:0.5rem;">Named after <a href="https://en.wikipedia.org/wiki/P._C._Sorcar">P.C. Sorcar</a>, the legendary Bengali magician.</p>
+    <p style="margin-top:0.4rem;">Named after <a href="https://en.wikipedia.org/wiki/P._C._Sorcar">P.C. Sorcar</a>, the legendary Bengali magician.</p>
   </footer>
 
 </body>
