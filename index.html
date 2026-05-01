@@ -576,60 +576,6 @@
       border: 0;
     }
 
-    /* Author */
-    .authors-grid {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 1.25rem;
-      max-width: 860px;
-    }
-
-    .author-box {
-      text-align: center;
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: 12px;
-      padding: 1.8rem 1.25rem;
-    }
-
-    .author-box .avatar {
-      width: 72px;
-      height: 72px;
-      border-radius: 50%;
-      background: linear-gradient(135deg, var(--primary), var(--accent));
-      margin: 0 auto 0.9rem;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      color: #fff;
-      font-size: 1.5rem;
-      font-weight: 500;
-      letter-spacing: 0.02em;
-    }
-
-    .author-box .name {
-      font-size: 1.2rem;
-      font-weight: 500;
-      margin-bottom: 0.25rem;
-      color: var(--text);
-    }
-
-    .author-box .affil {
-      font-size: 0.92rem;
-      color: var(--text-dim);
-      margin-bottom: 0.9rem;
-    }
-
-    .author-box .links a {
-      color: var(--primary);
-      text-decoration: none;
-      font-size: 0.9rem;
-      margin: 0 0.55rem;
-      font-weight: 500;
-    }
-
-    .author-box .links a:hover { text-decoration: underline; }
-
     /* Citation */
     .citation-block {
       position: relative;
@@ -698,12 +644,10 @@
       .benchmark .divider { width: 60%; height: 1px; margin: 0 auto; }
       .layer { grid-template-columns: auto 1fr; }
       .layer .lines { grid-column: 2; }
-      .authors-grid { grid-template-columns: 1fr 1fr; }
     }
 
     @media (max-width: 540px) {
       .grid-3 { grid-template-columns: 1fr; }
-      .authors-grid { grid-template-columns: 1fr; }
       section { padding: 2.5rem 1.25rem; }
     }
   </style>
@@ -1000,48 +944,10 @@
     </div>
   </section>
 
-  <!-- Authors -->
-  <section id="authors">
-    <div class="section-head">
-      <span class="num">§ 07 — Authors</span>
-    </div>
-    <div class="authors-grid">
-      <div class="author-box">
-        <div class="avatar">KS</div>
-        <div class="name">Koushik Sen</div>
-        <div class="affil">Professor, EECS &middot; UC Berkeley</div>
-        <div class="links">
-          <a href="mailto:ksen@berkeley.edu">Email</a>
-          <a href="https://www.linkedin.com/in/koushik-sen-80b99a/">LinkedIn</a>
-          <a href="https://x.com/koushik77">𝕏</a>
-        </div>
-      </div>
-      <div class="author-box">
-        <div class="avatar">MM</div>
-        <div class="name">Marius Momeu</div>
-        <div class="affil">UC Berkeley</div>
-        <div class="links">
-          <a href="mailto:marius.momeu@berkeley.edu">Email</a>
-          <a href="https://www.linkedin.com/in/mariusmomeu/">LinkedIn</a>
-          <a href="https://x.com/MariusMomeu">𝕏</a>
-        </div>
-      </div>
-      <div class="author-box">
-        <div class="avatar">YM</div>
-        <div class="name">Yogya Mehrotra</div>
-        <div class="affil">UC Santa Cruz</div>
-        <div class="links">
-          <a href="mailto:ymehrotr@ucsc.edu">Email</a>
-          <a href="https://www.linkedin.com/in/yogyamehrotra/">LinkedIn</a>
-        </div>
-      </div>
-    </div>
-  </section>
-
   <!-- Citation -->
   <section id="citation">
     <div class="section-head">
-      <span class="num">§ 08 — Citation</span>
+      <span class="num">§ 07 — Citation</span>
       <h2>Cite the paper.<a href="#citation" class="anchor">¶</a></h2>
       <p class="sub">If you use KISS Sorcar in your research, please cite:</p>
     </div>
