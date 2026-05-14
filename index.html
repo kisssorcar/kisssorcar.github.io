@@ -328,12 +328,14 @@
       margin: 0 auto 3rem;
       padding: 0 1.5rem;
     }
-    .screenshot img {
+    .screenshot img,
+    .screenshot video {
       display: block;
       width: 100%;
       border: 1px solid var(--border);
       border-radius: 12px;
       box-shadow: var(--shadow-2);
+      background: #000;
     }
 
     /* Sections */
@@ -729,9 +731,18 @@
     </div>
   </div>
 
-  <!-- Screenshot -->
+  <!-- Demo video -->
   <div class="screenshot">
-    <img src="assets/KISS-Sorcar-UI.png" alt="KISS Sorcar in VS Code">
+    <video src="assets/sorcar-main.mp4"
+           controls
+           muted
+           loop
+           playsinline
+           preload="metadata"
+           poster="assets/KISS-Sorcar-UI.png"
+           aria-label="KISS Sorcar demo video">
+      <a href="assets/sorcar-main.mp4">Watch the KISS Sorcar demo video</a>
+    </video>
   </div>
 
   <!-- Install -->
