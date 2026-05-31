@@ -682,6 +682,7 @@
         <li><a href="#architecture">Architecture</a></li>
         <li><a href="#models">Models</a></li>
         <li><a href="#agents">Agents</a></li>
+        <li><a href="#papers">Papers</a></li>
         <li><a href="#citation">Citation</a></li>
       </ul>
       <a href="https://github.com/ksenxx/kiss_ai" class="gh-badge" aria-label="GitHub">
@@ -707,11 +708,11 @@
       Cursor agent <strong>61.7%</strong> &middot; Claude Code <strong>58%</strong>.
     </p>
     <p class="lead lead--accent">
-      <em>Free. Local. Bring your own API key.</em> Runs as a <strong>VS Code extension</strong> and as a <strong>web/mobile app</strong>, built on the KISS Agent Framework &mdash; a stupidly-simple agentic core in roughly 1,850 lines of Python.
+      <em>Free. Local. Bring your own API key.</em> Runs as a <strong>VS Code extension</strong>, as a <strong>CLI tool</strong>, and as a <strong>web/mobile app</strong>, built on the KISS Agent Framework &mdash; a stupidly-simple agentic core in roughly 3,270 lines of Python.
     </p>
     <div class="actions">
       <a href="#install" class="btn btn-main">Get Started</a>
-      <a href="assets/kiss_sorcar.pdf" class="btn btn-ghost">Read the Paper</a>
+      <a href="#papers" class="btn btn-ghost">Read the Papers</a>
       <a href="https://github.com/ksenxx/kiss_ai" class="btn btn-ghost">GitHub</a>
     </div>
   </div>
@@ -853,33 +854,33 @@
     <div class="section-head">
       <span class="num">§ 03 — Architecture</span>
       <h2>Five layers. One concern each.<a href="#architecture" class="anchor">¶</a></h2>
-      <p class="sub">A clean hierarchy of agents — each adding exactly one capability — totalling about 1,850 lines of Python.</p>
+      <p class="sub">A clean hierarchy of agents — each adding exactly one capability — totalling about 3,270 lines of Python.</p>
     </div>
     <div class="layers">
       <div class="layer">
         <div class="n">L1</div>
         <div><h4>KISS Agent</h4><p>Budget-tracked ReAct loop with native function calling.</p></div>
-        <div class="lines">409 LOC</div>
+        <div class="lines">483 LOC</div>
       </div>
       <div class="layer">
         <div class="n">L2</div>
         <div><h4>Relentless Agent</h4><p>Automatic summarization and continuation across sub-sessions.</p></div>
-        <div class="lines">297 LOC</div>
+        <div class="lines">514 LOC</div>
       </div>
       <div class="layer">
         <div class="n">L3</div>
         <div><h4>Sorcar Agent</h4><p>Coding tools, browser automation, and parallel sub-agent execution.</p></div>
-        <div class="lines">323 LOC</div>
+        <div class="lines">912 LOC</div>
       </div>
       <div class="layer">
         <div class="n">L4</div>
         <div><h4>Chat Sorcar Agent</h4><p>Persistent multi-turn chat sessions with history recall.</p></div>
-        <div class="lines">120 LOC</div>
+        <div class="lines">443 LOC</div>
       </div>
       <div class="layer">
         <div class="n">L5</div>
         <div><h4>Worktree Sorcar Agent</h4><p>Git worktree isolation — every task lives on its own branch.</p></div>
-        <div class="lines">692 LOC</div>
+        <div class="lines">916 LOC</div>
       </div>
     </div>
   </section>
@@ -888,33 +889,45 @@
   <section id="models">
     <div class="section-head">
       <span class="num">§ 04 — Models</span>
-      <h2>Bring your own model.<a href="#models" class="anchor">¶</a></h2>
-      <p class="sub">Works with the providers you already use.</p>
+      <h2>542 models. Bring your own key.<a href="#models" class="anchor">¶</a></h2>
+      <p class="sub">542 models across 8 provider categories with built-in pricing, context lengths, and capability flags.</p>
     </div>
     <div class="grid-3">
       <div class="card">
         <h4>Anthropic</h4>
-        <p>Claude Opus 4.7, Opus 4.6, Sonnet 4.6, Sonnet 4, Haiku 4.5 and more</p>
+        <p>Claude Opus 4.7, Opus 4.6, Opus 4.5, Sonnet 4.6, Sonnet 4, Haiku 4.5 and more</p>
       </div>
       <div class="card">
         <h4>OpenAI</h4>
-        <p>GPT-5.5, GPT-5.4, o4-mini, o3-pro, Codex series and more</p>
+        <p>GPT-5.5, GPT-5.4, GPT-5, o4-mini, o3-pro, Codex series, Image series and more</p>
       </div>
       <div class="card">
         <h4>Google Gemini</h4>
-        <p>Gemini 3.1 Pro, 3 Flash, 2.5 Pro, 2.5 Flash and more</p>
+        <p>Gemini 3.1 Pro, 3 Flash, 2.5 Pro, 2.5 Flash, Gemma 4 and more</p>
       </div>
       <div class="card">
         <h4>Together AI</h4>
-        <p>Llama 4, Qwen 3.5, DeepSeek V4, Kimi K2.6, GLM-5.1 and more</p>
+        <p>Llama 4, Qwen 3.6, DeepSeek V4, Kimi K2.6, GLM-5.1, MiniMax M2.7 and more</p>
       </div>
       <div class="card">
         <h4>OpenRouter</h4>
-        <p>330+ models from 50+ providers via a unified API</p>
+        <p>330+ models from 51 providers via a unified API</p>
+      </div>
+      <div class="card">
+        <h4>Claude Code &amp; Codex CLI</h4>
+        <p>Use Claude Code (cc/*) or OpenAI Codex (codex/*) as model backends if installed</p>
+      </div>
+      <div class="card">
+        <h4>MiniMax</h4>
+        <p>MiniMax M2.5, M2.5 Lightning via direct MiniMax API</p>
       </div>
       <div class="card">
         <h4>Embeddings</h4>
-        <p>OpenAI, Google, Together AI embedding models for RAG and search</p>
+        <p>OpenAI, Google, Together AI embedding models for RAG and semantic search</p>
+      </div>
+      <div class="card">
+        <h4>Custom Endpoints</h4>
+        <p>Bring your own local model endpoint — any OpenAI-compatible API works out of the box</p>
       </div>
     </div>
   </section>
@@ -954,10 +967,37 @@
     </div>
   </section>
 
+  <!-- Papers -->
+  <section id="papers">
+    <div class="section-head">
+      <span class="num">§ 06 — Papers</span>
+      <h2>Read the papers.<a href="#papers" class="anchor">¶</a></h2>
+      <p class="sub">Three papers describe the design, engineering, and meta-process behind KISS Sorcar.</p>
+    </div>
+    <div class="grid-3">
+      <div class="card">
+        <h4>KISS Sorcar Paper</h4>
+        <p>The original paper describing the KISS Agent Framework and the KISS Sorcar system.</p>
+        <p style="margin-top:0.8rem;"><a href="assets/kiss_sorcar.pdf" class="btn btn-ghost" style="font-size:0.85rem; padding:0.45rem 1rem;">📄 Read Paper (PDF)</a></p>
+        <p style="margin-top:0.4rem; font-size:0.82rem; color:var(--text-soft);"><a href="https://arxiv.org/abs/2604.23822">arXiv:2604.23822</a></p>
+      </div>
+      <div class="card">
+        <h4>SE KISS Sorcar with KISS Sorcar</h4>
+        <p>How KISS Sorcar was used to software-engineer itself — a self-referential case study in AI-assisted development.</p>
+        <p style="margin-top:0.8rem;"><a href="assets/se_kiss_sorcar.pdf" class="btn btn-ghost" style="font-size:0.85rem; padding:0.45rem 1rem;">📄 Read Paper (PDF)</a></p>
+      </div>
+      <div class="card">
+        <h4>Writing a Paper with an AI Agent</h4>
+        <p>A chronicle of KISS Sorcar writing its own research paper — documenting the process end-to-end.</p>
+        <p style="margin-top:0.8rem;"><a href="assets/writing_paper.pdf" class="btn btn-ghost" style="font-size:0.85rem; padding:0.45rem 1rem;">📄 Read Paper (PDF)</a></p>
+      </div>
+    </div>
+  </section>
+
   <!-- Video -->
   <section id="demo">
     <div class="section-head">
-      <span class="num">§ 06 — Demo</span>
+      <span class="num">§ 07 — Demo</span>
       <h2>See it in action.<a href="#demo" class="anchor">¶</a></h2>
       <p class="sub">A short walkthrough of KISS Sorcar at work.</p>
     </div>
@@ -969,7 +1009,7 @@
   <!-- Citation -->
   <section id="citation">
     <div class="section-head">
-      <span class="num">§ 07 — Citation</span>
+      <span class="num">§ 08 — Citation</span>
       <h2>Cite the paper.<a href="#citation" class="anchor">¶</a></h2>
       <p class="sub">If you use KISS Sorcar in your research, please cite:</p>
     </div>
