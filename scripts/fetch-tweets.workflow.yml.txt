@@ -1,0 +1,36 @@
+name: Refresh @koushik77 tweets
+
+on:
+  schedule:
+    # Every 6 hours.
+    - cron: "17 */6 * * *"
+  workflow_dispatch: {}
+
+permissions:
+  contents: write
+
+jobs:
+  refresh:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Fetch tweets
+        run: python3 scripts/fetch_tweets.py
+
+      - name: Commit + push if changed
+        run: |
+          if git diff --quiet -- assets/tweets.json; then
+            echo "No changes in tweets.json"
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add assets/tweets.json
+          git commit -m "chore(tweets): refresh @koushik77 timeline snapshot"
+          git push
