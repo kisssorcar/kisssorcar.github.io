@@ -666,6 +666,35 @@
       .grid-3 { grid-template-columns: 1fr; }
       section { padding: 2.5rem 1.25rem; }
     }
+
+    /* Comparison table */
+    .compare-wrap { overflow-x: auto; border: 1px solid var(--border); border-radius: 10px; box-shadow: var(--shadow-1); }
+    table.compare { width: 100%; border-collapse: collapse; background: var(--bg); font-size: 0.92rem; }
+    table.compare th, table.compare td {
+      text-align: left;
+      padding: 0.8rem 1rem;
+      border-bottom: 1px solid var(--border);
+      vertical-align: top;
+      line-height: 1.5;
+    }
+    table.compare thead th {
+      background: var(--surface);
+      font-weight: 500;
+      color: var(--text);
+      letter-spacing: 0;
+      text-transform: none;
+      font-size: 0.92rem;
+      border-bottom: 1px solid var(--border);
+    }
+    table.compare thead th.kiss { color: var(--primary); }
+    table.compare th.cap { width: 22%; color: var(--text-dim); font-weight: 500; }
+    table.compare td.kiss { background: var(--primary-soft); font-weight: 500; color: var(--text); }
+    table.compare tr:last-child td { border-bottom: 0; }
+    table.compare .yes { color: var(--accent); font-weight: 600; }
+    table.compare .no  { color: #c62828; font-weight: 600; }
+    table.compare .warn { color: #ef6c00; font-weight: 600; }
+    table.compare small { color: var(--text-dim); font-weight: 400; }
+    .compare-foot { color: var(--text-soft); font-size: 0.82rem; margin-top: 0.9rem; }
   </style>
 </head>
 <body>
@@ -678,6 +707,7 @@
       </a>
       <ul class="links">
         <li><a href="#install">Install</a></li>
+        <li><a href="#compare">Compare</a></li>
         <li><a href="#features">Features</a></li>
         <li><a href="#architecture">Architecture</a></li>
         <li><a href="#models">Models</a></li>
@@ -708,7 +738,7 @@
       Cursor agent <strong>61.7%</strong> &middot; Claude Code <strong>58%</strong>.
     </p>
     <p class="lead lead--accent">
-      <em>Free. Local. Bring your own API key.</em> Runs as a <strong>VS Code extension</strong>, as a <strong>CLI tool</strong>, and as a <strong>web/mobile app</strong>, built on the KISS Agent Framework &mdash; a stupidly-simple agentic core in roughly 3,270 lines of Python.
+      <em>Free. Local. Bring your own API key.</em> Runs as a <strong>VS Code extension</strong>, as a Claude-Code-style <strong>CLI tool</strong>, and as a <strong>web/mobile app</strong>, built on the KISS Agent Framework &mdash; a stupidly-simple agentic core in roughly 3,800 lines of Python.
     </p>
     <div class="actions">
       <a href="#install" class="btn btn-main">Get Started</a>
@@ -761,39 +791,126 @@
       <div class="install-card">
         <h3>VS Code Extension</h3>
         <p class="install-alt">
-          Open VS Code, search <em>KISS Sorcar</em> in the Extension Marketplace, and install&mdash;or grab the <a href="https://github.com/ksenxx/kiss_ai/blob/main/src/kiss/agents/vscode/kiss-sorcar.vsix">.vsix</a> directly.
+          Open VS Code, search <em>KISS Sorcar</em> in the <a href="https://marketplace.visualstudio.com/items?itemName=ksenxx.kiss-sorcar">Extension Marketplace</a>, and install. Or run the one-line installer above &mdash; it builds and installs the extension for you.
         </p>
       </div>
     </div>
     <div class="cli-block">
       <h3>From the Terminal</h3>
       <div class="cli-panel">
-        <div class="cli-line"><span class="x"># Run a one-shot task</span></div>
-        <div class="cli-line"><span class="c">sorcar</span> <span class="f">-t</span> <span class="s">"What is 2435*234"</span></div>
+        <div class="cli-line"><span class="x"># Launch the interactive Claude-Code-style REPL</span></div>
+        <div class="cli-line"><span class="c">sorcar</span></div>
         <div class="cli-line spacer"></div>
-        <div class="cli-line"><span class="x"># Start a new chat session (-n) and stay in chat mode</span></div>
-        <div class="cli-line"><span class="c">sorcar</span> <span class="f">-n -t --use-chat</span> <span class="s">"What is 2435*234?"</span></div>
+        <div class="cli-line"><span class="x"># Run a one-shot task (non-interactive)</span></div>
+        <div class="cli-line"><span class="c">sorcar</span> <span class="f">-t</span> <span class="s">"What is 2435*234?"</span></div>
         <div class="cli-line spacer"></div>
-        <div class="cli-line"><span class="x"># Use a specific model</span></div>
+        <div class="cli-line"><span class="x"># Pick a specific model</span></div>
         <div class="cli-line"><span class="c">sorcar</span> <span class="f">-m</span> <span class="s">"claude-sonnet-4-6"</span> <span class="f">-t</span> <span class="s">"What is 2435*234?"</span></div>
         <div class="cli-line spacer"></div>
+        <div class="cli-line"><span class="x"># Custom endpoint and headers for a local or self-hosted model</span></div>
+        <div class="cli-line"><span class="c">sorcar</span> <span class="f">-e</span> <span class="s">"http://localhost:8000/v1"</span> <span class="f">--header</span> <span class="s">"Authorization:Bearer xxx"</span> \</div>
+        <div class="cli-line">       <span class="f">-t</span> <span class="s">"Summarise this codebase."</span></div>
+        <div class="cli-line spacer"></div>
+        <div class="cli-line"><span class="x"># Cap spend at $2 and pin the working directory</span></div>
+        <div class="cli-line"><span class="c">sorcar</span> <span class="f">-b</span> <span class="s">2.0</span> <span class="f">-w</span> <span class="s">"$HOME/projects/my-repo"</span> <span class="f">-t</span> <span class="s">"Refactor utils.py for clarity."</span></div>
+        <div class="cli-line spacer"></div>
         <div class="cli-line"><span class="x"># Read the task from a file</span></div>
-        <div class="cli-line"><span class="c">echo</span> <span class="s">"Can you find the cheapest non-stop flight from SFO to JFK on June 15 by consulting various websites?"</span> <span class="o">&gt;</span> prompt</div>
+        <div class="cli-line"><span class="c">echo</span> <span class="s">"Can you find the cheapest non-stop flight from SFO to JFK on June 15?"</span> <span class="o">&gt;</span> prompt</div>
         <div class="cli-line"><span class="c">sorcar</span> <span class="f">-f</span> prompt</div>
         <div class="cli-line spacer"></div>
         <div class="cli-line"><span class="x"># Drive a desktop app</span></div>
-        <div class="cli-line"><span class="c">sorcar</span> <span class="f">-t</span> <span class="s">'Can you send the message "Hello from Sorcar!" to ksen via the desktop slack app?'</span></div>
+        <div class="cli-line"><span class="c">sorcar</span> <span class="f">-t</span> <span class="s">'Can you send the message "Hello from Sorcar!" to ksen via the desktop Slack app?'</span></div>
         <div class="cli-line spacer"></div>
         <div class="cli-line"><span class="x"># Explain a code path step by step</span></div>
         <div class="cli-line"><span class="c">sorcar</span> <span class="f">-t</span> <span class="s">'Can you show me the detailed step-by-step workflow of gepa.py?'</span></div>
+        <div class="cli-line spacer"></div>
+        <div class="cli-line"><span class="x"># Manage MCP servers</span></div>
+        <div class="cli-line"><span class="c">sorcar</span> <span class="f">mcp list --ping</span></div>
       </div>
+    </div>
+  </section>
+
+  <!-- Comparison -->
+  <section id="compare">
+    <div class="section-head">
+      <span class="num">§ 02 — KISS Sorcar vs Claude Code vs Cursor</span>
+      <h2>How does it compare?<a href="#compare" class="anchor">¶</a></h2>
+      <p class="sub">A side-by-side look at the differences that matter for everyday use.</p>
+    </div>
+    <div class="compare-wrap">
+      <table class="compare">
+        <thead>
+          <tr>
+            <th class="cap">Capability</th>
+            <th class="kiss">KISS Sorcar</th>
+            <th>Claude Code</th>
+            <th>Cursor</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <th class="cap">Interfaces</th>
+            <td class="kiss">CLI + VS Code extension + web/mobile app</td>
+            <td>CLI + mobile app</td>
+            <td>Custom VS Code</td>
+          </tr>
+          <tr>
+            <th class="cap">Multiple models from multiple vendors in the same task</th>
+            <td class="kiss"><span class="yes">✓</span> Mix OpenAI, Anthropic, Gemini, Together, MiniMax, OpenRouter, Claude Code CLI, and Codex CLI</td>
+            <td><span class="no">✗</span> Anthropic Claude models only</td>
+            <td><span class="no">✗</span> One model per task</td>
+          </tr>
+          <tr>
+            <th class="cap">Models in bundled catalog</th>
+            <td class="kiss">501 across 8 provider categories</td>
+            <td>Claude family only</td>
+            <td>Subset chosen by Cursor</td>
+          </tr>
+          <tr>
+            <th class="cap">Bring your own API key / endpoint</th>
+            <td class="kiss"><span class="yes">✓</span> Yes &mdash; keys stay on your machine</td>
+            <td><span class="yes">✓</span> Anthropic key</td>
+            <td><span class="warn">⚠</span> Routed through Cursor backend</td>
+          </tr>
+          <tr>
+            <th class="cap">Open source</th>
+            <td class="kiss"><span class="yes">✓</span> Apache-2.0</td>
+            <td><span class="no">✗</span> Proprietary</td>
+            <td><span class="no">✗</span> Proprietary</td>
+          </tr>
+          <tr>
+            <th class="cap">Price</th>
+            <td class="kiss">Free framework; pay only your chosen model provider</td>
+            <td>Subscription / API usage</td>
+            <td>Subscription</td>
+          </tr>
+          <tr>
+            <th class="cap">Run on top of Claude Code / Codex CLI</th>
+            <td class="kiss"><span class="yes">✓</span> <code>cc/*</code> and <code>codex/*</code> namespaces</td>
+            <td>N/A</td>
+            <td><span class="no">✗</span></td>
+          </tr>
+          <tr>
+            <th class="cap">Primary focus</th>
+            <td class="kiss"><span class="yes">✓</span> <strong>Quality</strong> &mdash; rigorous review, end-to-end tests</td>
+            <td>Speed and developer ergonomics</td>
+            <td>IDE iteration speed</td>
+          </tr>
+          <tr>
+            <th class="cap">Terminal Bench 2.0 score</th>
+            <td class="kiss"><strong>62.2%</strong></td>
+            <td>58%</td>
+            <td>61.7% <small>(Cursor agent / Composer 2)</small></td>
+          </tr>
+        </tbody>
+      </table>
     </div>
   </section>
 
   <!-- Features -->
   <section id="features">
     <div class="section-head">
-      <span class="num">§ 02 — Features</span>
+      <span class="num">§ 03 — Features</span>
       <h2>Everything you need, nothing you don't.<a href="#features" class="anchor">¶</a></h2>
       <p class="sub">Built for software engineering and general-purpose automation.</p>
     </div>
@@ -852,35 +969,35 @@
   <!-- Architecture -->
   <section id="architecture">
     <div class="section-head">
-      <span class="num">§ 03 — Architecture</span>
+      <span class="num">§ 04 — Architecture</span>
       <h2>Five layers. One concern each.<a href="#architecture" class="anchor">¶</a></h2>
-      <p class="sub">A clean hierarchy of agents — each adding exactly one capability — totalling about 3,270 lines of Python.</p>
+      <p class="sub">A clean hierarchy of agents — each adding exactly one capability — totalling about 3,800 lines of Python.</p>
     </div>
     <div class="layers">
       <div class="layer">
         <div class="n">L1</div>
         <div><h4>KISS Agent</h4><p>Budget-tracked ReAct loop with native function calling.</p></div>
-        <div class="lines">483 LOC</div>
+        <div class="lines">552 LOC</div>
       </div>
       <div class="layer">
         <div class="n">L2</div>
         <div><h4>Relentless Agent</h4><p>Automatic summarization and continuation across sub-sessions.</p></div>
-        <div class="lines">514 LOC</div>
+        <div class="lines">563 LOC</div>
       </div>
       <div class="layer">
         <div class="n">L3</div>
         <div><h4>Sorcar Agent</h4><p>Coding tools, browser automation, and parallel sub-agent execution.</p></div>
-        <div class="lines">912 LOC</div>
+        <div class="lines">993 LOC</div>
       </div>
       <div class="layer">
         <div class="n">L4</div>
         <div><h4>Chat Sorcar Agent</h4><p>Persistent multi-turn chat sessions with history recall.</p></div>
-        <div class="lines">443 LOC</div>
+        <div class="lines">675 LOC</div>
       </div>
       <div class="layer">
         <div class="n">L5</div>
         <div><h4>Worktree Sorcar Agent</h4><p>Git worktree isolation — every task lives on its own branch.</p></div>
-        <div class="lines">916 LOC</div>
+        <div class="lines">1,028 LOC</div>
       </div>
     </div>
   </section>
@@ -888,46 +1005,46 @@
   <!-- Models -->
   <section id="models">
     <div class="section-head">
-      <span class="num">§ 04 — Models</span>
-      <h2>542 models. Bring your own key.<a href="#models" class="anchor">¶</a></h2>
-      <p class="sub">542 models across 8 provider categories with built-in pricing, context lengths, and capability flags.</p>
+      <span class="num">§ 05 — Models</span>
+      <h2>501 models. Bring your own key.<a href="#models" class="anchor">¶</a></h2>
+      <p class="sub">501 models across 8 provider categories with built-in pricing, context lengths, and capability flags (function calling, generation, embedding).</p>
     </div>
     <div class="grid-3">
       <div class="card">
-        <h4>Anthropic</h4>
-        <p>Claude Opus 4.7, Opus 4.6, Opus 4.5, Sonnet 4.6, Sonnet 4, Haiku 4.5 and more</p>
+        <h4>Anthropic (13)</h4>
+        <p>Claude Opus 4.8, 4.7, 4.6, 4.5, 4.1, Sonnet 4.6, 4.5, Haiku 4.5, Fable 5 and more</p>
       </div>
       <div class="card">
-        <h4>OpenAI</h4>
+        <h4>OpenAI (70)</h4>
         <p>GPT-5.5, GPT-5.4, GPT-5, o4-mini, o3-pro, Codex series, Image series and more</p>
       </div>
       <div class="card">
-        <h4>Google Gemini</h4>
+        <h4>Google Gemini (23)</h4>
         <p>Gemini 3.1 Pro, 3 Flash, 2.5 Pro, 2.5 Flash, Gemma 4 and more</p>
       </div>
       <div class="card">
-        <h4>Together AI</h4>
-        <p>Llama 4, Qwen 3.6, DeepSeek V4, Kimi K2.6, GLM-5.1, MiniMax M2.7 and more</p>
+        <h4>Together AI (77)</h4>
+        <p>Llama 4, Qwen 3.6, DeepSeek V4, Kimi K2.7, GLM-5.2, Mistral and more</p>
       </div>
       <div class="card">
-        <h4>OpenRouter</h4>
-        <p>330+ models from 51 providers via a unified API</p>
+        <h4>OpenRouter (303)</h4>
+        <p>303 models from 54 providers via a unified API</p>
       </div>
       <div class="card">
-        <h4>Claude Code &amp; Codex CLI</h4>
-        <p>Use Claude Code (cc/*) or OpenAI Codex (codex/*) as model backends if installed</p>
+        <h4>Claude Code CLI (3)</h4>
+        <p>Use Claude Code as a model backend with <code>cc/haiku</code>, <code>cc/sonnet</code>, <code>cc/opus</code>.</p>
       </div>
       <div class="card">
-        <h4>MiniMax</h4>
-        <p>MiniMax M2.5, M2.5 Lightning via direct MiniMax API</p>
+        <h4>Codex CLI (7)</h4>
+        <p>Use OpenAI Codex as a model backend with <code>codex/gpt-5.5</code>, <code>codex/gpt-5.4</code>, <code>codex/gpt-5.3-codex</code> and more.</p>
       </div>
       <div class="card">
-        <h4>Embeddings</h4>
-        <p>OpenAI, Google, Together AI embedding models for RAG and semantic search</p>
+        <h4>MiniMax (5)</h4>
+        <p>MiniMax M2.5, M2.5 Lightning, M2.7, M3 via direct MiniMax API</p>
       </div>
       <div class="card">
         <h4>Custom Endpoints</h4>
-        <p>Bring your own local model endpoint — any OpenAI-compatible API works out of the box</p>
+        <p>Bring your own local model endpoint &mdash; any OpenAI-compatible API works out of the box.</p>
       </div>
     </div>
   </section>
@@ -935,7 +1052,7 @@
   <!-- Third-Party Agents -->
   <section id="agents">
     <div class="section-head">
-      <span class="num">§ 05 — Third-Party Agents</span>
+      <span class="num">§ 06 — Third-Party Agents</span>
       <h2>Reach the agent from anywhere.<a href="#agents" class="anchor">¶</a></h2>
       <p class="sub">OpenClaw-style integrations let KISS Sorcar live inside the apps you already use &mdash; chat from Slack, schedule from cron, drive an Android phone, or send a message from Signal. Authentication is handled for you; you confirm before anything is sent.</p>
     </div>
@@ -970,7 +1087,7 @@
   <!-- Papers -->
   <section id="papers">
     <div class="section-head">
-      <span class="num">§ 06 — Papers</span>
+      <span class="num">§ 07 — Papers</span>
       <h2>Read the papers.<a href="#papers" class="anchor">¶</a></h2>
       <p class="sub">Three papers describe the design, engineering, and meta-process behind KISS Sorcar.</p>
     </div>
@@ -997,7 +1114,7 @@
   <!-- Video -->
   <section id="demo">
     <div class="section-head">
-      <span class="num">§ 07 — Demo</span>
+      <span class="num">§ 08 — Demo</span>
       <h2>See it in action.<a href="#demo" class="anchor">¶</a></h2>
       <p class="sub">A short walkthrough of KISS Sorcar at work.</p>
     </div>
@@ -1009,7 +1126,7 @@
   <!-- Citation -->
   <section id="citation">
     <div class="section-head">
-      <span class="num">§ 08 — Citation</span>
+      <span class="num">§ 09 — Citation</span>
       <h2>Cite the paper.<a href="#citation" class="anchor">¶</a></h2>
       <p class="sub">If you use KISS Sorcar in your research, please cite:</p>
     </div>
