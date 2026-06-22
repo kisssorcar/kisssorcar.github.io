@@ -25,6 +25,13 @@
   <style>
     *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
 
+    /* Custom property for rotating conic-gradient angle on the section-card border. */
+    @property --angle {
+      syntax: '<angle>';
+      initial-value: 0deg;
+      inherits: false;
+    }
+
     :root {
       --bg: #ffffff;
       --surface: #f5f7fa;
@@ -37,10 +44,13 @@
       --primary-dark: #0d47a1;
       --primary-soft: #e3f0fb;
       --accent: #00897b;
+      --gold: #f7c948;
+      --magenta: #d81b60;
       --code-bg: #1e2329;
       --code-text: #e8eaed;
       --shadow-1: 0 1px 2px rgba(0,0,0,0.06), 0 1px 3px rgba(0,0,0,0.04);
       --shadow-2: 0 2px 6px rgba(0,0,0,0.07), 0 4px 12px rgba(0,0,0,0.05);
+      --shadow-3: 0 12px 38px rgba(25,118,210,0.13), 0 4px 14px rgba(0,0,0,0.06);
     }
 
     html { scroll-behavior: smooth; -webkit-text-size-adjust: 100%; }
@@ -53,638 +63,362 @@
       -webkit-font-smoothing: antialiased;
       -moz-osx-font-smoothing: grayscale;
       text-rendering: optimizeLegibility;
+      overflow-x: hidden;
     }
 
     a { color: var(--primary); text-decoration: none; }
     a:hover { color: var(--primary-dark); }
 
-    /* Top Navigation — Material-style header */
+    /* Navigation */
     nav {
       position: sticky;
       top: 0;
       z-index: 100;
-      background: var(--bg);
+      background: rgba(255,255,255,0.85);
+      backdrop-filter: saturate(180%) blur(12px);
+      -webkit-backdrop-filter: saturate(180%) blur(12px);
       border-bottom: 1px solid var(--border);
       box-shadow: var(--shadow-1);
     }
 
     nav .container {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding: 0.7rem 1.5rem;
-      max-width: 1200px;
-      margin: 0 auto;
-      gap: 1.5rem;
+      display: flex; justify-content: space-between; align-items: center;
+      padding: 0.7rem 1.5rem; max-width: 1200px; margin: 0 auto; gap: 1.5rem;
     }
 
     nav .brand {
-      display: flex;
-      align-items: center;
-      gap: 0.6rem;
-      font-weight: 500;
-      font-size: 1.05rem;
-      color: var(--text);
-      letter-spacing: -0.005em;
+      display: flex; align-items: center; gap: 0.6rem;
+      font-weight: 500; font-size: 1.05rem; color: var(--text); letter-spacing: -0.005em;
     }
 
     nav .brand .dot {
-      width: 24px;
-      height: 24px;
-      border-radius: 50%;
-      background: linear-gradient(135deg, var(--primary), var(--accent));
+      width: 24px; height: 24px; border-radius: 50%;
+      background: conic-gradient(from var(--angle), var(--primary), var(--accent), var(--gold), var(--magenta), var(--primary));
+      animation: spin 8s linear infinite;
       flex-shrink: 0;
+      box-shadow: 0 0 12px rgba(25,118,210,0.45);
     }
 
     nav .links {
-      display: flex;
-      gap: 1.4rem;
-      list-style: none;
-      flex: 1;
-      justify-content: center;
+      display: flex; gap: 1.2rem; list-style: none; flex: 1; justify-content: center;
+      flex-wrap: wrap;
     }
 
     nav .links a {
-      color: var(--text-dim);
-      font-size: 0.9rem;
-      font-weight: 400;
-      letter-spacing: 0;
-      text-transform: none;
-      padding: 0.25rem 0;
-      border-bottom: 2px solid transparent;
+      color: var(--text-dim); font-size: 0.88rem; font-weight: 400;
+      padding: 0.25rem 0; border-bottom: 2px solid transparent;
       transition: color 0.15s, border-color 0.15s;
     }
-
     nav .links a:hover { color: var(--primary); border-bottom-color: var(--primary); }
 
     nav .gh-badge {
-      display: inline-flex;
-      align-items: center;
-      gap: 0.45rem;
-      padding: 0.32rem 0.7rem;
-      font-size: 0.78rem;
-      color: var(--text);
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: 999px;
-      font-weight: 500;
+      display: inline-flex; align-items: center; gap: 0.45rem;
+      padding: 0.32rem 0.7rem; font-size: 0.78rem;
+      color: var(--text); background: var(--surface);
+      border: 1px solid var(--border); border-radius: 999px; font-weight: 500;
     }
     nav .gh-badge:hover { background: var(--surface-2); }
     nav .gh-badge svg { width: 16px; height: 16px; }
 
     /* Hero */
     .hero {
+      position: relative;
       padding: 4rem 1.5rem 2rem;
       text-align: center;
       max-width: 1100px;
       margin: 0 auto;
+      z-index: 1;
     }
 
-    .hero-mark,
-    .screenshot {
-      max-width: 960px;
-      margin-left: auto;
-      margin-right: auto;
-    }
-
-    .hero-mark {
-      margin-bottom: 1.5rem;
-    }
-
-    .hero-logo {
-      display: block;
+    /* Magic-dust canvas behind the hero (Sorcar = magician). */
+    #magic-dust {
+      position: absolute;
+      inset: 0;
       width: 100%;
-      height: auto;
+      height: 100%;
+      pointer-events: none;
+      z-index: -1;
     }
 
-    .hero-quote {
-      margin: 1.5rem auto 0;
-      max-width: 640px;
-      text-align: center;
-    }
+    .hero-mark, .screenshot { max-width: 960px; margin-left: auto; margin-right: auto; }
+    .hero-mark { margin-bottom: 1.5rem; }
+    .hero-logo { display: block; width: 100%; height: auto; filter: drop-shadow(0 6px 24px rgba(25,118,210,0.18)); }
 
+    .hero-quote { margin: 1.5rem auto 0; max-width: 640px; text-align: center; }
     .hero-quote blockquote {
-      font-style: italic;
-      font-weight: 300;
-      color: var(--text-dim);
-      font-size: clamp(1.05rem, 2vw, 1.25rem);
-      line-height: 1.55;
+      font-style: italic; font-weight: 300; color: var(--text-dim);
+      font-size: clamp(1.05rem, 2vw, 1.25rem); line-height: 1.55;
     }
-
     .hero-quote figcaption {
-      margin-top: 0.5rem;
-      font-size: 0.82rem;
-      font-weight: 500;
-      color: var(--text-soft);
+      margin-top: 0.5rem; font-size: 0.82rem; font-weight: 500; color: var(--text-soft);
     }
 
     .hero h1 {
       font-size: clamp(2rem, 4.5vw, 3.1rem);
-      font-weight: 700;
-      line-height: 1.15;
-      letter-spacing: -0.02em;
-      margin: 1.5rem auto 1rem;
-      color: var(--text);
-      max-width: 780px;
+      font-weight: 700; line-height: 1.15; letter-spacing: -0.02em;
+      margin: 1.5rem auto 1rem; color: var(--text); max-width: 820px;
     }
-
     .hero h1 em {
       font-style: normal;
-      color: var(--primary);
+      background: linear-gradient(90deg, var(--primary), var(--accent));
+      -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent;
     }
 
     .hero .lead {
-      font-size: 1.1rem;
-      color: var(--text-dim);
-      max-width: 680px;
-      margin: 0 auto 1rem;
-      font-weight: 400;
+      font-size: 1.1rem; color: var(--text-dim);
+      max-width: 680px; margin: 0 auto 1rem; font-weight: 400;
     }
-
     .hero .lead--accent {
-      max-width: 760px;
-      margin: 0.25rem auto 1.5rem;
-      padding: 1rem 1.25rem;
-      border-left: 3px solid var(--primary);
-      background: var(--primary-soft);
-      color: var(--text);
-      text-align: left;
-      border-radius: 0 6px 6px 0;
+      max-width: 760px; margin: 0.25rem auto 1.5rem;
+      padding: 1rem 1.25rem; border-left: 3px solid var(--primary);
+      background: var(--primary-soft); color: var(--text);
+      text-align: left; border-radius: 0 6px 6px 0;
     }
-
-    .hero .lead--accent em {
-      font-style: italic;
-      color: var(--primary);
-    }
-
-    .hero .lead--accent strong {
-      color: var(--text);
-      font-weight: 600;
-    }
+    .hero .lead--accent em { font-style: italic; color: var(--primary); }
+    .hero .lead--accent strong { color: var(--text); font-weight: 600; }
 
     .hero .eyebrow {
-      display: inline-block;
-      font-size: 0.78rem;
-      font-weight: 500;
-      color: var(--primary);
-      background: var(--primary-soft);
-      padding: 0.25rem 0.85rem;
-      border-radius: 999px;
-      margin-bottom: 0.5rem;
-      letter-spacing: 0.02em;
+      display: inline-block; font-size: 0.78rem; font-weight: 500;
+      color: var(--primary); background: var(--primary-soft);
+      padding: 0.25rem 0.85rem; border-radius: 999px;
+      margin-bottom: 0.5rem; letter-spacing: 0.02em;
     }
 
-    .hero .actions {
-      display: flex;
-      gap: 0.7rem;
-      justify-content: center;
-      flex-wrap: wrap;
-      margin-top: 1.5rem;
-    }
+    .hero .actions { display: flex; gap: 0.7rem; justify-content: center; flex-wrap: wrap; margin-top: 1.5rem; }
 
     .btn {
-      display: inline-flex;
-      align-items: center;
-      gap: 0.45rem;
-      padding: 0.6rem 1.25rem;
-      font-size: 0.92rem;
-      font-weight: 500;
-      letter-spacing: 0.01em;
-      text-transform: none;
-      transition: all 0.18s ease;
-      cursor: pointer;
-      border: 1px solid transparent;
-      border-radius: 6px;
-      font-family: inherit;
+      display: inline-flex; align-items: center; gap: 0.45rem;
+      padding: 0.6rem 1.25rem; font-size: 0.92rem; font-weight: 500;
+      transition: all 0.18s ease; cursor: pointer;
+      border: 1px solid transparent; border-radius: 6px; font-family: inherit;
     }
     .btn svg { width: 16px; height: 16px; }
+    .btn-main { background: var(--primary); color: #fff; border-color: var(--primary); box-shadow: var(--shadow-1); }
+    .btn-main:hover { background: var(--primary-dark); border-color: var(--primary-dark); color: #fff; box-shadow: var(--shadow-2); transform: translateY(-1px); }
+    .btn-ghost { background: var(--bg); color: var(--primary); border-color: var(--border); }
+    .btn-ghost:hover { background: var(--primary-soft); border-color: var(--primary); color: var(--primary-dark); transform: translateY(-1px); }
 
-    .btn-main {
-      background: var(--primary);
-      color: #fff;
-      border-color: var(--primary);
-      box-shadow: var(--shadow-1);
+    /* Benchmark band */
+    .benchmark {
+      max-width: 920px; margin: 2rem auto 2.5rem; padding: 1.5rem;
+      display: grid; grid-template-columns: auto 1px 1fr 1px 1fr;
+      align-items: center; gap: 1.5rem;
+      background: var(--surface); border: 1px solid var(--border); border-radius: 12px;
     }
-    .btn-main:hover {
-      background: var(--primary-dark);
-      border-color: var(--primary-dark);
-      color: #fff;
-      box-shadow: var(--shadow-2);
+    .benchmark .divider { width: 1px; height: 48px; background: var(--border); }
+    .benchmark .score {
+      font-size: 2.8rem; font-weight: 700; letter-spacing: -0.03em;
+      background: linear-gradient(135deg, var(--primary), var(--accent));
+      -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent;
+      line-height: 1;
+    }
+    .benchmark .score sup { font-size: 1rem; color: var(--text-dim); margin-left: 0.15rem; font-weight: 500; -webkit-text-fill-color: var(--text-dim); }
+    .benchmark .cell .k {
+      font-size: 0.74rem; font-weight: 500; letter-spacing: 0.04em;
+      text-transform: uppercase; color: var(--text-soft); margin-bottom: 0.3rem;
+    }
+    .benchmark .cell .v { font-size: 1rem; color: var(--text); font-weight: 500; }
+    .benchmark .cell .v small { color: var(--text-dim); font-size: 0.85rem; margin-left: 0.3rem; font-weight: 400; }
+
+    /* Hero screenshot/demo video */
+    .screenshot { margin: 0 auto 3rem; padding: 0 1.5rem; }
+    .screenshot img, .screenshot video {
+      display: block; width: 100%;
+      border: 1px solid var(--border); border-radius: 12px;
+      box-shadow: var(--shadow-2); background: #000;
     }
 
-    .btn-ghost {
+    /* ========================================================== */
+    /* SECTION CARD — animated rotating conic-gradient border.    */
+    /* Each section is wrapped in .section-card whose ::before    */
+    /* paints a slow-rotating conic-gradient as a border.         */
+    /* ========================================================== */
+
+    .section-wrap {
+      max-width: 1100px;
+      margin: 2.2rem auto;
+      padding: 0 1.5rem;
+    }
+
+    .section-card {
+      position: relative;
       background: var(--bg);
-      color: var(--primary);
-      border-color: var(--border);
+      border-radius: 18px;
+      padding: 2.6rem 2.2rem;
+      box-shadow: var(--shadow-2);
+      /* Reveal-on-scroll initial state */
+      opacity: 0;
+      transform: translateY(36px) rotateX(-6deg);
+      transform-origin: bottom center;
+      transition: opacity 0.85s cubic-bezier(.2,.7,.2,1),
+                  transform 0.85s cubic-bezier(.2,.7,.2,1);
+      isolation: isolate;
     }
-    .btn-ghost:hover {
-      background: var(--primary-soft);
-      border-color: var(--primary);
+    .section-card.in-view {
+      opacity: 1;
+      transform: none;
+    }
+
+    /* Rotating conic-gradient border drawn via ::before. */
+    .section-card::before {
+      content: "";
+      position: absolute;
+      inset: -2px;
+      border-radius: 20px;
+      padding: 2px;
+      background: conic-gradient(
+        from var(--angle),
+        var(--primary) 0deg,
+        var(--accent) 90deg,
+        var(--gold) 170deg,
+        var(--magenta) 240deg,
+        var(--primary) 360deg
+      );
+      -webkit-mask:
+        linear-gradient(#000 0 0) content-box,
+        linear-gradient(#000 0 0);
+      -webkit-mask-composite: xor;
+              mask-composite: exclude;
+      animation: spin 9s linear infinite;
+      pointer-events: none;
+      z-index: -1;
+      opacity: 0.85;
+    }
+
+    /* Soft halo behind each card for depth. */
+    .section-card::after {
+      content: "";
+      position: absolute;
+      inset: 8px;
+      border-radius: 16px;
+      background: radial-gradient(circle at 12% 0%, rgba(25,118,210,0.05), transparent 55%),
+                  radial-gradient(circle at 92% 100%, rgba(0,137,123,0.05), transparent 55%);
+      pointer-events: none;
+      z-index: -1;
+    }
+
+    @keyframes spin {
+      to { --angle: 360deg; }
+    }
+
+    .section-card h2 {
+      font-size: clamp(1.55rem, 2.8vw, 2.05rem);
+      font-weight: 700; letter-spacing: -0.018em;
+      color: var(--text); line-height: 1.2;
+      display: flex; align-items: baseline; gap: 0.4rem; flex-wrap: wrap;
+    }
+    .section-card h2 .anchor {
+      color: var(--text-soft); font-weight: 400; font-size: 0.85em;
+      opacity: 0; transition: opacity 0.15s; text-decoration: none;
+    }
+    .section-card h2:hover .anchor { opacity: 1; }
+
+    .section-card .num {
+      display: inline-block; font-family: 'Roboto Mono', monospace;
+      font-size: 0.78rem; font-weight: 500; color: var(--primary);
+      background: var(--primary-soft); padding: 0.18rem 0.6rem;
+      border-radius: 4px; margin-bottom: 0.8rem; letter-spacing: 0.02em;
+    }
+
+    .section-card .sub {
+      color: var(--text-dim); max-width: 760px;
+      font-size: 1.02rem; line-height: 1.65; margin-top: 0.6rem;
+    }
+
+    .section-body { margin-top: 1.8rem; }
+
+    /* Inner cards with cursor spotlight overlay. */
+    .inner-card {
+      position: relative;
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 1.25rem 1.3rem;
+      transition: box-shadow 0.22s, transform 0.22s, border-color 0.22s;
+      overflow: hidden;
+      isolation: isolate;
+    }
+    .inner-card::before {
+      /* Cursor-tracked spotlight overlay. */
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(circle 220px at var(--mx, -200px) var(--my, -200px),
+        rgba(25,118,210,0.14), transparent 60%);
+      pointer-events: none;
+      opacity: 0;
+      transition: opacity 0.25s;
+      z-index: 0;
+    }
+    .inner-card:hover::before { opacity: 1; }
+    .inner-card:hover {
+      box-shadow: var(--shadow-3);
+      transform: translateY(-3px);
+      border-color: rgba(25,118,210,0.35);
+    }
+    .inner-card > * { position: relative; z-index: 1; }
+
+    .inner-card h3, .inner-card h4 {
+      font-size: 1rem; font-weight: 600; margin-bottom: 0.45rem;
+      color: var(--text); display: flex; align-items: center; gap: 0.45rem;
+    }
+    .inner-card h3::before, .inner-card h4::before {
+      content: ""; width: 8px; height: 8px; border-radius: 50%;
+      background: linear-gradient(135deg, var(--primary), var(--accent));
+      flex-shrink: 0;
+      box-shadow: 0 0 8px rgba(25,118,210,0.4);
+    }
+    .inner-card p, .inner-card li { color: var(--text-dim); font-size: 0.93rem; line-height: 1.6; }
+    .inner-card code {
+      background: var(--surface); padding: 0.05rem 0.35rem;
+      border-radius: 4px; font-family: 'Roboto Mono', monospace; font-size: 0.85em;
       color: var(--primary-dark);
     }
 
-    /* Benchmark */
-    .benchmark {
-      max-width: 920px;
-      margin: 2rem auto 2.5rem;
-      padding: 1.5rem 1.5rem;
-      display: grid;
-      grid-template-columns: auto 1px 1fr 1px 1fr;
-      align-items: center;
-      gap: 1.5rem;
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: 12px;
+    /* Stagger reveal of inner cards inside a section. */
+    .section-card.in-view .inner-card {
+      animation: rise 0.7s cubic-bezier(.2,.7,.2,1) both;
+      animation-delay: calc(var(--i, 0) * 70ms);
+    }
+    @keyframes rise {
+      from { opacity: 0; transform: translateY(20px) scale(0.985); }
+      to   { opacity: 1; transform: none; }
     }
 
-    .benchmark .divider { width: 1px; height: 48px; background: var(--border); }
+    /* Grids */
+    .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+    .grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; }
+    .grid-4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 0.85rem; }
 
-    .benchmark .score {
-      font-size: 2.8rem;
-      font-weight: 700;
-      letter-spacing: -0.03em;
-      color: var(--primary);
-      line-height: 1;
-    }
-    .benchmark .score sup { font-size: 1rem; color: var(--text-dim); margin-left: 0.15rem; font-weight: 500; }
-
-    .benchmark .cell .k {
-      font-size: 0.74rem;
-      font-weight: 500;
-      letter-spacing: 0.04em;
-      text-transform: uppercase;
-      color: var(--text-soft);
-      margin-bottom: 0.3rem;
-    }
-    .benchmark .cell .v {
-      font-size: 1rem;
-      color: var(--text);
-      font-weight: 500;
-    }
-    .benchmark .cell .v small { color: var(--text-dim); font-size: 0.85rem; margin-left: 0.3rem; font-weight: 400; }
-
-    /* Screenshot */
-    .screenshot {
-      margin: 0 auto 3rem;
-      padding: 0 1.5rem;
-    }
-    .screenshot img,
-    .screenshot video {
-      display: block;
-      width: 100%;
-      border: 1px solid var(--border);
-      border-radius: 12px;
-      box-shadow: var(--shadow-2);
-      background: #000;
-    }
-
-    /* Sections */
-    section {
-      max-width: 1040px;
-      margin: 0 auto;
-      padding: 3.5rem 1.5rem;
-      position: relative;
-    }
-
-    .section-head {
-      margin-bottom: 2rem;
-      max-width: 800px;
-    }
-
-    .section-head .num {
-      display: inline-block;
-      font-family: 'Roboto Mono', monospace;
-      font-size: 0.78rem;
-      font-weight: 500;
-      color: var(--primary);
-      background: var(--primary-soft);
-      padding: 0.18rem 0.6rem;
-      border-radius: 4px;
-      margin-bottom: 0.8rem;
-      letter-spacing: 0.02em;
-    }
-
-    section h2 {
-      font-size: clamp(1.6rem, 2.8vw, 2.1rem);
-      font-weight: 700;
-      letter-spacing: -0.018em;
-      color: var(--text);
-      line-height: 1.2;
-      display: flex;
-      align-items: baseline;
-      gap: 0.4rem;
-    }
-
-    section h2 .anchor {
-      color: var(--text-soft);
-      font-weight: 400;
-      font-size: 0.85em;
-      opacity: 0;
-      transition: opacity 0.15s;
-      text-decoration: none;
-    }
-    section h2:hover .anchor { opacity: 1; }
-
-    section .sub {
-      color: var(--text-dim);
-      max-width: 720px;
-      font-size: 1.02rem;
-      line-height: 1.65;
-      margin-top: 0.6rem;
-    }
-
-    /* Install */
-    .install-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 1.5rem;
-      align-items: start;
-    }
-
-    .install-card {
-      background: var(--bg);
-      border: 1px solid var(--border);
-      border-radius: 10px;
-      padding: 1.4rem;
-      box-shadow: var(--shadow-1);
-      transition: box-shadow 0.18s, transform 0.18s;
-    }
-    .install-card:hover { box-shadow: var(--shadow-2); }
-
-    .install-card h3 {
-      font-size: 0.95rem;
-      font-weight: 500;
-      margin-bottom: 0.85rem;
-      color: var(--text);
-      letter-spacing: 0;
-      text-transform: none;
-    }
-
-    .install-code,
-    .cli-panel {
-      background: var(--code-bg);
-      color: var(--code-text);
+    /* Code panels */
+    .code-panel {
+      background: var(--code-bg); color: var(--code-text);
       padding: 0.9rem 1.05rem;
       font-family: 'Roboto Mono', 'JetBrains Mono', monospace;
-      font-size: 0.85rem;
-      overflow-x: auto;
-      border-radius: 8px;
-    }
-
-    .install-code { white-space: nowrap; }
-
-    .install-code .prompt { color: #82c4ff; }
-    .install-code .green { color: #b6e3a3; }
-
-    .install-alt {
-      color: var(--text-dim);
-      font-size: 0.95rem;
-      line-height: 1.7;
-    }
-
-    .install-alt a {
-      color: var(--primary);
-      text-decoration: none;
-      border-bottom: 1px solid var(--primary);
-      padding-bottom: 1px;
-    }
-
-    .install-alt a:hover { color: var(--primary-dark); }
-
-    /* CLI */
-    .cli-block { margin-top: 2rem; }
-    .cli-block h3 {
-      font-size: 0.95rem;
-      font-weight: 500;
-      margin-bottom: 0.85rem;
-      color: var(--text);
-      text-transform: none;
-      letter-spacing: 0;
-    }
-
-    .cli-line {
-      white-space: nowrap;
-      overflow-x: auto;
-      line-height: 1.55;
-      color: var(--code-text);
-    }
-    .cli-line .c { color: #b6e3a3; }
-    .cli-line .f { color: #ffd479; }
-    .cli-line .s { color: #d4b8e8; }
-    .cli-line .x { color: #888f99; font-style: italic; }
-    .cli-line .o { color: var(--code-text); }
-    .cli-line.spacer { height: 0.6rem; }
-
-    /* Architecture */
-    .layers {
-      display: flex;
-      flex-direction: column;
-      max-width: 800px;
-      gap: 0.75rem;
-    }
-
-    .layer {
-      display: grid;
-      grid-template-columns: 56px 1fr auto;
-      align-items: center;
-      gap: 1.4rem;
-      padding: 1.1rem 1.3rem;
-      background: var(--bg);
-      border: 1px solid var(--border);
-      border-radius: 10px;
-      transition: box-shadow 0.18s, transform 0.18s;
-    }
-    .layer:hover { box-shadow: var(--shadow-2); transform: translateY(-1px); }
-
-    .layer .n {
-      font-family: 'Roboto Mono', monospace;
-      font-weight: 500;
-      font-size: 0.78rem;
-      color: #fff;
-      background: var(--primary);
-      padding: 0.35rem 0.55rem;
-      border-radius: 6px;
-      letter-spacing: 0.04em;
-      text-align: center;
-      width: fit-content;
-    }
-
-    .layer h4 {
-      font-size: 1.05rem;
-      font-weight: 500;
-      margin-bottom: 0.15rem;
-      color: var(--text);
-    }
-
-    .layer p {
-      font-size: 0.93rem;
-      color: var(--text-dim);
-      line-height: 1.5;
-    }
-
-    .layer .lines {
-      font-family: 'Roboto Mono', monospace;
-      font-size: 0.78rem;
-      color: var(--text-soft);
-      letter-spacing: 0.02em;
-      white-space: nowrap;
-      background: var(--surface);
-      padding: 0.3rem 0.6rem;
-      border-radius: 4px;
-    }
-
-    /* Features & Models grid (cards) */
-    .grid-3 {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 1rem;
-    }
-
-    .card {
-      background: var(--bg);
-      border: 1px solid var(--border);
-      border-radius: 10px;
-      padding: 1.3rem 1.3rem;
-      transition: box-shadow 0.2s, transform 0.2s, border-color 0.2s;
-    }
-    .card:hover {
-      box-shadow: var(--shadow-2);
-      transform: translateY(-2px);
-      border-color: var(--primary-soft);
-    }
-
-    .card h3, .card h4 {
-      font-size: 1rem;
-      font-weight: 500;
-      margin-bottom: 0.45rem;
-      color: var(--text);
-      display: flex;
-      align-items: center;
-      gap: 0.4rem;
-    }
-    .card h3::before, .card h4::before {
-      content: "";
-      width: 6px;
-      height: 6px;
-      border-radius: 50%;
-      background: var(--primary);
-      flex-shrink: 0;
-    }
-
-    .card p {
-      color: var(--text-dim);
-      font-size: 0.92rem;
+      font-size: 0.85rem; overflow-x: auto; border-radius: 8px;
       line-height: 1.6;
     }
-
-    /* Video */
-    .video-wrap {
-      max-width: 720px;
-      margin: 0 auto;
-      aspect-ratio: 16/9;
-      border-radius: 12px;
-      overflow: hidden;
-      box-shadow: var(--shadow-2);
-    }
-    .video-wrap iframe {
-      width: 100%;
-      height: 100%;
-      border: 0;
-    }
-
-    /* Citation */
-    .citation-block {
-      position: relative;
-      background: var(--code-bg);
-      color: var(--code-text);
-      border-radius: 10px;
-      padding: 1.1rem 1.2rem;
-      font-family: 'Roboto Mono', monospace;
-      font-size: 0.82rem;
-      line-height: 1.7;
-      overflow-x: auto;
-      box-shadow: var(--shadow-1);
-    }
-
-    .citation-block pre {
-      margin: 0;
-      white-space: pre;
-      tab-size: 2;
-    }
-
-    .citation-block .copy-btn {
-      position: absolute;
-      top: 0.7rem;
-      right: 0.7rem;
-      background: rgba(255,255,255,0.08);
-      color: var(--code-text);
-      border: 1px solid rgba(255,255,255,0.15);
-      border-radius: 6px;
-      padding: 0.3rem 0.6rem;
-      font-size: 0.74rem;
-      font-family: inherit;
-      cursor: pointer;
-      transition: background 0.15s;
-    }
-    .citation-block .copy-btn:hover { background: rgba(255,255,255,0.16); }
-
-    .cite-meta {
-      color: var(--text-dim);
-      font-size: 0.95rem;
-      margin-bottom: 1rem;
-    }
-    .cite-meta a { color: var(--primary); }
-
-    /* Footer */
-    footer {
-      border-top: 1px solid var(--border);
-      padding: 2rem 1.5rem;
-      text-align: center;
-      color: var(--text-dim);
-      font-size: 0.88rem;
-      background: var(--surface);
-    }
-
-    footer a { color: var(--primary); text-decoration: none; }
-    footer a:hover { text-decoration: underline; }
-
-    /* Mobile */
-    @media (max-width: 820px) {
-      nav .links { display: none; }
-      .grid-3 { grid-template-columns: 1fr 1fr; }
-      .install-grid { grid-template-columns: 1fr; }
-      .benchmark {
-        grid-template-columns: 1fr;
-        text-align: center;
-      }
-      .benchmark .divider { width: 60%; height: 1px; margin: 0 auto; }
-      .layer { grid-template-columns: auto 1fr; }
-      .layer .lines { grid-column: 2; }
-    }
-
-    @media (max-width: 540px) {
-      .grid-3 { grid-template-columns: 1fr; }
-      section { padding: 2.5rem 1.25rem; }
-    }
+    .code-panel .prompt { color: #82c4ff; }
+    .code-panel .green { color: #b6e3a3; }
+    .code-panel .f { color: #ffd479; }
+    .code-panel .s { color: #d4b8e8; }
+    .code-panel .x { color: #888f99; font-style: italic; }
+    .code-panel .c { color: #b6e3a3; }
+    .code-panel .o { color: var(--code-text); }
+    .code-panel pre { margin: 0; white-space: pre; font: inherit; color: inherit; }
+    .code-line { white-space: nowrap; }
+    .code-line.spacer { height: 0.55rem; }
 
     /* Comparison table */
     .compare-wrap { overflow-x: auto; border: 1px solid var(--border); border-radius: 10px; box-shadow: var(--shadow-1); }
     table.compare { width: 100%; border-collapse: collapse; background: var(--bg); font-size: 0.92rem; }
     table.compare th, table.compare td {
-      text-align: left;
-      padding: 0.8rem 1rem;
-      border-bottom: 1px solid var(--border);
-      vertical-align: top;
-      line-height: 1.5;
+      text-align: left; padding: 0.8rem 1rem;
+      border-bottom: 1px solid var(--border); vertical-align: top; line-height: 1.5;
     }
     table.compare thead th {
-      background: var(--surface);
-      font-weight: 500;
-      color: var(--text);
-      letter-spacing: 0;
-      text-transform: none;
-      font-size: 0.92rem;
-      border-bottom: 1px solid var(--border);
+      background: var(--surface); font-weight: 500; color: var(--text);
+      font-size: 0.92rem; border-bottom: 1px solid var(--border);
     }
     table.compare thead th.kiss { color: var(--primary); }
     table.compare th.cap { width: 22%; color: var(--text-dim); font-weight: 500; }
@@ -694,7 +428,155 @@
     table.compare .no  { color: #c62828; font-weight: 600; }
     table.compare .warn { color: #ef6c00; font-weight: 600; }
     table.compare small { color: var(--text-dim); font-weight: 400; }
-    .compare-foot { color: var(--text-soft); font-size: 0.82rem; margin-top: 0.9rem; }
+
+    /* CLI options table */
+    .opt-table-wrap { overflow-x: auto; border: 1px solid var(--border); border-radius: 8px; }
+    table.opts { width: 100%; border-collapse: collapse; font-size: 0.9rem; }
+    table.opts th, table.opts td {
+      text-align: left; padding: 0.6rem 0.85rem;
+      border-bottom: 1px solid var(--border); vertical-align: top;
+    }
+    table.opts thead th { background: var(--surface); font-weight: 600; color: var(--text); }
+    table.opts tr:last-child td { border-bottom: 0; }
+    table.opts code {
+      background: var(--surface); padding: 0.05rem 0.35rem; border-radius: 4px;
+      font-family: 'Roboto Mono', monospace; font-size: 0.88em;
+      color: var(--primary-dark); white-space: nowrap;
+    }
+
+    /* Messaging chip cloud */
+    .chip-cloud { display: flex; flex-wrap: wrap; gap: 0.5rem; }
+    .chip {
+      display: inline-flex; align-items: center;
+      padding: 0.35rem 0.75rem;
+      background: var(--surface); border: 1px solid var(--border); border-radius: 999px;
+      font-size: 0.85rem; color: var(--text);
+      transition: background 0.18s, transform 0.18s, color 0.18s, border-color 0.18s;
+      cursor: default;
+    }
+    .chip:hover {
+      background: linear-gradient(135deg, var(--primary), var(--accent));
+      color: #fff; border-color: transparent; transform: translateY(-2px);
+    }
+
+    /* Models provider rows */
+    .provider-row {
+      display: grid;
+      grid-template-columns: 1.2fr auto;
+      align-items: center;
+      padding: 0.55rem 0.85rem;
+      border-bottom: 1px solid var(--border);
+      font-size: 0.95rem;
+    }
+    .provider-row:last-child { border-bottom: 0; }
+    .provider-row .label { color: var(--text); font-weight: 500; }
+    .provider-row .count {
+      font-family: 'Roboto Mono', monospace;
+      color: var(--primary-dark); font-weight: 600;
+      background: var(--primary-soft); padding: 0.1rem 0.55rem; border-radius: 999px;
+      font-size: 0.85rem;
+    }
+
+    .stat-row { display: flex; flex-wrap: wrap; gap: 0.8rem; margin-top: 1rem; }
+    .stat-pill {
+      flex: 1 1 140px;
+      background: linear-gradient(135deg, rgba(25,118,210,0.06), rgba(0,137,123,0.06));
+      border: 1px solid var(--border); border-radius: 10px;
+      padding: 0.75rem 0.95rem;
+    }
+    .stat-pill .n {
+      font-size: 1.55rem; font-weight: 700;
+      background: linear-gradient(135deg, var(--primary), var(--accent));
+      -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent;
+      line-height: 1;
+    }
+    .stat-pill .l { color: var(--text-dim); font-size: 0.82rem; margin-top: 0.2rem; }
+
+    /* Name section */
+    .name-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+    .name-card {
+      padding: 1.3rem;
+      background: linear-gradient(135deg, var(--surface), var(--bg));
+      border-radius: 12px; border: 1px solid var(--border);
+    }
+    .name-card .k {
+      font-family: 'Roboto Mono', monospace; font-size: 0.72rem;
+      letter-spacing: 0.06em; text-transform: uppercase;
+      color: var(--primary); margin-bottom: 0.3rem;
+    }
+    .name-card h3 { font-size: 1.05rem; font-weight: 600; margin-bottom: 0.5rem; }
+    .name-card p { color: var(--text-dim); font-size: 0.93rem; }
+
+    /* Citation */
+    .citation-block {
+      position: relative;
+      background: var(--code-bg); color: var(--code-text);
+      border-radius: 10px; padding: 1.1rem 1.2rem;
+      font-family: 'Roboto Mono', monospace; font-size: 0.82rem;
+      line-height: 1.7; overflow-x: auto; box-shadow: var(--shadow-1);
+    }
+    .citation-block pre { margin: 0; white-space: pre; tab-size: 2; color: inherit; }
+    .citation-block .copy-btn {
+      position: absolute; top: 0.7rem; right: 0.7rem;
+      background: rgba(255,255,255,0.08); color: var(--code-text);
+      border: 1px solid rgba(255,255,255,0.15); border-radius: 6px;
+      padding: 0.3rem 0.6rem; font-size: 0.74rem; font-family: inherit;
+      cursor: pointer; transition: background 0.15s;
+    }
+    .citation-block .copy-btn:hover { background: rgba(255,255,255,0.16); }
+    .cite-meta { color: var(--text-dim); font-size: 0.95rem; margin-bottom: 1rem; }
+    .cite-meta a { color: var(--primary); }
+
+    /* License pill */
+    .license-pill {
+      display: inline-flex; align-items: center; gap: 0.5rem;
+      padding: 0.45rem 0.85rem;
+      background: linear-gradient(135deg, var(--accent), var(--primary));
+      color: #fff; border-radius: 999px;
+      font-size: 0.88rem; font-weight: 600; letter-spacing: 0.02em;
+      box-shadow: 0 6px 16px rgba(0,137,123,0.25);
+    }
+
+    /* Footer */
+    footer {
+      border-top: 1px solid var(--border);
+      padding: 2rem 1.5rem; text-align: center;
+      color: var(--text-dim); font-size: 0.88rem; background: var(--surface);
+      margin-top: 2.5rem;
+    }
+    footer a { color: var(--primary); text-decoration: none; }
+    footer a:hover { text-decoration: underline; }
+
+    /* Mobile */
+    @media (max-width: 900px) {
+      .grid-3 { grid-template-columns: 1fr 1fr; }
+      .grid-4 { grid-template-columns: 1fr 1fr; }
+      .name-grid { grid-template-columns: 1fr; }
+    }
+    @media (max-width: 820px) {
+      nav .links { display: none; }
+      .benchmark { grid-template-columns: 1fr; text-align: center; }
+      .benchmark .divider { width: 60%; height: 1px; margin: 0 auto; }
+      .section-card { padding: 2rem 1.4rem; }
+    }
+    @media (max-width: 540px) {
+      .grid-3 { grid-template-columns: 1fr; }
+      .grid-2 { grid-template-columns: 1fr; }
+      .grid-4 { grid-template-columns: 1fr; }
+    }
+
+    /* Respect reduced motion. */
+    @media (prefers-reduced-motion: reduce) {
+      .section-card::before { animation: none; }
+      nav .brand .dot { animation: none; background: linear-gradient(135deg, var(--primary), var(--accent)); }
+      .section-card {
+        opacity: 1; transform: none;
+        transition: none;
+      }
+      .section-card.in-view .inner-card { animation: none; }
+      #magic-dust { display: none; }
+      html { scroll-behavior: auto; }
+    }
   </style>
 </head>
 <body>
@@ -706,13 +588,14 @@
         <span>KISS Sorcar</span>
       </a>
       <ul class="links">
-        <li><a href="#install">Install</a></li>
         <li><a href="#compare">Compare</a></li>
-        <li><a href="#features">Features</a></li>
-        <li><a href="#architecture">Architecture</a></li>
-        <li><a href="#models">Models</a></li>
+        <li><a href="#name">Name</a></li>
+        <li><a href="#install">Install</a></li>
+        <li><a href="#cli">CLI</a></li>
         <li><a href="#agents">Agents</a></li>
-        <li><a href="#papers">Papers</a></li>
+        <li><a href="#models">Models</a></li>
+        <li><a href="#contributing">Contributing</a></li>
+        <li><a href="#license">License</a></li>
         <li><a href="#citation">Citation</a></li>
       </ul>
       <a href="https://github.com/ksenxx/kiss_ai" class="gh-badge" aria-label="GitHub">
@@ -724,6 +607,7 @@
 
   <!-- Hero -->
   <div class="hero">
+    <canvas id="magic-dust" aria-hidden="true"></canvas>
     <div class="hero-mark">
       <img src="assets/KISS-Sorcar.png" alt="KISS Sorcar" class="hero-logo">
       <figure class="hero-quote">
@@ -731,23 +615,23 @@
         <figcaption>&mdash; Albert Einstein</figcaption>
       </figure>
     </div>
-    <div class="eyebrow">Open Source · Apache 2.0</div>
-    <h1>The open-source AI coding agent that beats <em>Cursor</em> and <em>Claude Code</em> on Terminal Bench.</h1>
+    <div class="eyebrow">Open Source · Apache 2.0 · v2026.6.26</div>
+    <h1>Open-source general-purpose AI agent for <em>long-horizon tasks</em> and AI discovery.</h1>
     <p class="lead">
       <strong>Terminal Bench 2.0:</strong> KISS Sorcar <strong>62.2%</strong> &middot;
       Cursor agent <strong>61.7%</strong> &middot; Claude Code <strong>58%</strong>.
     </p>
     <p class="lead lead--accent">
-      <em>Free. Local. Bring your own API key.</em> Runs as a <strong>VS Code extension</strong>, as a Claude-Code-style <strong>CLI tool</strong>, and as a <strong>web/mobile app</strong>, built on the KISS Agent Framework &mdash; a stupidly-simple agentic core in roughly 3,800 lines of Python.
+      <em>Free. Simple. Local-first. Bring your own key.</em> KISS Sorcar runs as a <strong>VS Code extension</strong>, a Claude-Code-style <strong>CLI</strong>, and a <strong>browser / mobile web app</strong>. Your prompts and code go directly to the model provider or local endpoint you configure &mdash; not through our servers. Supports multi-model workflows through a single prompt. All agents run as daemons.
     </p>
     <div class="actions">
       <a href="#install" class="btn btn-main">Get Started</a>
-      <a href="#papers" class="btn btn-ghost">Read the Papers</a>
+      <a href="#compare" class="btn btn-ghost">Compare</a>
       <a href="https://github.com/ksenxx/kiss_ai" class="btn btn-ghost">GitHub</a>
     </div>
   </div>
 
-  <!-- Benchmark -->
+  <!-- Benchmark band -->
   <div class="benchmark">
     <div class="score">62.2<sup>%</sup></div>
     <div class="divider"></div>
@@ -762,380 +646,425 @@
     </div>
   </div>
 
-  <!-- Demo video -->
+  <!-- Hero demo video -->
   <div class="screenshot">
     <video src="assets/sorcar-main.mp4"
-           controls
-           muted
-           loop
-           playsinline
-           preload="metadata"
+           controls muted loop playsinline preload="metadata"
            poster="assets/KISS-Sorcar-UI.png"
            aria-label="KISS Sorcar demo video">
       <a href="assets/sorcar-main.mp4">Watch the KISS Sorcar demo video</a>
     </video>
   </div>
 
-  <!-- Install -->
-  <section id="install">
-    <div class="section-head">
-      <span class="num">§ 01 — Install</span>
-      <h2>Get started in one line.<a href="#install" class="anchor">¶</a></h2>
-      <p class="sub">All you need is an API key from a major LLM provider.</p>
-    </div>
-    <div class="install-grid">
-      <div class="install-card">
-        <h3>Command Line</h3>
-        <div class="install-code"><span class="prompt">$</span> <span class="green">curl -fsSL https://raw.githubusercontent.com/ksenxx/kiss_ai/main/scripts/install.sh | bash</span></div>
-      </div>
-      <div class="install-card">
-        <h3>VS Code Extension</h3>
-        <p class="install-alt">
-          Open VS Code, search <em>KISS Sorcar</em> in the <a href="https://marketplace.visualstudio.com/items?itemName=ksenxx.kiss-sorcar">Extension Marketplace</a>, and install. Or run the one-line installer above &mdash; it builds and installs the extension for you.
-        </p>
-      </div>
-    </div>
-    <div class="cli-block">
-      <h3>From the Terminal</h3>
-      <div class="cli-panel">
-        <div class="cli-line"><span class="x"># Launch the interactive Claude-Code-style REPL</span></div>
-        <div class="cli-line"><span class="c">sorcar</span></div>
-        <div class="cli-line spacer"></div>
-        <div class="cli-line"><span class="x"># Run a one-shot task (non-interactive)</span></div>
-        <div class="cli-line"><span class="c">sorcar</span> <span class="f">-t</span> <span class="s">"What is 2435*234?"</span></div>
-        <div class="cli-line spacer"></div>
-        <div class="cli-line"><span class="x"># Pick a specific model</span></div>
-        <div class="cli-line"><span class="c">sorcar</span> <span class="f">-m</span> <span class="s">"claude-sonnet-4-6"</span> <span class="f">-t</span> <span class="s">"What is 2435*234?"</span></div>
-        <div class="cli-line spacer"></div>
-        <div class="cli-line"><span class="x"># Custom endpoint and headers for a local or self-hosted model</span></div>
-        <div class="cli-line"><span class="c">sorcar</span> <span class="f">-e</span> <span class="s">"http://localhost:8000/v1"</span> <span class="f">--header</span> <span class="s">"Authorization:Bearer xxx"</span> \</div>
-        <div class="cli-line">       <span class="f">-t</span> <span class="s">"Summarise this codebase."</span></div>
-        <div class="cli-line spacer"></div>
-        <div class="cli-line"><span class="x"># Cap spend at $2 and pin the working directory</span></div>
-        <div class="cli-line"><span class="c">sorcar</span> <span class="f">-b</span> <span class="s">2.0</span> <span class="f">-w</span> <span class="s">"$HOME/projects/my-repo"</span> <span class="f">-t</span> <span class="s">"Refactor utils.py for clarity."</span></div>
-        <div class="cli-line spacer"></div>
-        <div class="cli-line"><span class="x"># Read the task from a file</span></div>
-        <div class="cli-line"><span class="c">echo</span> <span class="s">"Can you find the cheapest non-stop flight from SFO to JFK on June 15?"</span> <span class="o">&gt;</span> prompt</div>
-        <div class="cli-line"><span class="c">sorcar</span> <span class="f">-f</span> prompt</div>
-        <div class="cli-line spacer"></div>
-        <div class="cli-line"><span class="x"># Drive a desktop app</span></div>
-        <div class="cli-line"><span class="c">sorcar</span> <span class="f">-t</span> <span class="s">'Can you send the message "Hello from Sorcar!" to ksen via the desktop Slack app?'</span></div>
-        <div class="cli-line spacer"></div>
-        <div class="cli-line"><span class="x"># Explain a code path step by step</span></div>
-        <div class="cli-line"><span class="c">sorcar</span> <span class="f">-t</span> <span class="s">'Can you show me the detailed step-by-step workflow of gepa.py?'</span></div>
-        <div class="cli-line spacer"></div>
-        <div class="cli-line"><span class="x"># Manage MCP servers</span></div>
-        <div class="cli-line"><span class="c">sorcar</span> <span class="f">mcp list --ping</span></div>
-      </div>
-    </div>
-  </section>
-
-  <!-- Comparison -->
-  <section id="compare">
-    <div class="section-head">
-      <span class="num">§ 02 — KISS Sorcar vs Claude Code vs Cursor</span>
-      <h2>How does it compare?<a href="#compare" class="anchor">¶</a></h2>
-      <p class="sub">A side-by-side look at the differences that matter for everyday use.</p>
-    </div>
-    <div class="compare-wrap">
-      <table class="compare">
-        <thead>
-          <tr>
-            <th class="cap">Capability</th>
-            <th class="kiss">KISS Sorcar</th>
-            <th>Claude Code</th>
-            <th>Cursor</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <th class="cap">Interfaces</th>
-            <td class="kiss">CLI + VS Code extension + web/mobile app</td>
-            <td>CLI + mobile app</td>
-            <td>Custom VS Code</td>
-          </tr>
-          <tr>
-            <th class="cap">Multiple models from multiple vendors in the same task</th>
-            <td class="kiss"><span class="yes">✓</span> Mix OpenAI, Anthropic, Gemini, Together, MiniMax, OpenRouter, Claude Code CLI, and Codex CLI</td>
-            <td><span class="no">✗</span> Anthropic Claude models only</td>
-            <td><span class="no">✗</span> One model per task</td>
-          </tr>
-          <tr>
-            <th class="cap">Models in bundled catalog</th>
-            <td class="kiss">501 across 8 provider categories</td>
-            <td>Claude family only</td>
-            <td>Subset chosen by Cursor</td>
-          </tr>
-          <tr>
-            <th class="cap">Bring your own API key / endpoint</th>
-            <td class="kiss"><span class="yes">✓</span> Yes &mdash; keys stay on your machine</td>
-            <td><span class="yes">✓</span> Anthropic key</td>
-            <td><span class="warn">⚠</span> Routed through Cursor backend</td>
-          </tr>
-          <tr>
-            <th class="cap">Open source</th>
-            <td class="kiss"><span class="yes">✓</span> Apache-2.0</td>
-            <td><span class="no">✗</span> Proprietary</td>
-            <td><span class="no">✗</span> Proprietary</td>
-          </tr>
-          <tr>
-            <th class="cap">Price</th>
-            <td class="kiss">Free framework; pay only your chosen model provider</td>
-            <td>Subscription / API usage</td>
-            <td>Subscription</td>
-          </tr>
-          <tr>
-            <th class="cap">Run on top of Claude Code / Codex CLI</th>
-            <td class="kiss"><span class="yes">✓</span> <code>cc/*</code> and <code>codex/*</code> namespaces</td>
-            <td>N/A</td>
-            <td><span class="no">✗</span></td>
-          </tr>
-          <tr>
-            <th class="cap">Primary focus</th>
-            <td class="kiss"><span class="yes">✓</span> <strong>Quality</strong> &mdash; rigorous review, end-to-end tests</td>
-            <td>Speed and developer ergonomics</td>
-            <td>IDE iteration speed</td>
-          </tr>
-          <tr>
-            <th class="cap">Terminal Bench 2.0 score</th>
-            <td class="kiss"><strong>62.2%</strong></td>
-            <td>58%</td>
-            <td>61.7% <small>(Cursor agent / Composer 2)</small></td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
-  </section>
-
-  <!-- Features -->
-  <section id="features">
-    <div class="section-head">
-      <span class="num">§ 03 — Features</span>
-      <h2>Everything you need, nothing you don't.<a href="#features" class="anchor">¶</a></h2>
-      <p class="sub">Built for software engineering and general-purpose automation.</p>
-    </div>
-    <div class="grid-3">
-      <div class="card">
-        <h3>General-Purpose Assistant</h3>
-        <p>More than a coding tool. Books flights, drives desktop apps, navigates websites, explains code, and automates everyday workflows from a single prompt.</p>
-      </div>
-      <div class="card">
-        <h3>Time-Tested Engineering Principles</h3>
-        <p>Both KISS Sorcar and the KISS Agent Framework are built on robust, time-tested software engineering principles so the code it produces is <strong>simple, elegant, maintainable, and bug-free</strong>.</p>
-      </div>
-      <div class="card">
-        <h3>Third-Party Agents</h3>
-        <p>OpenClaw-style integrations let the agent live inside the apps you already use — Slack, Discord, Teams, WhatsApp, iMessage, Telegram, Signal, Gmail, cron, and more. Authentication is handled for you.</p>
-      </div>
-      <div class="card">
-        <h3>Runs Relentlessly</h3>
-        <p>Automatic summarization and continuation across sub-sessions. Never gives up until the task is done.</p>
-      </div>
-      <div class="card">
-        <h3>Browser Automation</h3>
-        <p>Built-in Chromium via Playwright. Navigate, click, fill forms, take screenshots — all programmatically.</p>
-      </div>
-      <div class="card">
-        <h3>Git Worktree Isolation</h3>
-        <p>Every task runs on its own branch in a separate worktree. Your working tree stays untouched.</p>
-      </div>
-      <div class="card">
-        <h3>Docker Support</h3>
-        <p>Execute tasks inside Docker containers for sandboxed, reproducible environments.</p>
-      </div>
-      <div class="card">
-        <h3>Multimodal Input</h3>
-        <p>Understands images, screenshots, and text. Attach visual context to your prompts.</p>
-      </div>
-      <div class="card">
-        <h3>Budget Tracking</h3>
-        <p>Tokens, cost, and time at every step. Hard budget ceilings prevent runaway spending.</p>
-      </div>
-      <div class="card">
-        <h3>Cross-Session Learning</h3>
-        <p>Learns your preferences and project invariants via USER_PREFS.md. Gets better over time.</p>
-      </div>
-      <div class="card">
-        <h3>CLI + VS Code</h3>
-        <p>Rich VS Code extension or command-line tool. Same agent, your choice of interface.</p>
-      </div>
-      <div class="card">
-        <h3>Quality Over Speed</h3>
-        <p>Runs linters, type checkers, and tests before declaring success. Clean, well-tested code.</p>
+  <!-- ================ § 01 — Compare ================ -->
+  <div class="section-wrap">
+  <section id="compare" class="section-card">
+    <span class="num">§ 01 — KISS Sorcar vs Claude Code vs Cursor</span>
+    <h2>How does it compare?<a href="#compare" class="anchor">¶</a></h2>
+    <p class="sub">A side-by-side look at the differences that matter for everyday use.</p>
+    <div class="section-body">
+      <div class="compare-wrap">
+        <table class="compare">
+          <thead>
+            <tr>
+              <th class="cap">Capability</th>
+              <th class="kiss">KISS Sorcar</th>
+              <th>Claude Code</th>
+              <th>Cursor</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <th class="cap">Interfaces</th>
+              <td class="kiss">CLI + VS Code extension + web/mobile app</td>
+              <td>CLI + mobile app</td>
+              <td>Custom VS Code</td>
+            </tr>
+            <tr>
+              <th class="cap">Multiple models from multiple vendors in the same task</th>
+              <td class="kiss"><span class="yes">✓</span> Mix OpenAI, Anthropic, Gemini, Together, MiniMax, OpenRouter, Claude Code CLI, and Codex CLI</td>
+              <td><span class="no">✗</span> Anthropic Claude models only</td>
+              <td><span class="no">✗</span> One model per task</td>
+            </tr>
+            <tr>
+              <th class="cap">Primary focus</th>
+              <td class="kiss"><span class="yes">✓</span> <strong>Quality</strong> &mdash; rigorous review, end-to-end tests</td>
+              <td>Speed and developer ergonomics</td>
+              <td>Speed</td>
+            </tr>
+            <tr>
+              <th class="cap">Models in bundled catalog</th>
+              <td class="kiss">501 across 8 provider categories</td>
+              <td>Claude family only</td>
+              <td>Subset chosen by Cursor</td>
+            </tr>
+            <tr>
+              <th class="cap">Bring your own API key / endpoint</th>
+              <td class="kiss"><span class="yes">✓</span> Yes &mdash; keys stay on your machine</td>
+              <td><span class="yes">✓</span> Anthropic key</td>
+              <td><span class="warn">⚠</span> Routed through Cursor backend</td>
+            </tr>
+            <tr>
+              <th class="cap">Open source</th>
+              <td class="kiss"><span class="yes">✓</span> Apache-2.0</td>
+              <td><span class="no">✗</span> Proprietary</td>
+              <td><span class="no">✗</span> Proprietary</td>
+            </tr>
+            <tr>
+              <th class="cap">Price</th>
+              <td class="kiss">Free framework; pay only your chosen model provider</td>
+              <td>Subscription / API usage</td>
+              <td>Subscription</td>
+            </tr>
+            <tr>
+              <th class="cap">Run on top of Claude Code / Codex CLI</th>
+              <td class="kiss"><span class="yes">✓</span> <code>cc/*</code> and <code>codex/*</code> namespaces</td>
+              <td>N/A</td>
+              <td><span class="no">✗</span></td>
+            </tr>
+            <tr>
+              <th class="cap">Messaging and communication channels</th>
+              <td class="kiss"><span class="yes">✓</span> 23 third-party agents, including Slack, Gmail, Phone Control, SMS, and WhatsApp</td>
+              <td><span class="warn">⚠</span> Slack, mobile Remote Control, and research-preview channels for Telegram, Discord, and iMessage; no documented built-in Gmail, WhatsApp, phone-call, or SMS channel</td>
+              <td><span class="warn">⚠</span> Slack and Microsoft Teams Cloud Agent integrations; no documented built-in Gmail, WhatsApp, phone-call, or SMS channel</td>
+            </tr>
+            <tr>
+              <th class="cap">Terminal Bench 2.0 score</th>
+              <td class="kiss"><strong>62.2%</strong></td>
+              <td>58%</td>
+              <td>61.7% <small>(Cursor agent)</small></td>
+            </tr>
+          </tbody>
+        </table>
       </div>
     </div>
   </section>
+  </div>
 
-  <!-- Architecture -->
-  <section id="architecture">
-    <div class="section-head">
-      <span class="num">§ 04 — Architecture</span>
-      <h2>Five layers. One concern each.<a href="#architecture" class="anchor">¶</a></h2>
-      <p class="sub">A clean hierarchy of agents — each adding exactly one capability — totalling about 3,800 lines of Python.</p>
-    </div>
-    <div class="layers">
-      <div class="layer">
-        <div class="n">L1</div>
-        <div><h4>KISS Agent</h4><p>Budget-tracked ReAct loop with native function calling.</p></div>
-        <div class="lines">552 LOC</div>
-      </div>
-      <div class="layer">
-        <div class="n">L2</div>
-        <div><h4>Relentless Agent</h4><p>Automatic summarization and continuation across sub-sessions.</p></div>
-        <div class="lines">563 LOC</div>
-      </div>
-      <div class="layer">
-        <div class="n">L3</div>
-        <div><h4>Sorcar Agent</h4><p>Coding tools, browser automation, and parallel sub-agent execution.</p></div>
-        <div class="lines">993 LOC</div>
-      </div>
-      <div class="layer">
-        <div class="n">L4</div>
-        <div><h4>Chat Sorcar Agent</h4><p>Persistent multi-turn chat sessions with history recall.</p></div>
-        <div class="lines">675 LOC</div>
-      </div>
-      <div class="layer">
-        <div class="n">L5</div>
-        <div><h4>Worktree Sorcar Agent</h4><p>Git worktree isolation — every task lives on its own branch.</p></div>
-        <div class="lines">1,028 LOC</div>
+  <!-- ================ § 02 — What is in the Name ================ -->
+  <div class="section-wrap">
+  <section id="name" class="section-card">
+    <span class="num">§ 02 — What is in the Name</span>
+    <h2>What is in the Name?<a href="#name" class="anchor">¶</a></h2>
+    <p class="sub">Two names. One principle. A nod to a Bengali magician.</p>
+    <div class="section-body">
+      <div class="name-grid">
+        <div class="inner-card name-card" style="--i:0">
+          <div class="k">KISS Agent Framework</div>
+          <h3>Keep it Simple, Stupid.</h3>
+          <p><strong>KISS Agent Framework</strong> is a deliberately small agent runtime organized around the <a href="https://en.wikipedia.org/wiki/KISS_principle">KISS principle</a> &mdash; "Keep it Simple, Stupid."</p>
+        </div>
+        <div class="inner-card name-card" style="--i:1">
+          <div class="k">KISS Sorcar</div>
+          <h3>Named after P. C. Sorcar.</h3>
+          <p>KISS Sorcar is named after <a href="https://en.wikipedia.org/wiki/P._C._Sorcar">P. C. Sorcar, the Bengali magician</a>. Note: <strong>Sorcar</strong> also means <em>government</em> in Bengali.</p>
+        </div>
       </div>
     </div>
   </section>
+  </div>
 
-  <!-- Models -->
-  <section id="models">
-    <div class="section-head">
-      <span class="num">§ 05 — Models</span>
-      <h2>501 models. Bring your own key.<a href="#models" class="anchor">¶</a></h2>
-      <p class="sub">501 models across 8 provider categories with built-in pricing, context lengths, and capability flags (function calling, generation, embedding).</p>
-    </div>
-    <div class="grid-3">
-      <div class="card">
-        <h4>Anthropic (13)</h4>
-        <p>Claude Opus 4.8, 4.7, 4.6, 4.5, 4.1, Sonnet 4.6, 4.5, Haiku 4.5, Fable 5 and more</p>
-      </div>
-      <div class="card">
-        <h4>OpenAI (70)</h4>
-        <p>GPT-5.5, GPT-5.4, GPT-5, o4-mini, o3-pro, Codex series, Image series and more</p>
-      </div>
-      <div class="card">
-        <h4>Google Gemini (23)</h4>
-        <p>Gemini 3.1 Pro, 3 Flash, 2.5 Pro, 2.5 Flash, Gemma 4 and more</p>
-      </div>
-      <div class="card">
-        <h4>Together AI (77)</h4>
-        <p>Llama 4, Qwen 3.6, DeepSeek V4, Kimi K2.7, GLM-5.2, Mistral and more</p>
-      </div>
-      <div class="card">
-        <h4>OpenRouter (303)</h4>
-        <p>303 models from 54 providers via a unified API</p>
-      </div>
-      <div class="card">
-        <h4>Claude Code CLI (3)</h4>
-        <p>Use Claude Code as a model backend with <code>cc/haiku</code>, <code>cc/sonnet</code>, <code>cc/opus</code>.</p>
-      </div>
-      <div class="card">
-        <h4>Codex CLI (7)</h4>
-        <p>Use OpenAI Codex as a model backend with <code>codex/gpt-5.5</code>, <code>codex/gpt-5.4</code>, <code>codex/gpt-5.3-codex</code> and more.</p>
-      </div>
-      <div class="card">
-        <h4>MiniMax (5)</h4>
-        <p>MiniMax M2.5, M2.5 Lightning, M2.7, M3 via direct MiniMax API</p>
-      </div>
-      <div class="card">
-        <h4>Custom Endpoints</h4>
-        <p>Bring your own local model endpoint &mdash; any OpenAI-compatible API works out of the box.</p>
+  <!-- ================ § 03 — Installation ================ -->
+  <div class="section-wrap">
+  <section id="install" class="section-card">
+    <span class="num">§ 03 — Installation</span>
+    <h2>Install in one line.<a href="#install" class="anchor">¶</a></h2>
+    <p class="sub">Pick the install path that fits you &mdash; full source, Python package, or the VS Code extension. All you need is at least one API key from a major LLM provider.</p>
+    <div class="section-body">
+      <div class="grid-2">
+        <div class="inner-card" style="--i:0">
+          <h3>Full install from source</h3>
+          <p style="margin-bottom:0.7rem;">macOS and Linux on <code>x86_64</code>, <code>aarch64</code>, and <code>arm64</code>. Installs or checks every tool needed to run KISS Sorcar and build/install the VS Code extension.</p>
+          <div class="code-panel">
+            <div class="code-line"><span class="prompt">$</span> <span class="green">curl -fsSL https://raw.githubusercontent.com/ksenxx/kiss_ai/main/scripts/install.sh | bash</span></div>
+          </div>
+        </div>
+
+        <div class="inner-card" style="--i:1">
+          <h3>Python package / CLI install</h3>
+          <p style="margin-bottom:0.7rem;">For just the Python package and CLI entry points. KISS Sorcar requires <strong>Python 3.13+</strong>.</p>
+          <div class="code-panel">
+            <div class="code-line"><span class="prompt">$</span> <span class="green">pipx install kiss-agent-framework</span></div>
+            <div class="code-line"><span class="x"># or</span></div>
+            <div class="code-line"><span class="prompt">$</span> <span class="green">uv tool install kiss-agent-framework</span></div>
+          </div>
+        </div>
+
+        <div class="inner-card" style="--i:2">
+          <h3>Configure model access</h3>
+          <p style="margin-bottom:0.7rem;">Provide at least one model backend through environment variables:</p>
+          <div class="code-panel">
+            <div class="code-line"><span class="c">export</span> <span class="f">ANTHROPIC_API_KEY</span>=<span class="s">...</span></div>
+            <div class="code-line"><span class="c">export</span> <span class="f">OPENAI_API_KEY</span>=<span class="s">...</span></div>
+            <div class="code-line"><span class="c">export</span> <span class="f">GEMINI_API_KEY</span>=<span class="s">...</span></div>
+            <div class="code-line"><span class="c">export</span> <span class="f">TOGETHER_API_KEY</span>=<span class="s">...</span></div>
+            <div class="code-line"><span class="c">export</span> <span class="f">OPENROUTER_API_KEY</span>=<span class="s">...</span></div>
+            <div class="code-line"><span class="c">export</span> <span class="f">MINIMAX_API_KEY</span>=<span class="s">...</span></div>
+          </div>
+          <p style="margin-top:0.7rem;">Or configure a custom endpoint with <code>--endpoint</code> / <code>-e</code> and optional repeated <code>--header Key:Value</code> CLI flags.</p>
+        </div>
+
+        <div class="inner-card" style="--i:3">
+          <h3>VS Code Extension</h3>
+          <p>To install only the KISS Sorcar extension, open Visual Studio Code, search for <strong>KISS Sorcar</strong> in the <a href="https://marketplace.visualstudio.com/items?itemName=ksenxx.kiss-sorcar">extension marketplace</a>, install it, and relaunch VS Code.</p>
+          <p style="margin-top:0.6rem;">Press <kbd style="background:var(--surface);padding:0.05rem 0.4rem;border-radius:4px;border:1px solid var(--border);font-family:'Roboto Mono',monospace;font-size:0.82em;">ESC</kbd> if you do not have a specific API key ready, but configure at least one model backend before running tasks.</p>
+        </div>
       </div>
     </div>
   </section>
+  </div>
 
-  <!-- Third-Party Agents -->
-  <section id="agents">
-    <div class="section-head">
-      <span class="num">§ 06 — Third-Party Agents</span>
-      <h2>Reach the agent from anywhere.<a href="#agents" class="anchor">¶</a></h2>
-      <p class="sub">OpenClaw-style integrations let KISS Sorcar live inside the apps you already use &mdash; chat from Slack, schedule from cron, drive an Android phone, or send a message from Signal. Authentication is handled for you; you confirm before anything is sent.</p>
-    </div>
-    <div class="grid-3">
-      <div class="card">
-        <h4>Team Chat</h4>
-        <p>Slack, Discord, Microsoft Teams, Google Chat, Mattermost, Matrix, IRC, Nextcloud Talk, Synology Chat</p>
-      </div>
-      <div class="card">
-        <h4>Personal Messaging</h4>
-        <p>WhatsApp, iMessage, Telegram, Signal, SMS, BlueBubbles</p>
-      </div>
-      <div class="card">
-        <h4>Regional</h4>
-        <p>Feishu, LINE, Zalo</p>
-      </div>
-      <div class="card">
-        <h4>Email &amp; Streaming</h4>
-        <p>Gmail and Twitch &mdash; read mail, post chat, react to events from a single agent loop</p>
-      </div>
-      <div class="card">
-        <h4>Decentralized</h4>
-        <p>Tlon (Urbit) and Nostr for self-sovereign communication</p>
-      </div>
-      <div class="card">
-        <h4>Phone &amp; Scheduling</h4>
-        <p>Android phone control over a companion REST app, plus a cron-manager daemon for scheduled, recurring agent runs</p>
-      </div>
-    </div>
-  </section>
-
-  <!-- Papers -->
-  <section id="papers">
-    <div class="section-head">
-      <span class="num">§ 07 — Papers</span>
-      <h2>Read the papers.<a href="#papers" class="anchor">¶</a></h2>
-      <p class="sub">Three papers describe the design, engineering, and meta-process behind KISS Sorcar.</p>
-    </div>
-    <div class="grid-3">
-      <div class="card">
-        <h4>KISS Sorcar Paper</h4>
-        <p>The original paper describing the KISS Agent Framework and the KISS Sorcar system.</p>
-        <p style="margin-top:0.8rem;"><a href="assets/kiss_sorcar.pdf" class="btn btn-ghost" style="font-size:0.85rem; padding:0.45rem 1rem;">📄 Read Paper (PDF)</a></p>
-        <p style="margin-top:0.4rem; font-size:0.82rem; color:var(--text-soft);"><a href="https://arxiv.org/abs/2604.23822">arXiv:2604.23822</a></p>
-      </div>
-      <div class="card">
-        <h4>SE KISS Sorcar with KISS Sorcar</h4>
-        <p>How KISS Sorcar was used to software-engineer itself — a self-referential case study in AI-assisted development.</p>
-        <p style="margin-top:0.8rem;"><a href="assets/se_kiss_sorcar.pdf" class="btn btn-ghost" style="font-size:0.85rem; padding:0.45rem 1rem;">📄 Read Paper (PDF)</a></p>
-      </div>
-      <div class="card">
-        <h4>Writing a Paper with an AI Agent</h4>
-        <p>A chronicle of KISS Sorcar writing its own research paper — documenting the process end-to-end.</p>
-        <p style="margin-top:0.8rem;"><a href="assets/writing_paper.pdf" class="btn btn-ghost" style="font-size:0.85rem; padding:0.45rem 1rem;">📄 Read Paper (PDF)</a></p>
-      </div>
-    </div>
-  </section>
-
-  <!-- Video -->
-  <section id="demo">
-    <div class="section-head">
-      <span class="num">§ 08 — Demo</span>
-      <h2>See it in action.<a href="#demo" class="anchor">¶</a></h2>
-      <p class="sub">A short walkthrough of KISS Sorcar at work.</p>
-    </div>
-    <div class="video-wrap">
-      <iframe src="https://www.youtube.com/embed/xnYxWvRqACE" title="KISS Sorcar Demo" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
-    </div>
-  </section>
-
-  <!-- Citation -->
-  <section id="citation">
-    <div class="section-head">
-      <span class="num">§ 09 — Citation</span>
-      <h2>Cite the paper.<a href="#citation" class="anchor">¶</a></h2>
-      <p class="sub">If you use KISS Sorcar in your research, please cite:</p>
-    </div>
-    <p class="cite-meta">
-      Koushik Sen. <em>KISS Sorcar: A Stupidly-Simple General-Purpose and Software Engineering AI Assistant.</em>
-      arXiv preprint <a href="https://arxiv.org/abs/2604.23822">arXiv:2604.23822</a>, 2026.
+  <!-- ================ § 04 — CLI Interface ================ -->
+  <div class="section-wrap">
+  <section id="cli" class="section-card">
+    <span class="num">§ 04 — CLI Interface</span>
+    <h2>The <code style="background:var(--surface);padding:0.05rem 0.45rem;border-radius:6px;font-size:0.85em;color:var(--primary-dark);">sorcar</code> CLI.<a href="#cli" class="anchor">¶</a></h2>
+    <p class="sub">
+      <code>sorcar</code> runs in two modes. <strong>Interactive</strong> (no <code>-t/--task</code> or <code>-f/--file</code>) is a Claude-Code-style REPL that connects as a thin terminal client to the local <code>sorcar web</code> daemon; chat-session control (new chat, resume by id, list history) and worktree merge/discard prompts are driven from slash commands, and each task is isolated in a git worktree by default. <strong>Non-interactive</strong> (<code>-t</code> or <code>-f</code> supplied) runs a plain <code>SorcarAgent</code> once on the supplied task and exits; worktree isolation and chat-session control are unavailable in this mode, but display events are still streamed into the chat DB so the run is replayable in the chat webview.
     </p>
-    <div class="citation-block">
-      <button class="copy-btn" onclick="navigator.clipboard.writeText(document.getElementById('bibtex').innerText); this.innerText='Copied'; setTimeout(()=>this.innerText='Copy',1500);">Copy</button>
+
+    <div class="section-body">
+      <div class="inner-card" style="--i:0;margin-bottom:1.1rem;">
+        <h3>Example invocations</h3>
+        <div class="code-panel">
+          <div class="code-line"><span class="x"># Launch the interactive Sorcar CLI, similar to Claude Code.</span></div>
+          <div class="code-line"><span class="c">sorcar</span></div>
+          <div class="code-line spacer"></div>
+          <div class="code-line"><span class="x"># Run a one-shot task (non-interactive).</span></div>
+          <div class="code-line"><span class="c">sorcar</span> <span class="f">-t</span> <span class="s">"What is 2435*234?"</span></div>
+          <div class="code-line spacer"></div>
+          <div class="code-line"><span class="x"># Use a specific model.</span></div>
+          <div class="code-line"><span class="c">sorcar</span> <span class="f">-m</span> <span class="s">"claude-sonnet-4-6"</span> <span class="f">-t</span> <span class="s">"What is 2435*234?"</span></div>
+          <div class="code-line spacer"></div>
+          <div class="code-line"><span class="x"># Custom endpoint and headers for a local or self-hosted model.</span></div>
+          <div class="code-line"><span class="c">sorcar</span> <span class="f">-e</span> <span class="s">"http://localhost:8000/v1"</span> <span class="f">--header</span> <span class="s">"Authorization:Bearer xxx"</span> \</div>
+          <div class="code-line">       <span class="f">-t</span> <span class="s">"Summarise this codebase."</span></div>
+          <div class="code-line spacer"></div>
+          <div class="code-line"><span class="x"># Cap spend at $2 and pin the working directory.</span></div>
+          <div class="code-line"><span class="c">sorcar</span> <span class="f">-b</span> <span class="s">2.0</span> <span class="f">-w</span> <span class="s">"$HOME/projects/my-repo"</span> <span class="f">-t</span> <span class="s">"Refactor utils.py for clarity."</span></div>
+          <div class="code-line spacer"></div>
+          <div class="code-line"><span class="x"># Use the contents of a file as the task.</span></div>
+          <div class="code-line"><span class="c">echo</span> <span class="s">"Can you find the cheapest non-stop flight from SFO to JFK on June 15?"</span> <span class="o">&gt;</span> prompt</div>
+          <div class="code-line"><span class="c">sorcar</span> <span class="f">-f</span> prompt</div>
+          <div class="code-line spacer"></div>
+          <div class="code-line"><span class="x"># Disable browser/web tools (terminal-only mode).</span></div>
+          <div class="code-line"><span class="c">sorcar</span> <span class="f">--no-web</span> <span class="f">-t</span> <span class="s">"Lint and fix every Python file under src/."</span></div>
+          <div class="code-line spacer"></div>
+          <div class="code-line"><span class="x"># Disable parallel sub-agents for a deterministic single-thread run.</span></div>
+          <div class="code-line"><span class="c">sorcar</span> <span class="f">--no-parallel</span> <span class="f">-t</span> <span class="s">'Run pytest and report which tests fail and why.'</span></div>
+          <div class="code-line spacer"></div>
+          <div class="code-line"><span class="x"># Ask Sorcar to use desktop/browser/messaging tools.</span></div>
+          <div class="code-line"><span class="c">sorcar</span> <span class="f">-t</span> <span class="s">'Can you send the message "Hello from Sorcar!" to ksen via the desktop Slack app?'</span></div>
+          <div class="code-line spacer"></div>
+          <div class="code-line"><span class="x"># Ask Sorcar to explain code.</span></div>
+          <div class="code-line"><span class="c">sorcar</span> <span class="f">-t</span> <span class="s">'Can you show me the detailed step-by-step workflow of gepa.py?'</span></div>
+          <div class="code-line spacer"></div>
+          <div class="code-line"><span class="x"># Manage MCP servers (see "sorcar mcp" subcommand below).</span></div>
+          <div class="code-line"><span class="c">sorcar</span> <span class="f">mcp list --ping</span></div>
+        </div>
+      </div>
+
+      <div class="inner-card" style="--i:1;margin-bottom:1.1rem;">
+        <h3>CLI options</h3>
+        <div class="opt-table-wrap">
+          <table class="opts">
+            <thead><tr><th style="width:32%;">Flag</th><th>Description</th></tr></thead>
+            <tbody>
+              <tr><td><code>-t</code>, <code>--task</code></td><td>Task description; switches to non-interactive mode</td></tr>
+              <tr><td><code>-f</code>, <code>--file</code></td><td>Path to a file whose contents are used as the task; switches to non-interactive mode</td></tr>
+              <tr><td><code>-m</code>, <code>--model_name</code></td><td>LLM model name; defaults to the best available model for the configured API keys</td></tr>
+              <tr><td><code>-e</code>, <code>--endpoint</code></td><td>Custom base URL for a local or self-hosted model</td></tr>
+              <tr><td><code>--header</code></td><td>Custom HTTP header in <code>Key:Value</code> form; may be repeated</td></tr>
+              <tr><td><code>-b</code>, <code>--max_budget</code></td><td>Maximum spend in USD for the run</td></tr>
+              <tr><td><code>-w</code>, <code>--work_dir</code></td><td>Working directory; defaults to the directory where <code>sorcar</code> is launched</td></tr>
+              <tr><td><code>-v</code>, <code>--verbose</code></td><td>Print Rich panels to the console (<code>true</code> by default; pass <code>false</code> for quiet mode)</td></tr>
+              <tr><td><code>-p</code>, <code>--parallel</code> / <code>--no-parallel</code></td><td>Enable/disable parallel sub-agents (enabled by default)</td></tr>
+              <tr><td><code>--worktree</code> / <code>--no-worktree</code></td><td><strong>Interactive only.</strong> Isolate each task in a git worktree branch (enabled by default); use <code>--no-worktree</code> to run directly in the working tree</td></tr>
+              <tr><td><code>--auto-commit</code> / <code>--no-auto-commit</code></td><td><strong>Interactive only.</strong> Auto-commit worktree changes when a task finishes (enabled by default); use <code>--no-auto-commit</code> to preserve the worktree for manual review</td></tr>
+              <tr><td><code>--no-web</code></td><td>Disable browser/web tools (terminal-only mode)</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <p style="margin-top:0.8rem;font-size:0.88rem;color:var(--text-dim);"><code>--worktree</code> / <code>--no-worktree</code> / <code>--auto-commit</code> / <code>--no-auto-commit</code> are rejected with <code>exit 2</code> when combined with <code>-t</code>/<code>-f</code>, since the non-interactive path runs a bare <code>SorcarAgent</code> that does not implement them. Argparse prefix abbreviations are disabled, so each flag must be spelled out in full.</p>
+      </div>
+
+      <div class="inner-card" style="--i:2;margin-bottom:1.1rem;">
+        <h3>Interactive CLI features</h3>
+        <ul style="padding-left:1.2rem;">
+          <li><code>@</code> file/folder mentions with ranked project-file completion.</li>
+          <li>Slash commands: <code>/help</code>, <code>/clear</code> (alias <code>/new</code>), <code>/resume</code>, <code>/model</code>, <code>/model list</code>, <code>/cost</code> (aliases <code>/usage</code>, <code>/context</code>), <code>/commands</code>, <code>/skills</code>, <code>/mcp</code>, <code>/autocommit</code>, and <code>/exit</code> (alias <code>/quit</code>).</li>
+          <li>Custom Markdown slash commands loaded from <code>~/.kiss/commands</code>, <code>&lt;project&gt;/.kiss/commands</code>, <code>~/.claude/commands</code>, and <code>&lt;project&gt;/.claude/commands</code>.</li>
+          <li>Agent Skills loaded from <code>~/.kiss/skills</code>, <code>&lt;project&gt;/.kiss/skills</code>, Claude skill directories, <code>.agents/skills</code>, and bundled Sorcar skills.</li>
+          <li>MCP server discovery from <code>~/.kiss/mcp.json</code>, <code>&lt;project&gt;/.kiss/mcp.json</code>, and <code>&lt;project&gt;/.mcp.json</code>.</li>
+          <li>VS Code <strong>"Tricks"</strong> button entries read from <code>~/.kiss/INJECTIONS.md</code> (one per <code>## Trick</code> section), seeded on install from the bundled <code>src/kiss/INJECTIONS.md</code>. Edit the file to customise the dropdown; remove it to regenerate from the bundled defaults.</li>
+          <li>VS Code welcome-screen sample-task chips read from <code>~/.kiss/SAMPLE_TASKS.md</code> (one per <code>## Task</code> section), seeded on install from the bundled <code>src/kiss/agents/vscode/SAMPLE_TASKS.md</code>. Edit the file to customise the chips; remove it to regenerate from the bundled defaults.</li>
+        </ul>
+      </div>
+
+      <div class="inner-card" style="--i:3">
+        <h3><code>sorcar mcp</code> subcommand</h3>
+        <p style="margin-bottom:0.7rem;">Manage Model-Context-Protocol servers used by Sorcar:</p>
+        <div class="opt-table-wrap">
+          <table class="opts">
+            <thead><tr><th style="width:38%;">Subcommand</th><th>Purpose</th></tr></thead>
+            <tbody>
+              <tr><td><code>sorcar mcp add &lt;name&gt; &lt;cmd…&gt;</code></td><td>Register a stdio (default) or <code>--transport http</code>/<code>sse</code> server in <code>--scope user</code> (<code>~/.kiss/mcp.json</code>) or <code>--scope project</code> (<code>&lt;work_dir&gt;/.kiss/mcp.json</code>); supports <code>--env KEY=VALUE</code> and <code>--header 'Key: Value'</code> (repeatable).</td></tr>
+              <tr><td><code>sorcar mcp list [--ping]</code></td><td>List configured servers; <code>--ping</code> also connects and reports live status and tool counts.</td></tr>
+              <tr><td><code>sorcar mcp get &lt;name&gt;</code></td><td>Print one server's configuration as JSON.</td></tr>
+              <tr><td><code>sorcar mcp remove &lt;name&gt;</code></td><td>Delete a server from every writable config file.</td></tr>
+              <tr><td><code>sorcar mcp auth &lt;name&gt; [--no-browser]</code></td><td>Run the OAuth 2.1 browser flow (dynamic client registration + PKCE) and persist tokens under <code>~/.kiss/mcp_auth/</code>.</td></tr>
+              <tr><td><code>sorcar mcp logout &lt;name&gt;</code></td><td>Delete a server's stored OAuth tokens.</td></tr>
+              <tr><td><code>sorcar mcp debug &lt;name&gt;</code></td><td>Connect and dump capabilities, tools (with input schemas and permission status), resources, and prompts.</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </section>
+  </div>
+
+  <!-- ================ § 05 — Messaging & Third-Party Agents ================ -->
+  <div class="section-wrap">
+  <section id="agents" class="section-card">
+    <span class="num">§ 05 — Messaging &amp; Third-Party Agents</span>
+    <h2>💬 Reach the agent from anywhere.<a href="#agents" class="anchor">¶</a></h2>
+    <p class="sub">KISS Sorcar includes <strong>23 third-party messaging agents</strong> that can send and receive messages on your behalf. It also ships a <strong>Govee smart-home CLI</strong> for controlling IoT lights (on/off, brightness, color, and color temperature) via the Govee Developer API. These agents live in <code>src/kiss/agents/third_party_agents/</code>.</p>
+    <div class="section-body">
+      <div class="inner-card" style="--i:0;margin-bottom:1.1rem;">
+        <h3>23 messaging channels</h3>
+        <div class="chip-cloud" style="margin-top:0.7rem;">
+          <span class="chip">BlueBubbles</span>
+          <span class="chip">Discord</span>
+          <span class="chip">Feishu</span>
+          <span class="chip">Gmail</span>
+          <span class="chip">Google Chat</span>
+          <span class="chip">iMessage</span>
+          <span class="chip">IRC</span>
+          <span class="chip">LINE</span>
+          <span class="chip">Matrix</span>
+          <span class="chip">Mattermost</span>
+          <span class="chip">Microsoft Teams</span>
+          <span class="chip">Nextcloud Talk</span>
+          <span class="chip">Nostr</span>
+          <span class="chip">Phone Control</span>
+          <span class="chip">Signal</span>
+          <span class="chip">Slack</span>
+          <span class="chip">SMS</span>
+          <span class="chip">Synology Chat</span>
+          <span class="chip">Telegram</span>
+          <span class="chip">Tlon</span>
+          <span class="chip">Twitch</span>
+          <span class="chip">WhatsApp</span>
+          <span class="chip">Zalo</span>
+        </div>
+      </div>
+      <div class="inner-card" style="--i:1">
+        <h3>Plus: smart-home control</h3>
+        <p>A <strong>Govee smart-home CLI</strong> for controlling IoT lights — on/off, brightness, color, and color temperature — directly via the Govee Developer API.</p>
+      </div>
+    </div>
+  </section>
+  </div>
+
+  <!-- ================ § 06 — Models Supported ================ -->
+  <div class="section-wrap">
+  <section id="models" class="section-card">
+    <span class="num">§ 06 — Models Supported</span>
+    <h2>🤖 501 models. 8 provider categories.<a href="#models" class="anchor">¶</a></h2>
+    <p class="sub">KISS Sorcar ships a catalog of <strong>501 models</strong> across <strong>8 provider categories</strong>, with built-in prices, context lengths, and capability flags (<code>fc</code> function calling, <code>gen</code> generation, <code>emb</code> embedding). The source of truth is <a href="https://github.com/ksenxx/kiss_ai/blob/main/src/kiss/core/models/MODEL_INFO.json">src/kiss/core/models/MODEL_INFO.json</a>.</p>
+
+    <div class="section-body">
+      <div class="grid-2">
+        <div class="inner-card" style="--i:0">
+          <h3>Provider categories</h3>
+          <div style="margin-top:0.5rem;">
+            <div class="provider-row"><span class="label">OpenAI</span><span class="count">70</span></div>
+            <div class="provider-row"><span class="label">Anthropic</span><span class="count">13</span></div>
+            <div class="provider-row"><span class="label">Gemini / Google</span><span class="count">23</span></div>
+            <div class="provider-row"><span class="label">Together AI</span><span class="count">77</span></div>
+            <div class="provider-row"><span class="label">MiniMax</span><span class="count">5</span></div>
+            <div class="provider-row"><span class="label">OpenRouter</span><span class="count">303</span></div>
+            <div class="provider-row"><span class="label">Claude Code CLI (<code>cc/*</code>)</span><span class="count">3</span></div>
+            <div class="provider-row"><span class="label">Codex CLI (<code>codex/*</code>)</span><span class="count">7</span></div>
+          </div>
+        </div>
+
+        <div class="inner-card" style="--i:1">
+          <h3>Catalog capability totals</h3>
+          <p>Across all bundled providers, the catalog currently reports:</p>
+          <div class="stat-row">
+            <div class="stat-pill">
+              <div class="n">485</div>
+              <div class="l">generation-capable models</div>
+            </div>
+            <div class="stat-pill">
+              <div class="n">321</div>
+              <div class="l">function-calling-capable models</div>
+            </div>
+            <div class="stat-pill">
+              <div class="n">7</div>
+              <div class="l">embedding models</div>
+            </div>
+          </div>
+          <p style="margin-top:0.9rem;font-size:0.88rem;">See the <a href="https://github.com/ksenxx/kiss_ai/blob/main/README.md#-models-supported">full per-provider model list</a> in the README, including the <code>cc/*</code> and <code>codex/*</code> namespaces that let KISS Sorcar run on top of the Claude Code and Codex CLIs.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+  </div>
+
+  <!-- ================ § 07 — Contributing ================ -->
+  <div class="section-wrap">
+  <section id="contributing" class="section-card">
+    <span class="num">§ 07 — Contributing</span>
+    <h2>🤗 Contributing.<a href="#contributing" class="anchor">¶</a></h2>
+    <p class="sub">Contributions in the form of issues are welcome. KISS Sorcar should be able to help implement and review them.</p>
+    <div class="section-body">
+      <div class="grid-2">
+        <div class="inner-card" style="--i:0">
+          <h3>Open an issue</h3>
+          <p>Report bugs, request features, or share ideas. Each issue becomes a candidate task KISS Sorcar can pick up and work on.</p>
+          <p style="margin-top:0.8rem;"><a href="https://github.com/ksenxx/kiss_ai/issues" class="btn btn-ghost" style="font-size:0.85rem; padding:0.45rem 1rem;">Open an issue →</a></p>
+        </div>
+        <div class="inner-card" style="--i:1">
+          <h3>Let KISS Sorcar implement and review</h3>
+          <p>Drop an issue link into a Sorcar task and it will draft a fix, run tests, and self-review before opening a PR.</p>
+          <p style="margin-top:0.8rem;"><a href="https://github.com/ksenxx/kiss_ai" class="btn btn-ghost" style="font-size:0.85rem; padding:0.45rem 1rem;">GitHub repo →</a></p>
+        </div>
+      </div>
+    </div>
+  </section>
+  </div>
+
+  <!-- ================ § 08 — License ================ -->
+  <div class="section-wrap">
+  <section id="license" class="section-card">
+    <span class="num">§ 08 — License</span>
+    <h2>📄 License.<a href="#license" class="anchor">¶</a></h2>
+    <p class="sub">KISS Sorcar is released under a permissive open-source license.</p>
+    <div class="section-body">
+      <div class="inner-card" style="--i:0">
+        <h3>Apache-2.0</h3>
+        <p style="margin-bottom:0.9rem;">Use it for anything &mdash; personal, commercial, research, education. See <a href="https://github.com/ksenxx/kiss_ai/blob/main/LICENSE">LICENSE</a> for the full text.</p>
+        <a href="https://github.com/ksenxx/kiss_ai/blob/main/LICENSE" class="license-pill">Apache License 2.0</a>
+      </div>
+    </div>
+  </section>
+  </div>
+
+  <!-- ================ § 09 — Citation ================ -->
+  <div class="section-wrap">
+  <section id="citation" class="section-card">
+    <span class="num">§ 09 — Citation</span>
+    <h2>📚 Cite the paper.<a href="#citation" class="anchor">¶</a></h2>
+    <p class="sub">If you use KISS Sorcar in your research, please cite:</p>
+    <div class="section-body">
+      <p class="cite-meta">
+        Koushik Sen. <em>KISS Sorcar: A Stupidly-Simple General-Purpose and Software Engineering AI Assistant.</em>
+        arXiv preprint <a href="https://arxiv.org/abs/2604.23822">arXiv:2604.23822</a>, 2026.
+      </p>
+      <div class="citation-block">
+        <button class="copy-btn" onclick="navigator.clipboard.writeText(document.getElementById('bibtex').innerText); this.innerText='Copied'; setTimeout(()=>this.innerText='Copy',1500);">Copy</button>
 <pre id="bibtex">@misc{sen2026kisssorcar,
   title         = {KISS Sorcar: A Stupidly-Simple General-Purpose and Software Engineering AI Assistant},
   author        = {Sen, Koushik},
@@ -1145,8 +1074,10 @@
   primaryClass  = {cs.SE},
   url           = {https://arxiv.org/abs/2604.23822}
 }</pre>
+      </div>
     </div>
   </section>
+  </div>
 
   <footer>
     <p>
@@ -1155,8 +1086,135 @@
       <a href="assets/kiss_sorcar.pdf">Paper</a> &middot;
       <a href="https://arxiv.org/abs/2604.23822">arXiv</a>
     </p>
-    <p style="margin-top:0.4rem;">Named after <a href="https://en.wikipedia.org/wiki/P._C._Sorcar">P.C. Sorcar</a>, the legendary Bengali magician.</p>
+    <p style="margin-top:0.4rem;">Named after <a href="https://en.wikipedia.org/wiki/P._C._Sorcar">P. C. Sorcar</a>, the legendary Bengali magician.</p>
   </footer>
 
+  <script>
+    // ---------------------------------------------------------------
+    // Scroll-reveal: tilt-rise each .section-card when it enters view.
+    // ---------------------------------------------------------------
+    (function () {
+      const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      const cards = document.querySelectorAll('.section-card');
+      if (reduced || !('IntersectionObserver' in window)) {
+        cards.forEach(c => c.classList.add('in-view'));
+        return;
+      }
+      const io = new IntersectionObserver((entries) => {
+        entries.forEach((e) => {
+          if (e.isIntersecting) {
+            e.target.classList.add('in-view');
+            io.unobserve(e.target);
+          }
+        });
+      }, { threshold: 0.12, rootMargin: '0px 0px -60px 0px' });
+      cards.forEach((c) => io.observe(c));
+    })();
+
+    // ---------------------------------------------------------------
+    // Cursor spotlight: update --mx/--my on each .inner-card on move.
+    // ---------------------------------------------------------------
+    (function () {
+      const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      if (reduced) return;
+      document.querySelectorAll('.inner-card').forEach((card) => {
+        card.addEventListener('mousemove', (ev) => {
+          const r = card.getBoundingClientRect();
+          card.style.setProperty('--mx', (ev.clientX - r.left) + 'px');
+          card.style.setProperty('--my', (ev.clientY - r.top)  + 'px');
+        });
+        card.addEventListener('mouseleave', () => {
+          card.style.setProperty('--mx', '-300px');
+          card.style.setProperty('--my', '-300px');
+        });
+      });
+    })();
+
+    // ---------------------------------------------------------------
+    // Magic-dust hero canvas. Tiny floating particles, thematic for
+    // P. C. Sorcar the magician. Pauses when tab is hidden.
+    // ---------------------------------------------------------------
+    (function () {
+      const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      const canvas = document.getElementById('magic-dust');
+      if (reduced || !canvas) { if (canvas) canvas.remove(); return; }
+      const ctx = canvas.getContext('2d');
+      let w = 0, h = 0, dpr = Math.min(window.devicePixelRatio || 1, 2);
+      const COLORS = ['#1976d2', '#00897b', '#f7c948', '#d81b60'];
+      const particles = [];
+
+      function resize() {
+        const r = canvas.getBoundingClientRect();
+        w = r.width; h = r.height;
+        canvas.width = Math.floor(w * dpr);
+        canvas.height = Math.floor(h * dpr);
+        ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+      }
+      window.addEventListener('resize', resize);
+      resize();
+
+      const COUNT = Math.min(80, Math.max(36, Math.floor((w * h) / 14000)));
+      for (let i = 0; i < COUNT; i++) {
+        particles.push({
+          x: Math.random() * w,
+          y: Math.random() * h,
+          vx: (Math.random() - 0.5) * 0.18,
+          vy: -Math.random() * 0.35 - 0.05,
+          r: Math.random() * 1.6 + 0.4,
+          c: COLORS[(Math.random() * COLORS.length) | 0],
+          a: Math.random() * Math.PI * 2,
+          tw: Math.random() * 0.02 + 0.008,
+        });
+      }
+
+      let raf = 0, running = true;
+      function frame() {
+        ctx.clearRect(0, 0, w, h);
+        for (const p of particles) {
+          p.x += p.vx;
+          p.y += p.vy;
+          p.a += p.tw;
+          if (p.y < -8) { p.y = h + 8; p.x = Math.random() * w; }
+          if (p.x < -8) p.x = w + 8;
+          if (p.x > w + 8) p.x = -8;
+          const alpha = 0.35 + 0.35 * Math.sin(p.a);
+          ctx.beginPath();
+          ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+          ctx.fillStyle = p.c;
+          ctx.globalAlpha = alpha;
+          ctx.shadowColor = p.c;
+          ctx.shadowBlur = 8;
+          ctx.fill();
+        }
+        ctx.globalAlpha = 1;
+        ctx.shadowBlur = 0;
+        if (running) raf = requestAnimationFrame(frame);
+      }
+      frame();
+
+      document.addEventListener('visibilitychange', () => {
+        if (document.hidden) {
+          running = false; cancelAnimationFrame(raf);
+        } else if (!running) {
+          running = true; frame();
+        }
+      });
+
+      // Pause when hero scrolls off screen to save battery.
+      const hero = document.querySelector('.hero');
+      if (hero && 'IntersectionObserver' in window) {
+        const heroIO = new IntersectionObserver((entries) => {
+          for (const e of entries) {
+            if (e.isIntersecting) {
+              if (!running) { running = true; frame(); }
+            } else {
+              running = false; cancelAnimationFrame(raf);
+            }
+          }
+        }, { threshold: 0 });
+        heroIO.observe(hero);
+      }
+    })();
+  </script>
 </body>
 </html>
