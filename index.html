@@ -565,6 +565,164 @@
       .grid-4 { grid-template-columns: 1fr; }
     }
 
+    /* ---------------------------------------------------------------
+       Floating left-side tweet panel (@koushik77 timeline).
+       --------------------------------------------------------------- */
+    .tweet-panel {
+      position: fixed;
+      left: 0.9rem;
+      top: 76px;
+      bottom: 0.9rem;
+      width: 330px;
+      z-index: 60;
+      display: flex;
+      flex-direction: column;
+      background: rgba(255,255,255,0.78);
+      backdrop-filter: saturate(180%) blur(14px);
+      -webkit-backdrop-filter: saturate(180%) blur(14px);
+      border-radius: 14px;
+      box-shadow: 0 18px 40px rgba(25,118,210,0.10), 0 6px 18px rgba(0,0,0,0.08);
+      overflow: hidden;
+      transition: transform 0.45s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.35s ease;
+    }
+    /* Rotating conic-gradient border matching .section-card. */
+    .tweet-panel::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      border-radius: 14px;
+      padding: 1.5px;
+      background: conic-gradient(from var(--angle),
+                  var(--primary), var(--accent), var(--gold), var(--magenta), var(--primary));
+      -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+      -webkit-mask-composite: xor;
+              mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+              mask-composite: exclude;
+      pointer-events: none;
+      animation: spin 11s linear infinite;
+      opacity: 0.85;
+    }
+    .tweet-panel__header {
+      position: relative;
+      z-index: 1;
+      display: flex; align-items: center; gap: 0.55rem;
+      padding: 0.72rem 0.9rem;
+      border-bottom: 1px solid var(--border);
+      background: linear-gradient(180deg, rgba(255,255,255,0.65), rgba(255,255,255,0.25));
+      font-weight: 500;
+      font-size: 0.92rem;
+      color: var(--text);
+      letter-spacing: -0.01em;
+    }
+    .tweet-panel__header svg {
+      width: 18px; height: 18px;
+      fill: var(--primary);
+      flex-shrink: 0;
+    }
+    .tweet-panel__header a {
+      color: var(--text);
+      font-weight: 500;
+    }
+    .tweet-panel__header a:hover { color: var(--primary); }
+    .tweet-panel__header .grow { flex: 1; }
+    .tweet-panel__toggle {
+      width: 26px; height: 26px;
+      display: inline-flex; align-items: center; justify-content: center;
+      background: transparent;
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      color: var(--text-dim);
+      cursor: pointer;
+      font: inherit;
+      line-height: 1;
+      transition: background 0.18s ease, color 0.18s ease, border-color 0.18s ease;
+    }
+    .tweet-panel__toggle:hover {
+      background: var(--primary-soft);
+      color: var(--primary);
+      border-color: var(--primary);
+    }
+    .tweet-panel__body {
+      position: relative;
+      z-index: 1;
+      flex: 1 1 auto;
+      overflow-y: auto;
+      overflow-x: hidden;
+      padding: 0.4rem 0.5rem 0.6rem;
+      scrollbar-width: thin;
+      scrollbar-color: rgba(25,118,210,0.35) transparent;
+    }
+    .tweet-panel__body::-webkit-scrollbar { width: 8px; }
+    .tweet-panel__body::-webkit-scrollbar-thumb {
+      background: rgba(25,118,210,0.30);
+      border-radius: 8px;
+    }
+    .tweet-panel__body::-webkit-scrollbar-thumb:hover {
+      background: rgba(25,118,210,0.55);
+    }
+    .tweet-panel__loading {
+      padding: 1.2rem 1rem;
+      color: var(--text-soft);
+      font-size: 0.88rem;
+      text-align: center;
+      line-height: 1.5;
+    }
+    .tweet-panel__loading .spinner {
+      display: inline-block;
+      width: 18px; height: 18px;
+      margin-bottom: 0.55rem;
+      border-radius: 50%;
+      border: 2px solid var(--primary-soft);
+      border-top-color: var(--primary);
+      animation: tweet-spin 0.9s linear infinite;
+      vertical-align: middle;
+    }
+    @keyframes tweet-spin { to { transform: rotate(360deg); } }
+
+    /* Collapsed state: slide off-screen, leave a tiny reopen tab. */
+    .tweet-panel.collapsed { transform: translateX(calc(-100% - 1.2rem)); opacity: 0.0; pointer-events: none; }
+
+    /* Floating reopen button (visible when panel collapsed, or on narrow screens). */
+    .tweet-reopen {
+      position: fixed;
+      left: 0;
+      top: 50%;
+      transform: translateY(-50%);
+      z-index: 59;
+      display: none;
+      align-items: center;
+      gap: 0.4rem;
+      padding: 0.55rem 0.7rem 0.55rem 0.5rem;
+      background: rgba(255,255,255,0.92);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      border: 1px solid var(--border);
+      border-left: 0;
+      border-radius: 0 12px 12px 0;
+      box-shadow: 0 6px 18px rgba(0,0,0,0.10);
+      cursor: pointer;
+      color: var(--text);
+      font: inherit;
+      font-size: 0.82rem;
+      writing-mode: vertical-rl;
+      transform-origin: center;
+      transition: background 0.2s ease, color 0.2s ease, padding 0.2s ease;
+    }
+    .tweet-reopen svg { width: 14px; height: 14px; fill: var(--primary); writing-mode: horizontal-tb; }
+    .tweet-reopen:hover { background: var(--primary-soft); color: var(--primary); padding-left: 0.7rem; }
+    .tweet-reopen.show { display: inline-flex; }
+
+    /* Narrow viewports: hide the panel by default; show only the reopen tab. */
+    @media (max-width: 1400px) {
+      .tweet-panel { transform: translateX(calc(-100% - 1.2rem)); opacity: 0; pointer-events: none; }
+      .tweet-panel.open { transform: translateX(0); opacity: 1; pointer-events: auto; }
+      .tweet-reopen { display: inline-flex; }
+      .tweet-reopen.hidden { display: none; }
+    }
+    @media (max-width: 640px) {
+      .tweet-panel { width: calc(100% - 1.8rem); }
+    }
+
     /* Respect reduced motion. */
     @media (prefers-reduced-motion: reduce) {
       .section-card::before { animation: none; }
@@ -575,11 +733,40 @@
       }
       .section-card.in-view .inner-card { animation: none; }
       #magic-dust { display: none; }
+      .tweet-panel::before { animation: none; }
+      .tweet-panel, .tweet-reopen { transition: none; }
       html { scroll-behavior: auto; }
     }
   </style>
 </head>
 <body>
+
+  <!-- Floating left-side panel: live tweets from @koushik77 -->
+  <aside class="tweet-panel" id="tweet-panel" aria-label="Tweets by koushik77">
+    <div class="tweet-panel__header">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24h-6.66l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231 5.45-6.231Zm-1.161 17.52h1.833L7.084 4.126H5.117L17.083 19.77Z"/></svg>
+      <span class="grow">Tweets by <a href="https://twitter.com/koushik77" target="_blank" rel="noopener">@koushik77</a></span>
+      <button type="button" class="tweet-panel__toggle" id="tweet-panel-toggle" aria-label="Hide tweets panel" title="Hide">&times;</button>
+    </div>
+    <div class="tweet-panel__body" id="tweet-panel-body">
+      <div class="tweet-panel__loading" id="tweet-panel-loading">
+        <span class="spinner" aria-hidden="true"></span><br>
+        Loading tweets&hellip;
+      </div>
+      <a class="twitter-timeline"
+         data-theme="light"
+         data-chrome="noheader nofooter transparent noborders"
+         data-tweet-limit="20"
+         data-dnt="true"
+         data-link-color="#1976d2"
+         href="https://twitter.com/koushik77?ref_src=twsrc%5Etfw">Tweets by koushik77</a>
+    </div>
+  </aside>
+  <button type="button" class="tweet-reopen" id="tweet-panel-reopen" aria-label="Show tweets by koushik77">
+    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24h-6.66l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231 5.45-6.231Zm-1.161 17.52h1.833L7.084 4.126H5.117L17.083 19.77Z"/></svg>
+    <span>@koushik77</span>
+  </button>
+  <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
 
   <nav>
     <div class="container">
@@ -1063,6 +1250,78 @@
   </footer>
 
   <script>
+    // ---------------------------------------------------------------
+    // Floating tweet panel: open/close + remove loading spinner once
+    // the Twitter widget's iframe finishes injecting.
+    // ---------------------------------------------------------------
+    (function () {
+      const panel = document.getElementById('tweet-panel');
+      const reopen = document.getElementById('tweet-panel-reopen');
+      const toggle = document.getElementById('tweet-panel-toggle');
+      const body = document.getElementById('tweet-panel-body');
+      const loading = document.getElementById('tweet-panel-loading');
+      if (!panel || !reopen || !toggle || !body) return;
+
+      const isNarrow = () => window.matchMedia('(max-width: 1400px)').matches;
+
+      function openPanel() {
+        if (isNarrow()) {
+          panel.classList.add('open');
+          reopen.classList.add('hidden');
+        } else {
+          panel.classList.remove('collapsed');
+          reopen.classList.remove('show');
+        }
+      }
+      function closePanel() {
+        if (isNarrow()) {
+          panel.classList.remove('open');
+          reopen.classList.remove('hidden');
+        } else {
+          panel.classList.add('collapsed');
+          reopen.classList.add('show');
+        }
+      }
+
+      toggle.addEventListener('click', closePanel);
+      reopen.addEventListener('click', openPanel);
+
+      // Honor saved preference per visit.
+      try {
+        if (sessionStorage.getItem('tweetPanelClosed') === '1') closePanel();
+      } catch (_) {}
+      toggle.addEventListener('click', () => { try { sessionStorage.setItem('tweetPanelClosed', '1'); } catch (_) {} });
+      reopen.addEventListener('click', () => { try { sessionStorage.setItem('tweetPanelClosed', '0'); } catch (_) {} });
+
+      // Recompute on resize so the panel adapts between wide/narrow modes.
+      window.addEventListener('resize', () => {
+        if (isNarrow()) {
+          panel.classList.remove('collapsed');
+        } else {
+          panel.classList.remove('open');
+        }
+      });
+
+      // Remove the loading hint once the Twitter widget injects its iframe.
+      const observer = new MutationObserver(() => {
+        if (body.querySelector('iframe')) {
+          if (loading && loading.parentNode) loading.parentNode.removeChild(loading);
+          observer.disconnect();
+        }
+      });
+      observer.observe(body, { childList: true, subtree: true });
+
+      // Safety fallback: drop the spinner after 10 s if the widget never loads
+      // (e.g. blocked by a tracker blocker). Show a graceful link instead.
+      setTimeout(() => {
+        if (loading && loading.parentNode && !body.querySelector('iframe')) {
+          loading.innerHTML = 'Couldn\u2019t load tweets here.<br>' +
+            '<a href="https://twitter.com/koushik77" target="_blank" rel="noopener" ' +
+            'style="color:var(--primary);font-weight:500;">Open @koushik77 on X &rarr;</a>';
+        }
+      }, 10000);
+    })();
+
     // ---------------------------------------------------------------
     // Scroll-reveal: tilt-rise each .section-card when it enters view.
     // ---------------------------------------------------------------
