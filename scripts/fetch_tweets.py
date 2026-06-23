@@ -29,6 +29,32 @@ TIMELINE_URL = (
 )
 OUTPUT_PATH = Path(__file__).resolve().parent.parent / "assets" / "tweets.json"
 MAX_TWEETS = 30
+
+# Only surface tweets related to KISS / KISS Sorcar on the homepage.
+# Matched case-insensitively against the full_text. "KISS" is matched as a
+# whole word (so "kissing", "kisser", etc. do not slip in by accident).
+KISS_KEYWORD_RE = re.compile(
+    r"(?<![A-Za-z])kiss(?![A-Za-z])|sorcar|kisssorcar|kiss[_\-]sorcar|fugu",
+    re.IGNORECASE,
+)
+
+
+def is_kiss_related(tweet: dict) -> bool:
+    """Return True if the tweet (or its quoted tweet) mentions KISS / Sorcar / Fugu."""
+    text = tweet.get("full_text") or tweet.get("text") or ""
+    if KISS_KEYWORD_RE.search(text):
+        return True
+    quoted = tweet.get("quoted_status")
+    if quoted:
+        qtext = quoted.get("full_text") or quoted.get("text") or ""
+        if KISS_KEYWORD_RE.search(qtext):
+            return True
+    return False
+
+
+def parse_created_at(value: str) -> datetime:
+    """Parse Twitter's 'Fri Sep 03 17:49:40 +0000 2021' timestamp."""
+    return datetime.strptime(value, "%a %b %d %H:%M:%S %z %Y")
 UA = (
     "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 "
     "(KHTML, like Gecko) Chrome/123.0.0.0 Safari/537.36"
@@ -154,15 +180,23 @@ def extract_tweets(next_data: dict) -> list[dict]:
             continue
         # Handle native retweets: the tweet has retweeted_status with the original.
         rt = raw.get("retweeted_status")
+        source = rt if rt else raw
+        # Only keep tweets related to KISS / KISS Sorcar / Fugu.
+        if not is_kiss_related(source):
+            continue
         if rt:
             rec = tweet_record(rt, retweeted=True)
             rec["retweeter"] = raw.get("user", {}).get("screen_name")
         else:
             rec = tweet_record(raw)
         out.append(rec)
-        if len(out) >= MAX_TWEETS:
-            break
-    return out
+
+    # Sort by created_at in descending order (newest first).
+    out.sort(
+        key=lambda r: parse_created_at(r["created_at"]) if r.get("created_at") else datetime.min.replace(tzinfo=timezone.utc),
+        reverse=True,
+    )
+    return out[:MAX_TWEETS]
 
 
 def main() -> int:
@@ -179,11 +213,10 @@ def main() -> int:
             return 0
         return 1
 
+    # An empty filtered list is a legitimate outcome (no KISS-related tweets in
+    # this snapshot). We still write the file so the UI shows a clean fallback.
     if not tweets:
-        print("Got 0 tweets from syndication endpoint — refusing to overwrite.", file=sys.stderr)
-        if OUTPUT_PATH.exists():
-            return 0
-        return 1
+        print("No KISS/Sorcar-related tweets found in this snapshot.", file=sys.stderr)
 
     payload = {
         "screen_name": SCREEN_NAME,

@@ -1498,8 +1498,26 @@
           return r.json();
         })
         .then(function (data) {
-          const tweets = (data && data.tweets) || [];
-          if (!tweets.length) { showFallback('No tweets available right now.'); return; }
+          let tweets = (data && data.tweets) || [];
+          // Only show tweets related to KISS / KISS Sorcar / Fugu (defence in
+          // depth: the fetcher script already filters, but if an older
+          // unfiltered snapshot is cached we still want the page to be clean).
+          const KISS_RE = /(?:^|[^A-Za-z])kiss(?![A-Za-z])|sorcar|kisssorcar|kiss[_-]sorcar|fugu/i;
+          function tweetMatches(t) {
+            if (!t) return false;
+            const own = t.html || '';
+            if (KISS_RE.test(own)) return true;
+            if (t.quoted && KISS_RE.test(t.quoted.html || '')) return true;
+            return false;
+          }
+          tweets = tweets.filter(tweetMatches);
+          // Sort newest-first by created_at.
+          tweets.sort(function (a, b) {
+            const da = a && a.created_at ? Date.parse(a.created_at) : 0;
+            const db = b && b.created_at ? Date.parse(b.created_at) : 0;
+            return db - da;
+          });
+          if (!tweets.length) { showFallback('No KISS Sorcar tweets yet — follow @koushik77 for updates.'); return; }
           list.innerHTML = tweets.map(renderTweet).join('');
           list.hidden = false;
           if (footer) footer.hidden = false;
