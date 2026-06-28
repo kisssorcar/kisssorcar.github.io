@@ -1031,10 +1031,124 @@
     </a>
   </div>
 
-  <!-- ================ § 01 — All you need is a short prompt ================ -->
+  <!-- ================ Social Proof ================ -->
+  <div style="max-width: 1200px; margin: 1.5rem auto 2.5rem; padding: 0 1.5rem; text-align: center;">
+    <div style="display: flex; gap: 1.5rem; flex-wrap: wrap; justify-content: center; align-items: center; font-size: 0.95rem; color: var(--text-dim);">
+      <span><strong>⭐ 528 stars</strong> on GitHub</span>
+      <span style="color: var(--border); opacity: 0.5;">·</span>
+      <span><strong>📦 50K+/month</strong> on PyPI</span>
+      <span style="color: var(--border); opacity: 0.5;">·</span>
+      <span><strong>💬 Join Discord</strong> community</span>
+    </div>
+  </div>
+
+  <!-- ================ § 01 — Compare ================ -->
+  <div class="section-wrap">
+  <section id="compare" class="section-card">
+    <span class="num">§ 01 — KISS Sorcar vs Claude Code vs Cursor</span>
+    <h2>How does it compare?<a href="#compare" class="anchor">¶</a></h2>
+    <p class="sub">A side-by-side look at the differences that matter for everyday use.</p>
+    <div class="section-body">
+      <div class="compare-wrap">
+        <table class="compare">
+          <thead>
+            <tr>
+              <th class="cap">Capability</th>
+              <th class="kiss">KISS Sorcar</th>
+              <th>Claude Code</th>
+              <th>Cursor</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <th class="cap">Interfaces</th>
+              <td class="kiss">CLI + VS Code extension + web/mobile app</td>
+              <td>CLI + mobile app</td>
+              <td>Custom VS Code</td>
+            </tr>
+            <tr>
+              <th class="cap">AI Discovery</th>
+              <td class="kiss"><span class="yes">✓</span> simply via prompt</td>
+              <td><span class="no">✗</span></td>
+              <td><span class="no">✗</span></td>
+            </tr>
+            <tr>
+              <th class="cap">GEPA Prompt Optimization</th>
+              <td class="kiss"><span class="yes">✓</span> simply via prompt</td>
+              <td><span class="no">✗</span></td>
+              <td><span class="no">✗</span></td>
+            </tr>
+            <tr>
+              <th class="cap">Multiple models from multiple vendors in the same task</th>
+              <td class="kiss"><span class="yes">✓</span> Mix OpenAI, Anthropic, Gemini, Together, Z.AI, Moonshot AI, OpenRouter, Claude Code CLI, and Codex CLI</td>
+              <td><span class="no">✗</span> Anthropic Claude models only</td>
+              <td><span class="no">✗</span> One model per task</td>
+            </tr>
+            <tr>
+              <th class="cap">Primary focus</th>
+              <td class="kiss"><span class="yes">✓</span> <strong>Quality</strong> &mdash; rigorous review, end-to-end tests</td>
+              <td>Speed and developer ergonomics</td>
+              <td>Speed</td>
+            </tr>
+            <tr>
+              <th class="cap">Core Agents # LoC</th>
+              <td class="kiss"><strong>~2500</strong></td>
+              <td>Unknown</td>
+              <td>Unknown</td>
+            </tr>
+            <tr>
+              <th class="cap">Models in bundled catalog</th>
+              <td class="kiss">502 across 9 provider categories</td>
+              <td>Claude family only</td>
+              <td>Subset chosen by Cursor</td>
+            </tr>
+            <tr>
+              <th class="cap">Bring your own API key / endpoint</th>
+              <td class="kiss"><span class="yes">✓</span> Yes &mdash; keys stay on your machine</td>
+              <td><span class="yes">✓</span> Anthropic key</td>
+              <td><span class="warn">⚠</span> Routed through Cursor backend</td>
+            </tr>
+            <tr>
+              <th class="cap">Open source</th>
+              <td class="kiss"><span class="yes">✓</span> Apache-2.0</td>
+              <td><span class="no">✗</span> Proprietary</td>
+              <td><span class="no">✗</span> Proprietary</td>
+            </tr>
+            <tr>
+              <th class="cap">Price</th>
+              <td class="kiss">Free framework; pay only your chosen model provider</td>
+              <td>Subscription / API usage</td>
+              <td>Subscription</td>
+            </tr>
+            <tr>
+              <th class="cap">Run on top of Claude Code / Codex CLI</th>
+              <td class="kiss"><span class="yes">✓</span> <code>cc/*</code> and <code>codex/*</code> namespaces</td>
+              <td>N/A</td>
+              <td><span class="no">✗</span></td>
+            </tr>
+            <tr>
+              <th class="cap">Messaging and communication channels</th>
+              <td class="kiss"><span class="yes">✓</span> 23 third-party agents, including Slack, Gmail, Phone Control, SMS, and WhatsApp</td>
+              <td><span class="warn">⚠</span> Slack, mobile Remote Control, and research-preview channels for Telegram, Discord, and iMessage; no documented built-in Gmail, WhatsApp, phone-call, or SMS channel</td>
+              <td><span class="warn">⚠</span> Slack and Microsoft Teams Cloud Agent integrations; no documented built-in Gmail, WhatsApp, phone-call, or SMS channel</td>
+            </tr>
+            <tr>
+              <th class="cap">Terminal Bench 2.0 score</th>
+              <td class="kiss"><strong>62.2%</strong></td>
+              <td>58%</td>
+              <td>61.7% <small>(Cursor agent)</small></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+  </div>
+
+  <!-- ================ § 02 — All you need is a short prompt ================ -->
   <div class="section-wrap">
   <section id="prompts" class="section-card">
-    <span class="num">§ 01 — All you need is a short prompt in KISS Sorcar to do big complex tasks</span>
+    <span class="num">§ 02 — All you need is a short prompt in KISS Sorcar to do big complex tasks</span>
     <h2>All You Need is a Short Prompt in KISS Sorcar to do Big Complex Tasks.<a href="#prompts" class="anchor">¶</a></h2>
     <p class="sub">KISS Sorcar ships with a curated set of <strong>sample tasks</strong> (long-horizon prompts you can drop straight into the CLI or VS Code extension or Web app) and <strong>promptlet tricks</strong> (short reusable directives that steer Sorcar's behaviour by injecting to the prompt). The tasks live in <a href="https://github.com/ksenxx/kiss_ai/blob/main/src/kiss/SAMPLE_TASKS.md"><code>src/kiss/SAMPLE_TASKS.md</code></a>; the tricks live in <a href="https://github.com/ksenxx/kiss_ai/blob/main/src/kiss/INJECTIONS.md"><code>src/kiss/INJECTIONS.md</code></a>. You can add your tasks at <code>~/.kiss/MY_TASK_TEMPLATES.md</code> and your promptlets at <code>~/.kiss/MY_INJECTIONS.md</code>.</p>
     <div class="section-body">
@@ -1423,109 +1537,6 @@ In each step, keep track of the best prompt which has the maximum number of succ
         </div>
 
         <div class="carousel-dots" id="carousel-dots" role="tablist" aria-label="Prompt navigation"></div>
-      </div>
-    </div>
-  </section>
-  </div>
-
-  <!-- ================ § 02 — Compare ================ -->
-  <div class="section-wrap">
-  <section id="compare" class="section-card">
-    <span class="num">§ 02 — KISS Sorcar vs Claude Code vs Cursor</span>
-    <h2>How does it compare?<a href="#compare" class="anchor">¶</a></h2>
-    <p class="sub">A side-by-side look at the differences that matter for everyday use.</p>
-    <div class="section-body">
-      <div class="compare-wrap">
-        <table class="compare">
-          <thead>
-            <tr>
-              <th class="cap">Capability</th>
-              <th class="kiss">KISS Sorcar</th>
-              <th>Claude Code</th>
-              <th>Cursor</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <th class="cap">Interfaces</th>
-              <td class="kiss">CLI + VS Code extension + web/mobile app</td>
-              <td>CLI + mobile app</td>
-              <td>Custom VS Code</td>
-            </tr>
-            <tr>
-              <th class="cap">AI Discovery</th>
-              <td class="kiss"><span class="yes">✓</span> simply via prompt</td>
-              <td><span class="no">✗</span></td>
-              <td><span class="no">✗</span></td>
-            </tr>
-            <tr>
-              <th class="cap">GEPA Prompt Optimization</th>
-              <td class="kiss"><span class="yes">✓</span> simply via prompt</td>
-              <td><span class="no">✗</span></td>
-              <td><span class="no">✗</span></td>
-            </tr>
-            <tr>
-              <th class="cap">Multiple models from multiple vendors in the same task</th>
-              <td class="kiss"><span class="yes">✓</span> Mix OpenAI, Anthropic, Gemini, Together, Z.AI, Moonshot AI, OpenRouter, Claude Code CLI, and Codex CLI</td>
-              <td><span class="no">✗</span> Anthropic Claude models only</td>
-              <td><span class="no">✗</span> One model per task</td>
-            </tr>
-            <tr>
-              <th class="cap">Primary focus</th>
-              <td class="kiss"><span class="yes">✓</span> <strong>Quality</strong> &mdash; rigorous review, end-to-end tests</td>
-              <td>Speed and developer ergonomics</td>
-              <td>Speed</td>
-            </tr>
-            <tr>
-              <th class="cap">Core Agents # LoC</th>
-              <td class="kiss"><strong>~2500</strong></td>
-              <td>Unknown</td>
-              <td>Unknown</td>
-            </tr>
-            <tr>
-              <th class="cap">Models in bundled catalog</th>
-              <td class="kiss">502 across 9 provider categories</td>
-              <td>Claude family only</td>
-              <td>Subset chosen by Cursor</td>
-            </tr>
-            <tr>
-              <th class="cap">Bring your own API key / endpoint</th>
-              <td class="kiss"><span class="yes">✓</span> Yes &mdash; keys stay on your machine</td>
-              <td><span class="yes">✓</span> Anthropic key</td>
-              <td><span class="warn">⚠</span> Routed through Cursor backend</td>
-            </tr>
-            <tr>
-              <th class="cap">Open source</th>
-              <td class="kiss"><span class="yes">✓</span> Apache-2.0</td>
-              <td><span class="no">✗</span> Proprietary</td>
-              <td><span class="no">✗</span> Proprietary</td>
-            </tr>
-            <tr>
-              <th class="cap">Price</th>
-              <td class="kiss">Free framework; pay only your chosen model provider</td>
-              <td>Subscription / API usage</td>
-              <td>Subscription</td>
-            </tr>
-            <tr>
-              <th class="cap">Run on top of Claude Code / Codex CLI</th>
-              <td class="kiss"><span class="yes">✓</span> <code>cc/*</code> and <code>codex/*</code> namespaces</td>
-              <td>N/A</td>
-              <td><span class="no">✗</span></td>
-            </tr>
-            <tr>
-              <th class="cap">Messaging and communication channels</th>
-              <td class="kiss"><span class="yes">✓</span> 23 third-party agents, including Slack, Gmail, Phone Control, SMS, and WhatsApp</td>
-              <td><span class="warn">⚠</span> Slack, mobile Remote Control, and research-preview channels for Telegram, Discord, and iMessage; no documented built-in Gmail, WhatsApp, phone-call, or SMS channel</td>
-              <td><span class="warn">⚠</span> Slack and Microsoft Teams Cloud Agent integrations; no documented built-in Gmail, WhatsApp, phone-call, or SMS channel</td>
-            </tr>
-            <tr>
-              <th class="cap">Terminal Bench 2.0 score</th>
-              <td class="kiss"><strong>62.2%</strong></td>
-              <td>58%</td>
-              <td>61.7% <small>(Cursor agent)</small></td>
-            </tr>
-          </tbody>
-        </table>
       </div>
     </div>
   </section>
