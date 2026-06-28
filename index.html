@@ -953,21 +953,13 @@
         <span>KISS Sorcar</span>
       </a>
       <ul class="links">
-        <li><a href="#prompts">Prompts</a></li>
-        <li><a href="#compare">Compare</a></li>
-        <li><a href="#name">Name</a></li>
         <li><a href="#install">Install</a></li>
-        <li><a href="#cli">CLI</a></li>
-        <li><a href="#agents">Agents</a></li>
-        <li><a href="#models">Models</a></li>
-        <li><a href="#contributing">Contributing</a></li>
-        <li><a href="#license">License</a></li>
-        <li><a href="#citation">Citation</a></li>
+        <li><a href="#compare">Demo</a></li>
+        <li><a href="#compare">Compare</a></li>
+        <li><a href="https://github.com/ksenxx/kiss_ai" target="_blank" rel="noopener">Docs</a></li>
+        <li><a href="https://github.com/ksenxx/kiss_ai" target="_blank" rel="noopener">GitHub</a></li>
+        <li><a href="https://discord.gg/kiss" target="_blank" rel="noopener">Discord</a></li>
       </ul>
-      <a href="https://github.com/ksenxx/kiss_ai" class="gh-badge" aria-label="GitHub">
-        <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 .5C5.65.5.5 5.65.5 12c0 5.08 3.29 9.39 7.86 10.91.58.1.79-.25.79-.56v-2c-3.2.7-3.88-1.36-3.88-1.36-.52-1.33-1.27-1.69-1.27-1.69-1.04-.71.08-.7.08-.7 1.15.08 1.76 1.18 1.76 1.18 1.02 1.75 2.69 1.24 3.34.95.1-.74.4-1.24.72-1.53-2.55-.29-5.24-1.27-5.24-5.66 0-1.25.45-2.27 1.18-3.07-.12-.29-.51-1.46.11-3.05 0 0 .96-.31 3.16 1.17.92-.26 1.91-.39 2.88-.39s1.96.13 2.88.39c2.2-1.48 3.16-1.17 3.16-1.17.62 1.59.23 2.76.11 3.05.74.8 1.18 1.82 1.18 3.07 0 4.4-2.69 5.37-5.25 5.65.41.36.78 1.05.78 2.12v3.14c0 .31.21.66.79.55C20.21 21.39 23.5 17.08 23.5 12 23.5 5.65 18.35.5 12 .5z"/></svg>
-        GitHub
-      </a>
     </div>
   </nav>
 
@@ -982,7 +974,12 @@
       </figure>
     </div>
     <div class="eyebrow">Open Source · Apache 2.0</div>
-    <h1>Open-source general-purpose AI agent for <em>long-horizon tasks</em> and AI discovery.</h1>
+    <h1>Tell it what to do, in English. It picks the best LLM, runs on your laptop, and ships the work.</h1>
+    <div style="margin-top: 0.8rem; font-size: 0.95rem; color: var(--text-dim); display: flex; gap: 1.2rem; flex-wrap: wrap; justify-content: center;">
+      <span><strong>Open Source</strong> · Apache 2.0</span>
+      <span><strong>62.2%</strong> Terminal Bench 2.0</span>
+      <span><strong>502 models</strong> supported</span>
+    </div>
   </div>
 
   <!-- Hero demo video -->
@@ -1029,6 +1026,25 @@
       <span class="cta-star-label">Star on GitHub</span>
       <span class="star-count" id="cta-star-count" data-loading="true" aria-label="Loading star count">…</span>
     </a>
+  </div>
+
+  <!-- ================ Get Started in 3 Steps ================ -->
+  <div style="max-width: 1200px; margin: 2.5rem auto 3rem; padding: 0 1.5rem; text-align: center;">
+    <h3 style="font-size: 1.25rem; margin-bottom: 1.5rem; color: var(--text);">Get started in 3 steps</h3>
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1.5rem;">
+      <div style="background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 1.5rem; text-align: left;">
+        <div style="font-weight: 600; color: var(--primary); font-size: 1.1rem; margin-bottom: 0.8rem;">1. Install</div>
+        <button class="quickstart-copy" data-copy="pipx install kiss-agent-framework" style="background: var(--code-bg); color: var(--code-text); border: 1px solid var(--border); border-radius: 6px; padding: 0.8rem 1rem; font-family: 'Roboto Mono', monospace; font-size: 0.85rem; width: 100%; cursor: pointer; text-align: left; transition: background 0.15s;">$ pipx install kiss-agent-framework</button>
+      </div>
+      <div style="background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 1.5rem; text-align: left;">
+        <div style="font-weight: 600; color: var(--primary); font-size: 1.1rem; margin-bottom: 0.8rem;">2. Set your API key</div>
+        <button class="quickstart-copy" data-copy="export OPENAI_API_KEY=sk-..." style="background: var(--code-bg); color: var(--code-text); border: 1px solid var(--border); border-radius: 6px; padding: 0.8rem 1rem; font-family: 'Roboto Mono', monospace; font-size: 0.85rem; width: 100%; cursor: pointer; text-align: left; transition: background 0.15s;">$ export OPENAI_API_KEY=sk-...</button>
+      </div>
+      <div style="background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 1.5rem; text-align: left;">
+        <div style="font-weight: 600; color: var(--primary); font-size: 1.1rem; margin-bottom: 0.8rem;">3. Run your first task</div>
+        <button class="quickstart-copy" data-copy='sorcar -t "Open a PR that adds dark mode."' style="background: var(--code-bg); color: var(--code-text); border: 1px solid var(--border); border-radius: 6px; padding: 0.8rem 1rem; font-family: 'Roboto Mono', monospace; font-size: 0.85rem; width: 100%; cursor: pointer; text-align: left; transition: background 0.15s;">$ sorcar -t "Open a PR that adds dark mode."</button>
+      </div>
+    </div>
   </div>
 
   <!-- ================ § 01 — All you need is a short prompt ================ -->
@@ -1992,6 +2008,61 @@ In each step, keep track of the best prompt which has the maximum number of succ
           } catch (_e) { /* ignore */ }
         })
         .catch(() => hideCount());
+    })();
+
+    // ---------------------------------------------------------------
+    // Quickstart copy buttons: "Get started in 3 steps"
+    // ---------------------------------------------------------------
+    (function () {
+      const buttons = document.querySelectorAll('.quickstart-copy');
+      buttons.forEach((btn) => {
+        const originalText = btn.textContent;
+        let resetTimer = 0;
+
+        function fallbackCopy(text) {
+          try {
+            const ta = document.createElement('textarea');
+            ta.value = text;
+            ta.setAttribute('readonly', '');
+            ta.style.position = 'fixed';
+            ta.style.top = '-1000px';
+            ta.style.opacity = '0';
+            document.body.appendChild(ta);
+            ta.select();
+            const ok = document.execCommand('copy');
+            document.body.removeChild(ta);
+            return ok;
+          } catch (_e) {
+            return false;
+          }
+        }
+
+        btn.addEventListener('click', (e) => {
+          e.preventDefault();
+          const text = btn.getAttribute('data-copy') || originalText;
+          
+          function flash(ok) {
+            if (resetTimer) { clearTimeout(resetTimer); resetTimer = 0; }
+            btn.style.background = ok ? 'rgba(0, 137, 123, 0.15)' : 'rgba(217, 48, 37, 0.15)';
+            btn.style.color = ok ? 'var(--accent)' : '#d93025';
+            btn.textContent = ok ? '✓ Copied!' : '✗ Copy failed';
+            resetTimer = window.setTimeout(() => {
+              btn.style.background = 'var(--code-bg)';
+              btn.style.color = 'var(--code-text)';
+              btn.textContent = originalText;
+              resetTimer = 0;
+            }, 1600);
+          }
+
+          if (navigator.clipboard && window.isSecureContext) {
+            navigator.clipboard.writeText(text)
+              .then(() => flash(true))
+              .catch(() => flash(fallbackCopy(text)));
+          } else {
+            flash(fallbackCopy(text));
+          }
+        });
+      });
     })();
 
     // ---------------------------------------------------------------
