@@ -666,7 +666,7 @@
             </tr>
             <tr>
               <th class="cap">Multiple models from multiple vendors in the same task</th>
-              <td class="kiss"><span class="yes">✓</span> Mix OpenAI, Anthropic, Gemini, Together, MiniMax, OpenRouter, Claude Code CLI, and Codex CLI</td>
+              <td class="kiss"><span class="yes">✓</span> Mix OpenAI, Anthropic, Gemini, Together, Z.AI, Moonshot AI, OpenRouter, Claude Code CLI, and Codex CLI</td>
               <td><span class="no">✗</span> Anthropic Claude models only</td>
               <td><span class="no">✗</span> One model per task</td>
             </tr>
@@ -684,7 +684,7 @@
             </tr>
             <tr>
               <th class="cap">Models in bundled catalog</th>
-              <td class="kiss">501 across 8 provider categories</td>
+              <td class="kiss">502 across 9 provider categories</td>
               <td>Claude family only</td>
               <td>Subset chosen by Cursor</td>
             </tr>
@@ -788,8 +788,9 @@
             <div class="code-line"><span class="c">export</span> <span class="f">OPENAI_API_KEY</span>=<span class="s">...</span></div>
             <div class="code-line"><span class="c">export</span> <span class="f">GEMINI_API_KEY</span>=<span class="s">...</span></div>
             <div class="code-line"><span class="c">export</span> <span class="f">TOGETHER_API_KEY</span>=<span class="s">...</span></div>
+            <div class="code-line"><span class="c">export</span> <span class="f">ZAI_API_KEY</span>=<span class="s">...</span></div>
+            <div class="code-line"><span class="c">export</span> <span class="f">MOONSHOT_API_KEY</span>=<span class="s">...</span></div>
             <div class="code-line"><span class="c">export</span> <span class="f">OPENROUTER_API_KEY</span>=<span class="s">...</span></div>
-            <div class="code-line"><span class="c">export</span> <span class="f">MINIMAX_API_KEY</span>=<span class="s">...</span></div>
           </div>
           <p style="margin-top:0.7rem;">Or configure a custom endpoint with <code>--endpoint</code> / <code>-e</code> and optional repeated <code>--header Key:Value</code> CLI flags.</p>
         </div>
@@ -960,8 +961,8 @@
   <div class="section-wrap">
   <section id="models" class="section-card">
     <span class="num">§ 06 — Models Supported</span>
-    <h2>🤖 501 models. 8 provider categories.<a href="#models" class="anchor">¶</a></h2>
-    <p class="sub">KISS Sorcar ships a catalog of <strong>501 models</strong> across <strong>8 provider categories</strong>, with built-in prices, context lengths, and capability flags (<code>fc</code> function calling, <code>gen</code> generation, <code>emb</code> embedding). The source of truth is <a href="https://github.com/ksenxx/kiss_ai/blob/main/src/kiss/core/models/MODEL_INFO.json">src/kiss/core/models/MODEL_INFO.json</a>.</p>
+    <h2>🤖 502 models. 9 provider categories.<a href="#models" class="anchor">¶</a></h2>
+    <p class="sub">KISS Sorcar ships a catalog of <strong>502 models</strong> across <strong>9 provider categories</strong>, with built-in prices, context lengths, and capability flags (<code>fc</code> function calling, <code>gen</code> generation, <code>emb</code> embedding). The source of truth is <a href="https://github.com/ksenxx/kiss_ai/blob/main/src/kiss/core/models/MODEL_INFO.json">src/kiss/core/models/MODEL_INFO.json</a>.</p>
 
     <div class="section-body">
       <div class="grid-2">
@@ -972,8 +973,9 @@
             <div class="provider-row"><span class="label">Anthropic</span><span class="count">13</span></div>
             <div class="provider-row"><span class="label">Gemini / Google</span><span class="count">23</span></div>
             <div class="provider-row"><span class="label">Together AI</span><span class="count">77</span></div>
-            <div class="provider-row"><span class="label">MiniMax</span><span class="count">5</span></div>
-            <div class="provider-row"><span class="label">OpenRouter</span><span class="count">303</span></div>
+            <div class="provider-row"><span class="label">Z.AI</span><span class="count">8</span></div>
+            <div class="provider-row"><span class="label">Moonshot AI</span><span class="count">6</span></div>
+            <div class="provider-row"><span class="label">OpenRouter</span><span class="count">295</span></div>
             <div class="provider-row"><span class="label">Claude Code CLI (<code>cc/*</code>)</span><span class="count">3</span></div>
             <div class="provider-row"><span class="label">Codex CLI (<code>codex/*</code>)</span><span class="count">7</span></div>
           </div>
@@ -984,11 +986,11 @@
           <p>Across all bundled providers, the catalog currently reports:</p>
           <div class="stat-row">
             <div class="stat-pill">
-              <div class="n">485</div>
+              <div class="n">486</div>
               <div class="l">generation-capable models</div>
             </div>
             <div class="stat-pill">
-              <div class="n">321</div>
+              <div class="n">326</div>
               <div class="l">function-calling-capable models</div>
             </div>
             <div class="stat-pill">
