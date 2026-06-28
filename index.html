@@ -537,6 +537,110 @@
       box-shadow: 0 6px 16px rgba(0,137,123,0.25);
     }
 
+    /* ========================================================== */
+    /* PROMPT DECK — § 02 "All you need is a short prompt".        */
+    /* Each panel: title, 1–2 sentence description, scrollable     */
+    /* prompt area with a fade-out, and a "more …" toggle.         */
+    /* ========================================================== */
+
+    .deck-group-title {
+      display: flex; align-items: center; gap: 0.7rem;
+      font-size: 0.78rem; font-weight: 600;
+      letter-spacing: 0.08em; text-transform: uppercase;
+      color: var(--primary); margin: 1.6rem 0 0.9rem;
+    }
+    .deck-group-title:first-child { margin-top: 0.4rem; }
+    .deck-group-title::before, .deck-group-title::after {
+      content: ""; flex: 1; height: 1px;
+      background: linear-gradient(90deg, transparent, var(--border), transparent);
+    }
+
+    .prompt-deck {
+      display: flex; flex-direction: column; gap: 1rem;
+    }
+
+    .prompt-panel { padding: 1.3rem 1.4rem; }
+    .prompt-panel .panel-head {
+      display: flex; align-items: flex-start; justify-content: space-between;
+      gap: 0.8rem; flex-wrap: wrap;
+    }
+    .prompt-panel .panel-title {
+      font-size: 1.02rem; font-weight: 600; margin-bottom: 0;
+    }
+    .prompt-panel .panel-badge {
+      flex-shrink: 0;
+      font-family: 'Roboto Mono', monospace;
+      font-size: 0.7rem; font-weight: 600; letter-spacing: 0.04em;
+      text-transform: uppercase;
+      padding: 0.2rem 0.55rem; border-radius: 999px;
+      background: var(--primary-soft); color: var(--primary-dark);
+      white-space: nowrap;
+    }
+    .prompt-panel .panel-badge.trick {
+      background: rgba(0,137,123,0.10); color: var(--accent);
+    }
+    .prompt-panel .panel-desc {
+      color: var(--text-dim); font-size: 0.92rem; line-height: 1.6;
+      margin-top: 0.5rem;
+    }
+
+    .prompt-body {
+      position: relative;
+      margin-top: 0.85rem;
+      background: var(--code-bg);
+      color: var(--code-text);
+      border-radius: 8px;
+      overflow: hidden;
+      box-shadow: var(--shadow-1);
+    }
+    .prompt-body pre {
+      margin: 0;
+      padding: 0.9rem 1.05rem;
+      font-family: 'Roboto Mono', 'JetBrains Mono', monospace;
+      font-size: 0.84rem; line-height: 1.65;
+      white-space: pre-wrap; word-wrap: break-word;
+      max-height: 180px; overflow-y: auto;
+      color: inherit;
+      scrollbar-width: thin;
+      scrollbar-color: rgba(255,255,255,0.25) transparent;
+    }
+    .prompt-body pre::-webkit-scrollbar { width: 8px; }
+    .prompt-body pre::-webkit-scrollbar-thumb {
+      background: rgba(255,255,255,0.20); border-radius: 4px;
+    }
+    .prompt-body pre::-webkit-scrollbar-track { background: transparent; }
+
+    .prompt-fade {
+      position: absolute; left: 0; right: 0; bottom: 0; height: 56px;
+      pointer-events: none;
+      background: linear-gradient(180deg, rgba(30,35,41,0) 0%, var(--code-bg) 90%);
+      transition: opacity 0.2s;
+    }
+    .prompt-panel.expanded .prompt-body pre {
+      max-height: none;
+    }
+    .prompt-panel.expanded .prompt-fade { opacity: 0; }
+
+    .prompt-more {
+      margin-top: 0.65rem;
+      display: inline-flex; align-items: center; gap: 0.35rem;
+      background: transparent; border: 1px solid var(--border);
+      color: var(--primary); font-family: inherit;
+      font-size: 0.82rem; font-weight: 500;
+      padding: 0.32rem 0.85rem; border-radius: 6px;
+      cursor: pointer;
+      transition: background 0.15s, border-color 0.15s, color 0.15s;
+    }
+    .prompt-more:hover {
+      background: var(--primary-soft);
+      border-color: var(--primary);
+      color: var(--primary-dark);
+    }
+    .prompt-more .chev {
+      display: inline-block; transition: transform 0.2s;
+    }
+    .prompt-panel.expanded .prompt-more .chev { transform: rotate(180deg); }
+
     /* Footer */
     footer {
       border-top: 1px solid var(--border);
@@ -588,6 +692,7 @@
       </a>
       <ul class="links">
         <li><a href="#compare">Compare</a></li>
+        <li><a href="#prompts">Prompts</a></li>
         <li><a href="#name">Name</a></li>
         <li><a href="#install">Install</a></li>
         <li><a href="#cli">CLI</a></li>
@@ -731,10 +836,403 @@
   </section>
   </div>
 
-  <!-- ================ § 02 — What is in the Name ================ -->
+  <!-- ================ § 02 — All you need is a short prompt ================ -->
+  <div class="section-wrap">
+  <section id="prompts" class="section-card">
+    <span class="num">§ 02 — All you need is a short prompt</span>
+    <h2>All you need is a short prompt.<a href="#prompts" class="anchor">¶</a></h2>
+    <p class="sub">KISS Sorcar ships with a curated set of <strong>sample tasks</strong> (long-horizon prompts you can drop straight into the CLI or VS Code extension) and <strong>promptlet tricks</strong> (short reusable directives that steer Sorcar's behaviour mid-task). The tasks live in <a href="https://github.com/ksenxx/kiss_ai/blob/main/src/kiss/SAMPLE_TASKS.md"><code>src/kiss/SAMPLE_TASKS.md</code></a>; the tricks live in <a href="https://github.com/ksenxx/kiss_ai/blob/main/src/kiss/INJECTIONS.md"><code>src/kiss/INJECTIONS.md</code></a>. Browse the deck below — click <em>more …</em> on any panel to expand the full prompt.</p>
+    <div class="section-body">
+
+      <div class="deck-group-title">Sample tasks &mdash; SAMPLE_TASKS.md</div>
+      <div class="prompt-deck">
+
+        <article class="inner-card prompt-panel" style="--i:0">
+          <div class="panel-head">
+            <h3 class="panel-title">Explain a workflow step-by-step</h3>
+            <span class="panel-badge">Task</span>
+          </div>
+          <p class="panel-desc">Ask Sorcar to walk you through the detailed step-by-step workflow of any algorithm or feature in your codebase, so you can understand it before changing it.</p>
+          <div class="prompt-body">
+            <pre>Can you show me the detailed step-by-step workflow of &lt;&lt;your algorithm or feature&gt;&gt;</pre>
+            <div class="prompt-fade"></div>
+          </div>
+          <button class="prompt-more" type="button">more <span class="chev">▾</span></button>
+        </article>
+
+        <article class="inner-card prompt-panel" style="--i:1">
+          <div class="panel-head">
+            <h3 class="panel-title">Edit a specific step of a workflow</h3>
+            <span class="panel-badge">Task</span>
+          </div>
+          <p class="panel-desc">Modify a specific step of an existing workflow with a precise natural-language instruction — no need to point Sorcar at the file, it will find the right code.</p>
+          <div class="prompt-body">
+            <pre>Can you change the step &lt;&lt;specify step&gt;&gt; as follows: &lt;&lt;whatever way you want to change&gt;&gt;</pre>
+            <div class="prompt-fade"></div>
+          </div>
+          <button class="prompt-more" type="button">more <span class="chev">▾</span></button>
+        </article>
+
+        <article class="inner-card prompt-panel" style="--i:2">
+          <div class="panel-head">
+            <h3 class="panel-title">Authenticate with a Slack workspace</h3>
+            <span class="panel-badge">Task</span>
+          </div>
+          <p class="panel-desc">Have Sorcar log you into a Slack workspace using the bundled Slack agent, so it can send and receive messages on your behalf.</p>
+          <div class="prompt-body">
+            <pre>can you authenticate me with the &lt;&lt;workspace name&gt;&gt; workspace on Slack using the Slack agent?</pre>
+            <div class="prompt-fade"></div>
+          </div>
+          <button class="prompt-more" type="button">more <span class="chev">▾</span></button>
+        </article>
+
+        <article class="inner-card prompt-panel" style="--i:3">
+          <div class="panel-head">
+            <h3 class="panel-title">Run a Slack-driven cron job</h3>
+            <span class="panel-badge">Task</span>
+          </div>
+          <p class="panel-desc">Spin up a named cron job that polls a Slack channel for unanswered messages, runs them as Sorcar tasks in arrival order, and replies with Slack-formatted results.</p>
+          <div class="prompt-body">
+            <pre>Can you create a cron job with a name prefixed with "kiss-" which will check every 3 seconds if there are latest unanswered messages from /&lt;&lt;user name&gt;&gt; in the channel sorcar using the Slack agent, then it will run the messages as tasks one-by-one in the order of arrival and respond with the result suitably formatted for Slack.</pre>
+            <div class="prompt-fade"></div>
+          </div>
+          <button class="prompt-more" type="button">more <span class="chev">▾</span></button>
+        </article>
+
+        <article class="inner-card prompt-panel" style="--i:4">
+          <div class="panel-head">
+            <h3 class="panel-title">Authenticate with iMessage</h3>
+            <span class="panel-badge">Task</span>
+          </div>
+          <p class="panel-desc">Connect Sorcar to your iMessage account so it can send and receive texts directly from macOS.</p>
+          <div class="prompt-body">
+            <pre>can you authenticate me with the iMessage agent?</pre>
+            <div class="prompt-fade"></div>
+          </div>
+          <button class="prompt-more" type="button">more <span class="chev">▾</span></button>
+        </article>
+
+        <article class="inner-card prompt-panel" style="--i:5">
+          <div class="panel-head">
+            <h3 class="panel-title">Send an SMS to a phone number</h3>
+            <span class="panel-badge">Task</span>
+          </div>
+          <p class="panel-desc">Dispatch a one-line SMS to any phone number through Sorcar's messaging agents — no scripting required.</p>
+          <div class="prompt-body">
+            <pre>can you send "Hello" to 1-800-772-1213?</pre>
+            <div class="prompt-fade"></div>
+          </div>
+          <button class="prompt-more" type="button">more <span class="chev">▾</span></button>
+        </article>
+
+        <article class="inner-card prompt-panel" style="--i:6">
+          <div class="panel-head">
+            <h3 class="panel-title">Authenticate with Gmail</h3>
+            <span class="panel-badge">Task</span>
+          </div>
+          <p class="panel-desc">Walk through the OAuth login flow for Gmail using the bundled Gmail agent, with the browser handling consent and Sorcar storing the token locally.</p>
+          <div class="prompt-body">
+            <pre>can you authenticate me with Gmail using the Gmail agent? Use the user's default browser to ask the user to log in and to get the authentication token.</pre>
+            <div class="prompt-fade"></div>
+          </div>
+          <button class="prompt-more" type="button">more <span class="chev">▾</span></button>
+        </article>
+
+        <article class="inner-card prompt-panel" style="--i:7">
+          <div class="panel-head">
+            <h3 class="panel-title">Audit a paper or repo for fraud</h3>
+            <span class="panel-badge">Task</span>
+          </div>
+          <p class="panel-desc">Have Sorcar fact-check a URL for wrong assumptions, cheating, irreproducibility, fraud, AI slop, and security vulnerabilities — verifying every claim and shipping an HTML report.</p>
+          <div class="prompt-body">
+            <pre>Can you read &lt;&lt;url&gt;&gt;, and thoroughly and precisely check for **wrong assumptions**, **cheating**, **irreproducibility issues**, **fraud**, **potential for cheating in evaluation**, **AI Slop**, and **security vulnerabilities**? Use internet search extensively and do not believe what people say -- verify them yourself. Do not hesitate to download code and run it to validate results. For security vulnerabilities, create a POC and test it. Generate an html report in ./sorcar_reported_frauds/ and open in the user's default browser. Thoroughly fact check everything you claim in the report.</pre>
+            <div class="prompt-fade"></div>
+          </div>
+          <button class="prompt-more" type="button">more <span class="chev">▾</span></button>
+        </article>
+
+        <article class="inner-card prompt-panel" style="--i:8">
+          <div class="panel-head">
+            <h3 class="panel-title">Sorcar for AI Discovery</h3>
+            <span class="panel-badge">Task</span>
+          </div>
+          <p class="panel-desc">Let Sorcar search, train, and benchmark candidate models on your data to find the lightest, fastest, cheapest model that hits a target accuracy and recall — without reward-hacking the evals.</p>
+          <div class="prompt-body">
+            <pre>Sorcar for AI Discovery: Can you discover the lightest and fastest AI model that will give the best accuracy and recall on the data at &lt;&lt;/path/to/data&gt;&gt; at the cheapest price? Analyze the data and search the internet extensively to propose the first few models. Implement and experiment with each of your proposals. Note down the ideas you used to optimize the accuracy/recall and speed/cost metrics achieved in a file, so that you can use the file to not repeat ideas that have already been tried and/or failed. You can also use the file to combine ideas that have been successful in the past. Separate 20% of the data for evals, and your discovery strategy must not look at the evals data. Use 'lambda' CLI to train your models on GPUs and evaluate if needed. Total budget for Lambda Labs is $1000. Experiment with a smaller subset of data and fewer parameters in a model to do experiments quickly, and then extrapolate. Use internet search extensively at every step. MAKE SURE THAT YOU DO NOT DO REWARD HACKING OR CHEATING IN THE MODELS OR AGENTS YOU ARE IMPLEMENTING TO FIT DATA. YOUR SOLUTION MUST GENERALIZE BEYOND THE DATA PROVIDED. Do not STOP until accuracy/recall reaches 95% on evals and you can process each query in less than 600 seconds and under 50 USD per query amortized over all queries. Create an html report with diagrams and illustrations in ./reports and open it in the user's default browser?</pre>
+            <div class="prompt-fade"></div>
+          </div>
+          <button class="prompt-more" type="button">more <span class="chev">▾</span></button>
+        </article>
+
+        <article class="inner-card prompt-panel" style="--i:9">
+          <div class="panel-head">
+            <h3 class="panel-title">Sorcar for Optimization</h3>
+            <span class="panel-badge">Task</span>
+          </div>
+          <p class="panel-desc">Run a command in the background, let Sorcar instrument and monitor its output, and iteratively rewrite the code to hit your speed, accuracy, recall, and cost targets.</p>
+          <div class="prompt-body">
+            <pre>Sorcar for Optimization: Can you run the command &lt;&lt;command&gt;&gt; in the background and monitor its output in real time to optimize the code at &lt;&lt;folder_name_or_url&gt;&gt; with respect to the following metrics: &lt;&lt;speed,accuracy,recall,cost&gt;&gt;. You can add diagnostic code which will print the metrics, such as running time at a finer level of granularity. Check for opportunities to optimize the code on the basis of the metrics information. If you discover any opportunities to optimize the metric based on the code, logs, events, and the command output, optimize the code and run the command again. Note down the ideas you used to optimize the code and the metric you achieved in a file, so that you can use the file to not repeat ideas that have already been tried and failed. You can also use the file to combine ideas that have been successful in the past. Repeat the process. Do not forget to remove the diagnostic code after the optimization is complete. You MUST NOT STOP until the metrics achieve the following values:&lt;&lt;give_concrete_values_for_metrics&gt;&gt;. Use the internet extensively to get new ideas for optimization. Create an html report with diagrams and illustrations in ./reports and open it in the user's default browser?</pre>
+            <div class="prompt-fade"></div>
+          </div>
+          <button class="prompt-more" type="button">more <span class="chev">▾</span></button>
+        </article>
+
+        <article class="inner-card prompt-panel" style="--i:10">
+          <div class="panel-head">
+            <h3 class="panel-title">Sorcar GEPA Prompt Optimizer</h3>
+            <span class="panel-badge">Task</span>
+          </div>
+          <p class="panel-desc">Run a full GEPA Pareto-frontier prompt-optimization loop over your dataset to evolve the best prompt for a <code>ChatSorcarAgent</code>, with cross-model review and no reward hacking.</p>
+          <div class="prompt-body">
+            <pre>Sorcar GEPA Prompt Optimizer: Can you optimize a prompt for a ChatSorcarAgent of the kiss-agent-framework Python library using the following GEPA algorithm on the data at &lt;&lt;url_or_db_file_of_data&gt;&gt; using claude-opus-4-7? You can find the trajectory events of an agent execution in ~/.kiss/sorcar.db after the agent has finished its execution. Split the dataset into 50% dev set and 50% val set.
+
+RUN_GEPA: Sample 100 data points from the val set and call it sval set. Maintain a pareto frontier in the folder ./pareto where we have a sub-folder for each node in the frontier. A node contains a prompt file (prompt.md) and a json file, say score.json, containing the list of sessions (ids) from the val set that were correctly predicted with the prompt. When you add a node to the pareto frontier make sure that the list of correctly predicted sessions is not a subset or equal to an existing list of sessions in some node in the frontier. If such a node exists, do not add the new node. After adding a node, remove all nodes whose list of sessions is a subset or equal to the list of sessions in the added node. Then run the following algorithm.
+
+1. pick a node from the pareto frontier with probability 0.5
+   a. sample a minibatch of 5 sessions from the dev set
+   b. run the agent with the prompt from the node on the minibatch
+   c. if the agent incorrectly predicts for some sessions, analyze and reflect on the trajectory events of the agent on those sessions available at ~/.kiss/sorcar.db and propose a new prompt which will fix the mistakes made by the agent on sessions incorrectly predicted.
+   d. if the agent predicts correctly on the minibatch, then evaluate it on the sval set and create the list of sessions on which the agent with the new prompt predicts correctly.
+   e. Add the new prompt and the list of sessions to the pareto frontier
+
+2. pick two nodes from the pareto frontier randomly with the remaining probability.
+   a. sample a minibatch of 5 sessions from the dev set
+   b. merge the prompts from the two nodes into a new prompt.
+   c. if the agent predicts correctly on the minibatch with the new prompt, then evaluate it on the sval set and create the list of sessions on which the agent with the new prompt predicts correctly.
+   d. Add the new prompt and the list of sessions to the pareto frontier
+
+3. Repeat steps 1 and 2 until there is no change in the prompt after 3 iterations.
+END_RUN_GEPA
+Repeat RUN_GEPA until there is no change in the prompt after 3 iterations.
+
+In each step, keep track of the best prompt which has the maximum number of successfully predicted sessions in ./pareto/optimal.md. In the prompt always add the sentence "Use internet search extensively at every step." MAKE SURE THAT YOU DO NOT DO REWARD HACKING OR CHEATING IN THE AGENT YOU ARE IMPLEMENTING TO FIT DATA. YOUR SOLUTION MUST GENERALIZE BEYOND THE DATA PROVIDED. Use internet search extensively at every step. Do not worry about budget. Create an html report with diagrams and illustrations in ./reports and open it in the user's default browser. Do NOT STOP until you could not improve the accuracy and recall after three consecutive rollouts. Use gpt-5.5 model (not codex) for thorough review of the work done by the other model.</pre>
+            <div class="prompt-fade"></div>
+          </div>
+          <button class="prompt-more" type="button">more <span class="chev">▾</span></button>
+        </article>
+
+        <article class="inner-card prompt-panel" style="--i:11">
+          <div class="panel-head">
+            <h3 class="panel-title">Run GEPA on HotpotQA</h3>
+            <span class="panel-badge">Task</span>
+          </div>
+          <p class="panel-desc">A one-liner to invoke <code>gepa.py</code> on the HotpotQA dataset with <code>gpt-4o-mini</code> as both the task model and the optimizer.</p>
+          <div class="prompt-body">
+            <pre>Can you run gepa.py on hotpotqa using gpt-4o-mini as both models</pre>
+            <div class="prompt-fade"></div>
+          </div>
+          <button class="prompt-more" type="button">more <span class="chev">▾</span></button>
+        </article>
+
+      </div>
+
+      <div class="deck-group-title">Promptlet tricks &mdash; INJECTIONS.md</div>
+      <div class="prompt-deck">
+
+        <article class="inner-card prompt-panel" style="--i:0">
+          <div class="panel-head">
+            <h3 class="panel-title">Force exhaustive web search</h3>
+            <span class="panel-badge trick">Trick</span>
+          </div>
+          <p class="panel-desc">Drop this trick into any task so Sorcar grounds its reasoning in current web evidence instead of stale training data.</p>
+          <div class="prompt-body">
+            <pre>Search internet extensively.</pre>
+            <div class="prompt-fade"></div>
+          </div>
+          <button class="prompt-more" type="button">more <span class="chev">▾</span></button>
+        </article>
+
+        <article class="inner-card prompt-panel" style="--i:1">
+          <div class="panel-head">
+            <h3 class="panel-title">Reproduce with an integration test</h3>
+            <span class="panel-badge trick">Trick</span>
+          </div>
+          <p class="panel-desc">Enforce a test-first workflow for bug fixes — write a failing integration test that reproduces the issue before changing any production code.</p>
+          <div class="prompt-body">
+            <pre>Reproduce the issue by writing an integration test. Then fix the issue.</pre>
+            <div class="prompt-fade"></div>
+          </div>
+          <button class="prompt-more" type="button">more <span class="chev">▾</span></button>
+        </article>
+
+        <article class="inner-card prompt-panel" style="--i:2">
+          <div class="panel-head">
+            <h3 class="panel-title">Reproduce with an end-to-end test</h3>
+            <span class="panel-badge trick">Trick</span>
+          </div>
+          <p class="panel-desc">Same as the integration-test trick, but demands full end-to-end coverage so the regression is locked down across module boundaries.</p>
+          <div class="prompt-body">
+            <pre>Reproduce the issue by writing an end-to-end test. Then fix the issue.</pre>
+            <div class="prompt-fade"></div>
+          </div>
+          <button class="prompt-more" type="button">more <span class="chev">▾</span></button>
+        </article>
+
+        <article class="inner-card prompt-panel" style="--i:3">
+          <div class="panel-head">
+            <h3 class="panel-title">Reproduce invariant violations</h3>
+            <span class="panel-badge trick">Trick</span>
+          </div>
+          <p class="panel-desc">Codify suspected invariant breaks as end-to-end tests first, then let Sorcar fix the offending code so the invariant holds forever.</p>
+          <div class="prompt-body">
+            <pre>Reproduce any violation of the ivariant by writing end-to-end tests. Then fix the issue.</pre>
+            <div class="prompt-fade"></div>
+          </div>
+          <button class="prompt-more" type="button">more <span class="chev">▾</span></button>
+        </article>
+
+        <article class="inner-card prompt-panel" style="--i:4">
+          <div class="panel-head">
+            <h3 class="panel-title">Pair-program with multi-model review</h3>
+            <span class="panel-badge trick">Trick</span>
+          </div>
+          <p class="panel-desc">Use Claude Opus as the implementer and GPT-5.5 as the reviewer/debugger so missed code paths and silent bugs are caught before they ship.</p>
+          <div class="prompt-body">
+            <pre>Use claude-opus-4-7 model for all tasks including coding, bug fixing, and test creation. Use gpt-5.5 model (not codex) for thorough review and debugging of the work done by the other model. Check if the other model has missed some code or has introduced bugs. No need to check if the models exist.</pre>
+            <div class="prompt-fade"></div>
+          </div>
+          <button class="prompt-more" type="button">more <span class="chev">▾</span></button>
+        </article>
+
+        <article class="inner-card prompt-panel" style="--i:5">
+          <div class="panel-head">
+            <h3 class="panel-title">Review the last task with GPT-5.5</h3>
+            <span class="panel-badge trick">Trick</span>
+          </div>
+          <p class="panel-desc">Spawn a review pass on your previous task: GPT-5.5 finds bugs and missing code, Claude Opus reproduces and fixes them with end-to-end tests, in a loop until the review is clean.</p>
+          <div class="prompt-body">
+            <pre>Can you review the updates made in the last task using gpt-5.5 (non codex) and find bugs or missing code. Then write end-to-end tests reproducing the bugs reported by the review, fix them, and test them using claude-opus-4-7? Run all the tests in parallel and fix bugs after thoroughly reviewing the fixes with gpt-5.5 (non codex). Repeat the process until you fail to reproduce the bugs reported by the review done by gpt-5.5 (non codex). No need to check if the models exist.</pre>
+            <div class="prompt-fade"></div>
+          </div>
+          <button class="prompt-more" type="button">more <span class="chev">▾</span></button>
+        </article>
+
+        <article class="inner-card prompt-panel" style="--i:6">
+          <div class="panel-head">
+            <h3 class="panel-title">Self-review the current task</h3>
+            <span class="panel-badge trick">Trick</span>
+          </div>
+          <p class="panel-desc">The same dual-model review loop, but applied to the in-flight task before you finish — bugs are reproduced, fixed, and re-reviewed in place.</p>
+          <div class="prompt-body">
+            <pre>Review the updates made in the current task using gpt-5.5 (non codex) and find bugs or missing code. Then write end-to-end tests reproducing the bugs reported by the review, fix them, and test them using claude-opus-4-7? Run all the tests in parallel and fix bugs after thoroughly reviewing the fixes with gpt-5.5 (non codex). Repeat the process until you fail to reproduce the bugs reported by the review done by gpt-5.5 (non codex). No need to check if the models exist.</pre>
+            <div class="prompt-fade"></div>
+          </div>
+          <button class="prompt-more" type="button">more <span class="chev">▾</span></button>
+        </article>
+
+        <article class="inner-card prompt-panel" style="--i:7">
+          <div class="panel-head">
+            <h3 class="panel-title">Use GLM-5.2 with dual review</h3>
+            <span class="panel-badge trick">Trick</span>
+          </div>
+          <p class="panel-desc">Switch the implementer to OpenRouter's GLM-5.2 and have both GPT-5.5 and Claude Opus carefully review its output for bugs and missing code.</p>
+          <div class="prompt-body">
+            <pre>Use openrouter/z-ai/glm-5.2 model for all tasks including coding, bug fixing, and test creation. ALWAYS use gpt-5.5 model (not codex) to carefully and thoroughly review and debug the work done by openrouter/z-ai/glm-5.2 for bugs and missing code. Then use claude-opus-4-7 to do the same thing.</pre>
+            <div class="prompt-fade"></div>
+          </div>
+          <button class="prompt-more" type="button">more <span class="chev">▾</span></button>
+        </article>
+
+        <article class="inner-card prompt-panel" style="--i:8">
+          <div class="panel-head">
+            <h3 class="panel-title">Resolve a merge conflict</h3>
+            <span class="panel-badge trick">Trick</span>
+          </div>
+          <p class="panel-desc">Paste the merge-conflict message after this trick and let Sorcar analyse the diff and resolve the conflict for you.</p>
+          <div class="prompt-body">
+            <pre>Can you check the following message on merge conflict and help me fix it? </pre>
+            <div class="prompt-fade"></div>
+          </div>
+          <button class="prompt-more" type="button">more <span class="chev">▾</span></button>
+        </article>
+
+        <article class="inner-card prompt-panel" style="--i:9">
+          <div class="panel-head">
+            <h3 class="panel-title">Generate an HTML report</h3>
+            <span class="panel-badge trick">Trick</span>
+          </div>
+          <p class="panel-desc">Have Sorcar package its findings into a polished HTML report with diagrams and illustrations under <code>./reports</code>, and open it in your default browser.</p>
+          <div class="prompt-body">
+            <pre>Can you create an html report with diagrams and illustrations in ./reports and open it in the user's default browser?</pre>
+            <div class="prompt-fade"></div>
+          </div>
+          <button class="prompt-more" type="button">more <span class="chev">▾</span></button>
+        </article>
+
+        <article class="inner-card prompt-panel" style="--i:10">
+          <div class="panel-head">
+            <h3 class="panel-title">Guard against reward hacking</h3>
+            <span class="panel-badge trick">Trick</span>
+          </div>
+          <p class="panel-desc">Add this guard so Sorcar audits its own implementation for shortcuts, overfitting, or cheating that would inflate metrics but fail to generalise.</p>
+          <div class="prompt-body">
+            <pre>Make sure that there is no reward hacking and cheating when reviewing your implementation.</pre>
+            <div class="prompt-fade"></div>
+          </div>
+          <button class="prompt-more" type="button">more <span class="chev">▾</span></button>
+        </article>
+
+        <article class="inner-card prompt-panel" style="--i:11">
+          <div class="panel-head">
+            <h3 class="panel-title">Push to origin</h3>
+            <span class="panel-badge trick">Trick</span>
+          </div>
+          <p class="panel-desc">A quick reminder for Sorcar to push your committed work upstream when you're done.</p>
+          <div class="prompt-body">
+            <pre>git push origin</pre>
+            <div class="prompt-fade"></div>
+          </div>
+          <button class="prompt-more" type="button">more <span class="chev">▾</span></button>
+        </article>
+
+        <article class="inner-card prompt-panel" style="--i:12">
+          <div class="panel-head">
+            <h3 class="panel-title">Rewind to a specific commit</h3>
+            <span class="panel-badge trick">Trick</span>
+          </div>
+          <p class="panel-desc">Reset both your local branch and the remote to a specific commit, discarding every commit that came after it.</p>
+          <div class="prompt-body">
+            <pre>Get rid of all commits after the following commit from both main and origin:</pre>
+            <div class="prompt-fade"></div>
+          </div>
+          <button class="prompt-more" type="button">more <span class="chev">▾</span></button>
+        </article>
+
+        <article class="inner-card prompt-panel" style="--i:13">
+          <div class="panel-head">
+            <h3 class="panel-title">Build paper &amp; screenshot-check formatting</h3>
+            <span class="panel-badge trick">Trick</span>
+          </div>
+          <p class="panel-desc">Have Sorcar compile your LaTeX paper, take screenshots of the rendered PDF, and iterate on the source until the layout is right.</p>
+          <div class="prompt-body">
+            <pre>Build the paper, and take screenshots to check and fix formatting.</pre>
+            <div class="prompt-fade"></div>
+          </div>
+          <button class="prompt-more" type="button">more <span class="chev">▾</span></button>
+        </article>
+
+        <article class="inner-card prompt-panel" style="--i:14">
+          <div class="panel-head">
+            <h3 class="panel-title">Debug the last failure</h3>
+            <span class="panel-badge trick">Trick</span>
+          </div>
+          <p class="panel-desc">Analyse the previous task's logs and trajectory events, reproduce the issue with an integration test, then fix the underlying cause.</p>
+          <div class="prompt-body">
+            <pre>Why did the last task failed? Thoroughly and precisely analyze the logs and the events of the task. Reproduce the issue by writing an integration test. Then fix the issue.</pre>
+            <div class="prompt-fade"></div>
+          </div>
+          <button class="prompt-more" type="button">more <span class="chev">▾</span></button>
+        </article>
+
+      </div>
+    </div>
+  </section>
+  </div>
+
+  <!-- ================ § 03 — What is in the Name ================ -->
   <div class="section-wrap">
   <section id="name" class="section-card">
-    <span class="num">§ 02 — What is in the Name</span>
+    <span class="num">§ 03 — What is in the Name</span>
     <h2>What is in the Name?<a href="#name" class="anchor">¶</a></h2>
     <p class="sub">Two names. One principle. A nod to a Bengali magician.</p>
     <div class="section-body">
@@ -754,10 +1252,10 @@
   </section>
   </div>
 
-  <!-- ================ § 03 — Installation ================ -->
+  <!-- ================ § 04 — Installation ================ -->
   <div class="section-wrap">
   <section id="install" class="section-card">
-    <span class="num">§ 03 — Installation</span>
+    <span class="num">§ 04 — Installation</span>
     <h2>Install in one line.<a href="#install" class="anchor">¶</a></h2>
     <p class="sub">Pick the install path that fits you &mdash; full source, Python package, or the VS Code extension. All you need is at least one API key from a major LLM provider.</p>
     <div class="section-body">
@@ -805,10 +1303,10 @@
   </section>
   </div>
 
-  <!-- ================ § 04 — CLI Interface ================ -->
+  <!-- ================ § 05 — CLI Interface ================ -->
   <div class="section-wrap">
   <section id="cli" class="section-card">
-    <span class="num">§ 04 — CLI Interface</span>
+    <span class="num">§ 05 — CLI Interface</span>
     <h2>The <code style="background:var(--surface);padding:0.05rem 0.45rem;border-radius:6px;font-size:0.85em;color:var(--primary-dark);">sorcar</code> CLI.<a href="#cli" class="anchor">¶</a></h2>
     <p class="sub">
       <code>sorcar</code> runs in two modes. <strong>Interactive</strong> (no <code>-t/--task</code> or <code>-f/--file</code>) is a Claude-Code-style REPL that connects as a thin terminal client to the local <code>sorcar web</code> daemon; chat-session control (new chat, resume by id, list history) and worktree merge/discard prompts are driven from slash commands, and each task is isolated in a git worktree by default. <strong>Non-interactive</strong> (<code>-t</code> or <code>-f</code> supplied) runs a plain <code>SorcarAgent</code> once on the supplied task and exits; worktree isolation and chat-session control are unavailable in this mode, but display events are still streamed into the chat DB so the run is replayable in the chat webview.
@@ -914,10 +1412,10 @@
   </section>
   </div>
 
-  <!-- ================ § 05 — Messaging & Third-Party Agents ================ -->
+  <!-- ================ § 06 — Messaging & Third-Party Agents ================ -->
   <div class="section-wrap">
   <section id="agents" class="section-card">
-    <span class="num">§ 05 — Messaging &amp; Third-Party Agents</span>
+    <span class="num">§ 06 — Messaging &amp; Third-Party Agents</span>
     <h2>💬 Reach the agent from anywhere.<a href="#agents" class="anchor">¶</a></h2>
     <p class="sub">KISS Sorcar includes <strong>23 third-party messaging agents</strong> that can send and receive messages on your behalf. It also ships a <strong>Govee smart-home CLI</strong> for controlling IoT lights (on/off, brightness, color, and color temperature) via the Govee Developer API. These agents live in <code>src/kiss/agents/third_party_agents/</code>.</p>
     <div class="section-body">
@@ -957,10 +1455,10 @@
   </section>
   </div>
 
-  <!-- ================ § 06 — Models Supported ================ -->
+  <!-- ================ § 07 — Models Supported ================ -->
   <div class="section-wrap">
   <section id="models" class="section-card">
-    <span class="num">§ 06 — Models Supported</span>
+    <span class="num">§ 07 — Models Supported</span>
     <h2>🤖 502 models. 9 provider categories.<a href="#models" class="anchor">¶</a></h2>
     <p class="sub">KISS Sorcar ships a catalog of <strong>502 models</strong> across <strong>9 provider categories</strong>, with built-in prices, context lengths, and capability flags (<code>fc</code> function calling, <code>gen</code> generation, <code>emb</code> embedding). The source of truth is <a href="https://github.com/ksenxx/kiss_ai/blob/main/src/kiss/core/models/MODEL_INFO.json">src/kiss/core/models/MODEL_INFO.json</a>.</p>
 
@@ -1005,10 +1503,10 @@
   </section>
   </div>
 
-  <!-- ================ § 07 — Contributing ================ -->
+  <!-- ================ § 08 — Contributing ================ -->
   <div class="section-wrap">
   <section id="contributing" class="section-card">
-    <span class="num">§ 07 — Contributing</span>
+    <span class="num">§ 08 — Contributing</span>
     <h2>🤗 Contributing.<a href="#contributing" class="anchor">¶</a></h2>
     <p class="sub">Contributions in the form of issues are welcome. KISS Sorcar should be able to help implement and review them.</p>
     <div class="section-body">
@@ -1028,10 +1526,10 @@
   </section>
   </div>
 
-  <!-- ================ § 08 — License ================ -->
+  <!-- ================ § 09 — License ================ -->
   <div class="section-wrap">
   <section id="license" class="section-card">
-    <span class="num">§ 08 — License</span>
+    <span class="num">§ 09 — License</span>
     <h2>📄 License.<a href="#license" class="anchor">¶</a></h2>
     <p class="sub">KISS Sorcar is released under a permissive open-source license.</p>
     <div class="section-body">
@@ -1044,10 +1542,10 @@
   </section>
   </div>
 
-  <!-- ================ § 09 — Citation ================ -->
+  <!-- ================ § 10 — Citation ================ -->
   <div class="section-wrap">
   <section id="citation" class="section-card">
-    <span class="num">§ 09 — Citation</span>
+    <span class="num">§ 10 — Citation</span>
     <h2>📚 Cite the paper.<a href="#citation" class="anchor">¶</a></h2>
     <p class="sub">If you use KISS Sorcar in your research, please cite:</p>
     <div class="section-body">
@@ -1119,6 +1617,25 @@
           card.style.setProperty('--mx', '-300px');
           card.style.setProperty('--my', '-300px');
         });
+      });
+    })();
+
+    // ---------------------------------------------------------------
+    // Prompt-deck "more …" toggle. Expands a .prompt-panel to show
+    // the full prompt text instead of the clipped, scrollable view.
+    // ---------------------------------------------------------------
+    (function () {
+      document.querySelectorAll('.prompt-panel').forEach((panel) => {
+        const btn = panel.querySelector('.prompt-more');
+        if (!btn) return;
+        const label = btn.firstChild;
+        const chev = btn.querySelector('.chev');
+        btn.addEventListener('click', () => {
+          const expanded = panel.classList.toggle('expanded');
+          if (label) label.nodeValue = expanded ? 'less ' : 'more ';
+          btn.setAttribute('aria-expanded', expanded ? 'true' : 'false');
+        });
+        btn.setAttribute('aria-expanded', 'false');
       });
     })();
 
