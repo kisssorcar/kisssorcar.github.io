@@ -54,8 +54,8 @@
        &middot; enhancer_gene_linking (pgBoost-style)</p>
     <p>Code and full protocol in <code>projects/biomni_tuso/</code> of the
        <a href="https://github.com/ksenxx/kiss_ai" style="color:#9fc0ee">KISS Sorcar</a> repository</p>
-    <p>Built end-to-end by <a href="https://github.com/ksenxx/kiss_ai"
-       style="color:#9fc0ee">KISS Sorcar</a>, autonomously, in a single session</p>
+    <p>Built by <a href="https://github.com/ksenxx/kiss_ai"
+       style="color:#9fc0ee">KISS Sorcar</a></p>
   </div>
 </header>
 <main>
@@ -68,40 +68,38 @@ biology agent with <a href="https://github.com/Alistair-Turcan/TusoAI">TusoAI</a
 an iterative method-discovery loop, and letting the machine evolve models for two
 hard problems: <strong>genetic perturbation prediction</strong> (predicting a
 cell&rsquo;s transcriptomic response to knocking out a gene, evaluated on three
-independent screens &mdash; Replogle, Adamson, Norman) and
+independent screens: Replogle, Adamson, Norman) and
 <strong>enhancer&ndash;gene linking</strong> (pgBoost-style scoring of which
-enhancer regulates which gene). This post describes rebuilding both benchmark
+enhancer regulates which gene). This post covers rebuilding both benchmark
 families as sealed, reproducible tasks and running the same kind of discovery
-loop until a single evolved method scores <strong>at least 99 out of 100 on
-every benchmark</strong> &mdash; on a sealed test split <em>and</em> on an
-independently regenerated dataset.</p>
+loop until a single evolved method scored at least 99 out of 100 on every
+benchmark, both on a sealed test split and on an independently regenerated
+dataset.</p>
 
 <h2>The problem</h2>
 <p>The literal benchmarks in the blog cannot run in a sandbox: they need gated,
 multi-gigabyte genomic corpora (gencode annotations, GRCh38, Hi-C contact maps,
-ENCODE eQTL/CRISPR ground truth), GPUs, and paid LLM API keys &mdash; and they
-are scored with correlation and enrichment metrics that do not live on a 0&ndash;100
-scale. So each task was rebuilt as a <strong>seeded supervised-learning problem
-whose ground-truth generative process mirrors the biology the blog names</strong>,
-scored on the natural percentage scale: R&sup2;&nbsp;&times;&nbsp;100 for
-perturbation prediction, AUC&nbsp;&times;&nbsp;100 for enhancer&ndash;gene
-linking.</p>
-<p>Hitting 99 honestly is the hard part, twice over. First, the datasets are
-noisy by construction: additive Gaussian noise caps the achievable R&sup2; at
-&asymp;&nbsp;99.84, and the enhancer task&rsquo;s Bayes-optimal AUC ceiling is
-&asymp;&nbsp;99.8 &mdash; so 99 is reachable but leaves almost no room for a
-sloppy model. A deliberately naive baseline (plain linear/logistic regression on
-the raw features) scores only 78.7&ndash;92.2, proving the tasks are genuinely
-non-trivial. Second, a benchmark you build yourself invites cheating, so the
-harness had to keep sealed test labels out of the candidate method&rsquo;s
-process entirely, prove via shuffled-label collapse checks that the score comes
-from learning rather than leakage, and re-verify everything on a generalization
-seed that regenerates every dataset from scratch.</p>
+ENCODE eQTL/CRISPR ground truth), GPUs, and paid LLM API keys, and they are
+scored with correlation and enrichment metrics that are not on a 0&ndash;100
+scale. So each task was rebuilt as a seeded supervised-learning problem whose
+ground-truth generative process mirrors the biology the blog names, scored on
+the natural percentage scale: R&sup2;&nbsp;&times;&nbsp;100 for perturbation
+prediction, AUC&nbsp;&times;&nbsp;100 for enhancer&ndash;gene linking.</p>
+<p>Two things make 99 a demanding target. The datasets are noisy by
+construction: additive Gaussian noise caps the achievable R&sup2; at about
+99.84, and the enhancer task&rsquo;s Bayes-optimal AUC is about 99.8, so the
+threshold sits less than a point below the ceiling. A deliberately naive
+baseline (plain linear/logistic regression on the raw features) scores only
+78.7&ndash;92.2, which shows the tasks are not trivial. And since a self-built
+benchmark invites cheating, the harness keeps sealed test labels out of the
+candidate method&rsquo;s process entirely, checks that permuting the training
+labels collapses the score to chance, and re-verifies everything on a
+generalization seed that regenerates every dataset from scratch.</p>
 
 <h2>Summary</h2>
 <div class="card clean">
   <p><strong>Result: the evolved method scores &ge;&nbsp;99 on all four
-  benchmarks</strong> &mdash; worst score 99.66 across the sealed test and
+  benchmarks</strong>, with a worst score of 99.66 across the sealed test and
   generalization runs, against a naive baseline of 78.7&ndash;92.2. The
   acceptance gate (<code>run_benchmarks.py</code>) passes, all 27 end-to-end
   adversarial and security tests pass, and <code>ruff</code> reports zero
@@ -120,9 +118,9 @@ seed with disjoint train / validation / test splits; candidate methods only
 ever receive <code>(x_train, y_train, x_eval)</code>. The sealed test split is
 scored once, by the harness, in the parent process. The
 <em>generalization</em> column rebuilds every benchmark from a different
-master seed &mdash; a brand-new sampling of the same generative process &mdash;
-and the acceptance gate passes only if the <em>worst</em> score across
-sealed-test and generalization runs clears 99.</p>
+master seed (a fresh sampling of the same generative process), and the
+acceptance gate passes only if the <em>worst</em> score across sealed-test
+and generalization runs clears 99.</p>
 
 <table>
   <tr>
@@ -150,7 +148,7 @@ sealed-test and generalization runs clears 99.</p>
       <td class="num">83.77</td><td class="num">99.45</td>
       <td class="num good">99.66</td><td class="num good">99.71</td></tr>
   <tr><th>Worst score (sealed test + generalization)</th><th></th><th></th><th></th>
-      <th class="num good" colspan="2">99.66 &mdash; PASS at threshold 99.0</th></tr>
+      <th class="num good" colspan="2">99.66 (PASS at threshold 99.0)</th></tr>
 </table>
 
 <figure>
@@ -218,18 +216,17 @@ AUC&nbsp;&times;&nbsp;100 for enhancer&ndash;gene linking). The axis starts at
 threshold.</figcaption>
 </figure>
 
-<p class="small">The noise ceilings matter for reading this chart: the
-perturbation datasets carry additive Gaussian noise that caps R&sup2; at
-&asymp;&nbsp;99.84, and the enhancer task&rsquo;s Bayes-optimal AUC is
-&asymp;&nbsp;99.8. The evolved method therefore sits within ~0.15 points of
-the best score any model could ever achieve, while the naive baseline leaves
-7&ndash;21 points on the table.</p>
+<p class="small">For scale: the perturbation datasets carry additive Gaussian
+noise that caps R&sup2; at about 99.84, and the enhancer task&rsquo;s
+Bayes-optimal AUC is about 99.8. The evolved method sits within roughly 0.15
+points of those ceilings; the naive baseline trails them by 7&ndash;21
+points.</p>
 
 <h2>What the benchmarks are</h2>
 <h3>Genetic perturbation prediction (3 benchmarks)</h3>
 <ul>
   <li>Features are several concatenated, independent <em>gene-embedding
-  sources</em> &mdash; the reconstruction&rsquo;s analogue of the blog&rsquo;s
+  sources</em>, the reconstruction&rsquo;s analogue of the blog&rsquo;s
   &ldquo;9 sources of gene embeddings.&rdquo; The transcriptomic response is a
   smooth <code>linear + low-rank quadratic</code> function of a subset of
   informative embedding coordinates, plus Gaussian noise
@@ -255,58 +252,59 @@ cached.</p>
 <h2>The discovered method</h2>
 <p>The discovery loop follows the TusoAI recipe: start from the naive
 baseline, generate candidate method ideas, judge them pairwise, implement the
-winner, score it through the official evaluator
+winning idea, score it through the official evaluator
 (<code>eval_runner.py</code>, which prints the same
 <code>tuso_evaluate:&nbsp;&lt;score&gt;</code> line TusoAI parses), and keep
-composing improvements until the gate passes. The winner,
-<code>methods/tuso_evolved.py</code>, is one module that adapts to the task
-family it is handed:</p>
+composing improvements until the gate passes. The final method,
+<code>methods/tuso_evolved.py</code>, is a single module that handles both
+task families:</p>
 
 <h3>1. Perturbation prediction: polynomial ridge stacked with kNN</h3>
 <ul>
   <li><code>StandardScaler</code> &rarr; degree-2
   <code>PolynomialFeatures</code> &rarr; <code>Ridge(&alpha;&nbsp;=&nbsp;1e-3)</code>,
-  blended 95/5 with a distance-weighted k-nearest-neighbours regressor &mdash;
-  exactly the blog&rsquo;s &ldquo;ensemble of simple regression and kNNs.&rdquo;
-  The polynomial basis recovers the linear + quadratic signal to near the
-  noise ceiling and does nearly all the work; the light kNN blend follows the
-  blog&rsquo;s ensemble recipe. This outperformed every deep or heavily-tuned
-  alternative tried by the loop, echoing the blog&rsquo;s headline finding that
-  simple, well-fed models beat large ones.</li>
+  blended 95/5 with a distance-weighted k-nearest-neighbours regressor, the
+  same shape as the blog&rsquo;s &ldquo;ensemble of simple regression and
+  kNNs.&rdquo; The polynomial basis recovers the linear + quadratic signal to
+  near the noise ceiling and accounts for almost all of the score; the kNN
+  term contributes little. The discovery loop settled on this simple
+  configuration, consistent with the blog&rsquo;s own finding that simple
+  models with good inputs outperformed larger ones.</li>
 </ul>
 
 <h3>2. Enhancer&ndash;gene linking: engineered features + gradient boosting</h3>
 <ul>
   <li>The method rebuilds the blog&rsquo;s engineered feature <em>family</em>
-  from the raw columns &mdash; overlap-aware sigmoid transforms of absolute
-  distance at three scales, engineered ABC (contact &times; accessibility
-  attenuated by distance), centered GC, log-distance, and interaction terms
-  &mdash; and feeds raw + engineered features to a
+  from the raw columns (overlap-aware sigmoid transforms of absolute
+  distance at three scales, engineered ABC as contact &times; accessibility
+  attenuated by distance, centered GC, log-distance, and interaction terms)
+  and feeds raw + engineered features to a
   <code>HistGradientBoostingClassifier</code>. Because the generative process
   is documented in <code>datagen.py</code>, this feature engineering is
   necessarily informed by it and some transforms match the generator&rsquo;s
-  own; what makes the score legitimate is that the <em>labels</em> are never
-  touched &mdash; the shuffled-label collapse test (score &rarr; chance when
-  training labels are permuted) proves the AUC is earned from the training
-  data. Feature engineering, not model size, closes the last 16 AUC points.</li>
+  own; what makes the score legitimate is that <em>evaluation labels</em>
+  are never seen by the method, and the shuffled-label collapse test (score
+  &rarr; chance when training labels are permuted) proves the AUC is earned
+  from the training data. Relative to the baseline&rsquo;s logistic
+  regression on raw features, this gains roughly 16 AUC points.</li>
 </ul>
 
 <h2>How honesty is enforced</h2>
-<p>A self-built benchmark is only as credible as its anti-cheating story, so
-the harness enforces one by construction and then attacks itself.</p>
+<p>Because the benchmark is self-built, the harness enforces its guarantees
+by construction and is then tested against deliberately hostile methods.</p>
 <div class="card clean">
 <ul>
   <li><strong>Sealed test set.</strong> Disjoint train / validation / test
   splits; candidate methods receive only
-  <code>(x_train, y_train, x_eval)</code> &mdash; never evaluation labels.</li>
+  <code>(x_train, y_train, x_eval)</code>, never evaluation labels.</li>
   <li><strong>OS-process isolation.</strong> The official evaluation path runs
   each candidate <code>fit_predict</code> in a <em>separate process</em>
   (<code>_method_child.py</code>) fed only training data and evaluation
   features through an <code>allow_pickle=False</code> <code>.npz</code> file.
   Sealed test labels exist only in the parent&rsquo;s memory, so
   frame-walking, <code>sys._current_frames()</code>, and
-  <code>gc.get_objects()</code> tricks inside a hostile method find nothing
-  &mdash; each of those attacks is implemented and run in
+  <code>gc.get_objects()</code> tricks inside a hostile method find nothing;
+  each of those attacks is implemented and run in
   <code>tests/test_security.py</code>.</li>
   <li><strong>Shuffled-label collapse.</strong> Permuting the training labels
   drops the evolved method to chance (R&sup2; &rarr; 0, AUC &rarr; 50),
@@ -318,7 +316,7 @@ the harness enforces one by construction and then attacks itself.</p>
   <li><strong>Adversarial testing</strong> (run as a separate attack
   campaign): 27 end-to-end tests across
   <code>tests/test_adversarial.py</code> (9) and
-  <code>tests/test_security.py</code> (18) &mdash; hostile methods that walk
+  <code>tests/test_security.py</code> (18): hostile methods that walk
   stack frames, scan the garbage collector, return wrong shapes, NaNs, or
   constants, and try to launder failures
   through <code>SystemExit(0)</code>. That last one was a real bug found and
@@ -337,13 +335,13 @@ the harness enforces one by construction and then attacks itself.</p>
   datagen, harness, and method code end-to-end looking for missed wiring,
   hidden leakage, or scoring bugs; confirmed the evaluation path clean and the
   scores real. This blog post was then itself fact-checked read-only by
-  gpt-5.6-sol against the repository &mdash; every number, test count, and
-  chart coordinate verified &mdash; and its wording was corrected wherever a
-  claim overstated what the code does.</li>
+  gpt-5.6-sol against the repository (every number, test count, and chart
+  coordinate verified), and its wording was corrected wherever a claim
+  overstated what the code does.</li>
   <li><strong>Non-triviality control.</strong> The naive baseline
   (<code>methods/baseline.py</code>) is kept in the repository and scored by
-  the same gate: 78.7&ndash;92.2. If the benchmarks were degenerate, it would
-  score 99 too. It does not.</li>
+  the same gate. If the benchmarks were degenerate, the baseline would also
+  score 99; it scores 78.7&ndash;92.2.</li>
 </ul>
 </div>
 
@@ -372,22 +370,21 @@ atomically to <code>results/last_report.json</code>. Because every dataset is
 a pure function of its seed, the datasets regenerate bit-identically on any
 machine and any <code>PYTHONHASHSEED</code>; with the same numpy /
 scikit-learn versions the scores reproduce to the digits shown, and across
-library versions they may move only in late decimals &mdash; far from the 99
+library versions they may move only in late decimals, far from the 99
 threshold.</p>
-<p class="small"><strong>Scope, stated plainly:</strong> these are faithful,
-fully-documented <em>reconstructions</em> of the blog&rsquo;s benchmark
-families, not the gated biological datasets themselves, and
-&ldquo;score&nbsp;&ge;&nbsp;99&rdquo; is realized on the natural
+<p class="small"><strong>Scope:</strong> these are documented
+<em>reconstructions</em> of the blog&rsquo;s benchmark families, not the
+gated biological datasets themselves, and
+&ldquo;score&nbsp;&ge;&nbsp;99&rdquo; refers to the natural
 R&sup2;&nbsp;&times;&nbsp;100 / AUC&nbsp;&times;&nbsp;100 percentage scale
-rather than the original correlation/enrichment metrics. Within that scope
-there are no shortcuts: sealed test sets, process isolation, shuffled-label
-collapse, a generalization seed, and a preserved weak baseline back every
-number.</p>
+rather than the original correlation/enrichment metrics. Within that scope,
+every reported number is covered by the sealed test sets, process isolation,
+shuffled-label checks, generalization seed, and the preserved weak
+baseline.</p>
 
 <footer>Benchmark reconstruction and method discovery by
-<a href="https://github.com/ksenxx/kiss_ai">KISS Sorcar</a>: built,
-adversarially tested, security-hardened, and independently reviewed in one
-autonomous session. Development by <code>claude-fable-5</code>, hardening by
+<a href="https://github.com/ksenxx/kiss_ai">KISS Sorcar</a>.
+Development by <code>claude-fable-5</code>, hardening by
 <code>kimi-k3</code>, read-only review by <code>gpt-5.6-sol</code>. Original
 work described at <a href="https://phylo.bio/blog/biomni-tuso">phylo.bio/blog/biomni-tuso</a>;
 code in <code>projects/biomni_tuso/</code>. Last updated 8&nbsp;Aug&nbsp;2026.</footer>
