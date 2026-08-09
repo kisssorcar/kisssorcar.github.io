@@ -52,8 +52,8 @@
        <a href="https://phylo.bio/blog/biomni-tuso" style="color:#9fc0ee">Biomni &times; TusoAI</a> blog</p>
     <p>Benchmarks: perturb_replogle &middot; perturb_adamson &middot; perturb_norman
        &middot; enhancer_gene_linking (pgBoost-style)</p>
-    <p>Code and full protocol in <code>projects/biomni_tuso/</code> of the
-       <a href="https://github.com/ksenxx/kiss_ai" style="color:#9fc0ee">KISS Sorcar</a> repository</p>
+    <p>Code and full protocol at
+       <a href="https://github.com/ksenxx/biomni_tuso" style="color:#9fc0ee">github.com/ksenxx/biomni_tuso</a></p>
     <p>Built by <a href="https://github.com/ksenxx/kiss_ai"
        style="color:#9fc0ee">KISS Sorcar</a></p>
   </div>
@@ -222,6 +222,112 @@ Bayes-optimal AUC is about 99.8. The evolved method sits within roughly 0.15
 points of those ceilings; the naive baseline trails them by 7&ndash;21
 points.</p>
 
+<h2>Comparison with past state of the art</h2>
+<p>Two comparisons are relevant: how standard prior methods score on these
+reconstructed benchmarks, and what the original Biomni &times; TusoAI work
+reported against the real past state of the art.</p>
+
+<h3>Measured on the reconstructions</h3>
+<p>Each row is a standard reference method: the defaults a practitioner would
+reach for before doing any feature engineering or method search. They are not
+claimed to be the historical state of the art; they show where ordinary
+modeling lands on these tasks. Each is implemented in <code>methods/</code>
+and scored by the same sealed harness as the evolved method. All numbers are
+sealed-test scores measured with the commands in the reproduction section;
+nothing is estimated. Gradient boosting on raw features is the closest
+analogue of pgBoost itself on the enhancer task: the same model family,
+without the engineered features.</p>
+
+<table>
+  <tr>
+    <th>Method (sealed test)</th>
+    <th class="num">perturb_<br>replogle</th>
+    <th class="num">perturb_<br>adamson</th>
+    <th class="num">perturb_<br>norman</th>
+    <th class="num">enhancer_gene_<br>linking (AUC)</th>
+  </tr>
+  <tr><td>Linear / logistic regression, raw features
+      (<code>methods/baseline.py</code>)</td>
+      <td class="num">90.25</td><td class="num">78.71</td>
+      <td class="num">92.20</td><td class="num">83.77</td></tr>
+  <tr><td>k-nearest neighbours, distance-weighted
+      (<code>methods/ref_knn.py</code>)</td>
+      <td class="num">50.78</td><td class="num">48.27</td>
+      <td class="num">54.41</td><td class="num">92.24</td></tr>
+  <tr><td>Random forest, 300 trees
+      (<code>methods/ref_random_forest.py</code>)</td>
+      <td class="num">86.68</td><td class="num">83.67</td>
+      <td class="num">90.04</td><td class="num">99.36</td></tr>
+  <tr><td>Gradient boosting, raw features
+      (<code>methods/ref_gbm_raw.py</code>)</td>
+      <td class="num">97.08</td><td class="num">95.22</td>
+      <td class="num">97.40</td><td class="num">99.62</td></tr>
+  <tr><td><strong>Evolved method</strong>
+      (<code>methods/tuso_evolved.py</code>)</td>
+      <td class="num good">99.71</td><td class="num good">99.71</td>
+      <td class="num good">99.71</td><td class="num good">99.66</td></tr>
+</table>
+
+<p class="small">No single prior method clears 99 on all four benchmarks. The
+strongest, gradient boosting on raw features, reaches 95.2&ndash;97.4 R&sup2;
+on the perturbation tasks (2.3&ndash;4.5 points below the evolved method,
+a large gap given the 99.84 noise ceiling) and 99.62 AUC on the enhancer task,
+where the evolved method&rsquo;s engineered features add a further 0.04 and
+the generalization-seed margin. The evolved method is also the only one that
+passes the acceptance gate on both the sealed test and the regenerated
+datasets.</p>
+
+<h3>What the original work reported</h3>
+<p>For context, the original blog&rsquo;s figures compare Biomni &times;
+TusoAI against the real past state of the art on the real datasets. The
+numbers below were measured pixel-by-pixel from those figures (Figures 2 and
+3 of the Phylo post), so they are approximate. The perturbation ranks are
+printed in Figure 2; the enhancer rank is counted from the nine methods
+plotted in Figure 3.</p>
+
+<table>
+  <tr>
+    <th>Original benchmark</th>
+    <th>Metric</th>
+    <th class="num">Best prior method</th>
+    <th class="num">Biomni &times; TusoAI</th>
+    <th class="num">Rank</th>
+  </tr>
+  <tr><td>Miller et al. (perturbation)</td>
+      <td>mean Pearson correlation (aggregate)</td>
+      <td class="num">&asymp; 0.42</td>
+      <td class="num">&asymp; 0.61</td>
+      <td class="num">1 of 16</td></tr>
+  <tr><td>scPerturBench (perturbation)</td>
+      <td>mean PCC(dPert), common DEGs</td>
+      <td class="num">&asymp; 0.33 (CPA)</td>
+      <td class="num">&asymp; 0.42</td>
+      <td class="num">1 of 18</td></tr>
+  <tr><td>PerturbHD (perturbation)</td>
+      <td>mean of regression corr / hit rates</td>
+      <td class="num">&asymp; 0.47 (PRESAGE)</td>
+      <td class="num">&asymp; 0.52</td>
+      <td class="num">1 of 20</td></tr>
+  <tr><td>eQTL evaluation (enhancer&ndash;gene linking, &gt;100&nbsp;kb)</td>
+      <td>average enrichment</td>
+      <td class="num">&asymp; 13 (rE2G)</td>
+      <td class="num">&asymp; 42</td>
+      <td class="num">1 of 9</td></tr>
+</table>
+
+<p class="small">The prior methods in those figures include GEARS, scGPT,
+scFoundation, CPA, PRESAGE, and Geneformer-style models for perturbation
+prediction, and pgBoost, rE2G, scE2G, SCENT, Signac, ArchR, Cicero, and a
+distance baseline for enhancer&ndash;gene linking. The original perturbation
+model beat every one of them, including the large deep learning models. The
+TusoAI-improved pgBoost roughly quadrupled the original pgBoost&rsquo;s
+enrichment at distal (&gt;100&nbsp;kb) links (about 10 to about 42, which the
+Phylo post describes as a 5-fold improvement) and cleared the best prior
+curve, rE2G, by about 3&times;. Those results are on the real gated datasets
+and are not directly comparable to the reconstruction scores above; they are
+shown to make clear what &ldquo;past state of the art&rdquo; means in the
+original setting.</p>
+
 <h2>What the benchmarks are</h2>
 <h3>Genetic perturbation prediction (3 benchmarks)</h3>
 <ul>
@@ -345,11 +451,44 @@ by construction and is then tested against deliberately hostile methods.</p>
 </ul>
 </div>
 
+<h2>Implications</h2>
+<p>A few observations follow from the workflow itself, independent of the
+final scores.</p>
+<ul>
+  <li><strong>Development time.</strong> The original Phylo work produced its
+  perturbation model from one sentence of natural language, over one week of
+  unattended iteration through 500 candidates; its enhancer model took 10,000
+  iterations. This reconstruction went from an empty directory to a gated,
+  adversarially tested 99+ method in a single autonomous session. If results
+  of this kind hold up more broadly, custom methods become practical for
+  datasets where writing one by hand was never worth the human time.</li>
+  <li><strong>Where the gains came from.</strong> In both the original work
+  and this reconstruction, the final methods are small and inspectable (ridge
+  regression, kNN, gradient boosting), and the improvements traced back to
+  the inputs: which gene embeddings to use, which features to engineer from
+  the raw genomic columns. Methods of this shape are cheap to run and
+  straightforward to audit, which matters once methods are produced faster
+  than humans can review them.</li>
+  <li><strong>Evaluation carries the weight.</strong> When a loop proposes
+  hundreds of candidates, benchmark design determines whether the search
+  finds real improvements or exploits leakage. In this repository the
+  harness, data generation, and test suite come to roughly 1,400 lines of
+  code, against 157 lines for the winning method. If machine-generated
+  methods become common, shared and hardened evaluation harnesses are the
+  part of the ecosystem that has to keep up.</li>
+  <li><strong>Access.</strong> A lab with data but no ML engineer could state
+  a task in a sentence and get back a documented method together with the
+  checks behind it. That would shift human experts toward benchmark design
+  and review, with more of the implementation delegated to discovery
+  loops.</li>
+</ul>
+
 <h2>Reproducing the results</h2>
-<p>The complete protocol ships as <code>README.md</code> in
-<code>projects/biomni_tuso/</code>. Everything is CPU-only, dependency-light
-(numpy, scipy, scikit-learn), and deterministic end-to-end.</p>
-<pre><code>cd projects/biomni_tuso
+<p>The complete protocol ships as <code>README.md</code> in the
+<a href="https://github.com/ksenxx/biomni_tuso">ksenxx/biomni_tuso</a>
+repository. Everything is CPU-only, dependency-light (numpy, scipy,
+scikit-learn), and deterministic end-to-end.</p>
+<pre><code>git clone https://github.com/ksenxx/biomni_tuso.git &amp;&amp; cd biomni_tuso
 uv venv --python 3.12 .venv &amp;&amp; . .venv/bin/activate
 uv pip install numpy scipy scikit-learn pytest ruff
 
@@ -361,6 +500,11 @@ python eval_runner.py perturb_replogle methods.tuso_evolved
 
 # The weak baseline, scored by the same gate (proves non-triviality)
 python run_benchmarks.py methods.baseline 99   # fails, by design
+
+# Prior-method references from the comparison table (all fail the gate)
+python run_benchmarks.py methods.ref_knn 99
+python run_benchmarks.py methods.ref_random_forest 99
+python run_benchmarks.py methods.ref_gbm_raw 99
 
 # Full adversarial + security suite (27 end-to-end tests, no mocks)
 python -m pytest tests/ -q
@@ -387,7 +531,8 @@ baseline.</p>
 Development by <code>claude-fable-5</code>, hardening by
 <code>kimi-k3</code>, read-only review by <code>gpt-5.6-sol</code>. Original
 work described at <a href="https://phylo.bio/blog/biomni-tuso">phylo.bio/blog/biomni-tuso</a>;
-code in <code>projects/biomni_tuso/</code>. Last updated 8&nbsp;Aug&nbsp;2026.</footer>
+code at <a href="https://github.com/ksenxx/biomni_tuso">github.com/ksenxx/biomni_tuso</a>.
+Last updated 9&nbsp;Aug&nbsp;2026.</footer>
 </main>
 </body>
 </html>
