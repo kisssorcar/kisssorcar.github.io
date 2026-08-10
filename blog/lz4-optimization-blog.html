@@ -89,8 +89,9 @@ project&rsquo;s object-file cache turned out to silently defeat
 profile-guided optimization in a way that is easy to miss (details below).</p>
 <p>LZ4&rsquo;s reputation rests on the stability of its format, so the
 binding constraint was: the bytes coming out must not change. Every
-optimization had to produce output identical to the stock binary in every
-mode, survive adversarial and sanitizer testing, and leave the serial code
+optimization had to keep file-mode output identical to the stock binary,
+keep every other mode identical to the pre-change binary, survive
+adversarial and sanitizer testing, and leave the serial code
 path untouched for pipes, dependent-block mode, the legacy format, and
 platforms without <code>pread</code>.</p>
 
