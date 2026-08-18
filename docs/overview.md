@@ -2,11 +2,11 @@
 
 > Open-source general-purpose AI agent for long-horizon tasks and AI discovery.
 
-**KISS Sorcar is a free, simple, local-first, bring-your-own-key AI agent framework.** It runs as a VS Code extension, a Claude-Code-style CLI, and a browser/mobile web app. Your prompts and code are sent directly to the model provider or local endpoint you configure — not through our servers. It supports multi-model workflows just via prompts. All agents run as daemons. Complex AI systems/techniques can be replaced with a paragraph of prompt in KISS Sorcar.
+**KISS Sorcar is a free, simple, local-first, bring-your-own-key AI agent framework.** It runs as a VS Code extension and a browser/mobile web app, both served by a local daemon, and offers a Python client API for scripting tasks. Your prompts and code are sent directly to the model provider or local endpoint you configure — not through our servers. It supports multi-model workflows just via prompts. All agents run as daemons. Complex AI systems/techniques can be replaced with a paragraph of prompt in KISS Sorcar.
 
 *"Everything should be made as simple as possible, but not simpler." — Albert Einstein*
 
-- **Version:** 2026.7.30
+- **Version:** 2026.8.2
 - **License:** Apache-2.0
 - **Python:** 3.13+
 - **Website:** <https://kisssorcar.github.io/>
@@ -17,18 +17,20 @@
 
 | Capability | KISS Sorcar | Claude Code | Cursor |
 |---|---|---|---|
-| Interfaces | CLI + VS Code extension + web/mobile app | CLI + mobile app | Custom VS Code |
+| Interfaces | VS Code extension + web/mobile app + Python API | CLI + mobile app | Custom VS Code |
 | AI Discovery | Yes — simply via prompt | No | No |
 | GEPA Prompt Optimization | Yes — simply via prompt | No | No |
 | Multiple models from multiple vendors in the same task | Yes — mix OpenAI, Anthropic, Gemini, Together, Z.AI, Moonshot AI, OpenRouter, Claude Code CLI, and Codex CLI | No — Anthropic Claude models only | No — one model per task |
 | Primary focus | Quality — rigorous review, end-to-end tests | Speed and developer ergonomics | Speed |
-| Core agents lines of code | ~2850 | Unknown | Unknown |
-| Models in bundled catalog | 538 across 9 provider categories | Claude family only | Subset chosen by Cursor |
+| Core agents lines of code | ~3000 | Unknown | Unknown |
+| Models in bundled catalog | 622 across 9 provider categories | Claude family only | Subset chosen by Cursor |
 | Bring your own API key / endpoint | Yes — keys stay on your machine | Anthropic key | Routed through Cursor backend |
 | Open source | Yes — Apache-2.0 | Proprietary | Proprietary |
 | Price | Free framework; pay only your chosen model provider | Subscription / API usage | Subscription |
 | Run on top of Claude Code / Codex CLI | Yes — `cc/*` and `codex/*` namespaces | N/A | No |
-| Messaging and communication channels | 23 third-party agents, including Slack, Gmail, Phone Control, SMS, and WhatsApp | Slack, mobile Remote Control, and research-preview channels; no documented built-in Gmail, WhatsApp, phone-call, or SMS channel | Slack and Microsoft Teams Cloud Agent integrations; no documented built-in Gmail, WhatsApp, phone-call, or SMS channel |
+| Messaging and communication channels | 32 third-party channel agents, including Slack, Gmail, Email (IMAP/SMTP), Phone Control, SMS, WhatsApp, and Home Assistant | Slack, mobile Remote Control, and research-preview channels; no documented built-in Gmail, WhatsApp, phone-call, or SMS channel | Slack and Microsoft Teams Cloud Agent integrations; no documented built-in Gmail, WhatsApp, phone-call, or SMS channel |
+| Scheduled automations | Natural-language cron agent | — | — |
+| Wake word for voice interaction | Sorcar | N/A | N/A |
 
 ## Unique Features
 
@@ -38,7 +40,7 @@
 - **Dynamic model switching and steering.** A running agent can change its own LLM mid-task (`set_model`), and you can inject user messages into a running agent to steer it on the fly.
 - **Git-worktree task isolation.** Each interactive task runs on an isolated git worktree branch that is auto-committed and squash-merged back when it finishes.
 - **Voice interaction.** With the `sorcar` wake word, KISS Sorcar behaves like a super-intelligent Alexa; it distinguishes among different speakers.
-- **23 messaging agents.** Slack, Gmail, WhatsApp, SMS, iMessage, Telegram, Discord, Signal, phone control, and more.
+- **32 channel agents.** Slack, Gmail, Email (IMAP/SMTP), WhatsApp, SMS, iMessage, Telegram, Discord, Signal, phone control, Home Assistant, and more.
 
 ## What Is in the Name
 
