@@ -1918,6 +1918,7 @@
         <li><a href="#compare">Compare</a></li>
         <li><a href="#prompts">Prompts</a></li>
         <li><a href="#papers">Papers</a></li>
+        <li><a href="#blog">Blog</a></li>
         <li><a href="#ai-software-engineering">Videos</a></li>
         <li><a href="#install">Install</a></li>
         <li><a href="#models">Models</a></li>
@@ -2520,10 +2521,63 @@ In each step, keep track of the best prompt which has the maximum number of succ
   </section>
   </div>
 
-  <!-- ================ § 04 — AI Software Engineering ================ -->
+  <!-- ================ § 04 — Blog ================ -->
+  <div class="section-wrap">
+  <section id="blog" class="section-card">
+    <span class="num">§ 04 — Blog</span>
+    <h2>✍️ Blog.<a href="#blog" class="anchor">¶</a></h2>
+    <p class="sub">Write-ups of real optimization and discovery runs performed end-to-end by KISS Sorcar, with reproducible numbers.</p>
+    <div class="section-body">
+      <div class="papers-grid">
+        <div class="inner-card paper-card" style="--i:0">
+          <div class="k">10 Aug 2026 &middot; Systems</div>
+          <h3>Making LZ4&rsquo;s Multithreaded File Compression Scale</h3>
+          <p>Rewires the multithreaded file-mode pipeline of lz4 v1.10.0 to reach 1.88&ndash;2.57&times; the throughput of the stock CLI at level -1 (3,810 vs 1,519 MB/s at 32 threads), with compressed output byte-identical to upstream at every tested level. Includes head-to-head runs against pigz, pzstd, and zstd -T. Done in about 7&frac12; hours of agent wall-clock time.</p>
+          <div class="paper-actions">
+            <a class="paper-pill primary" href="blog/lz4-optimization-blog.html">Read post</a>
+          </div>
+        </div>
+        <div class="inner-card paper-card" style="--i:1">
+          <div class="k">10 Aug 2026 &middot; Systems</div>
+          <h3>Optimizing DuckDB Against Its Official and Academic Benchmarks</h3>
+          <p>Makes an upstream DuckDB development tree faster on five suites &mdash; TPC-H sf1, TPC-DS sf1, IMDB/JOB, h2oai group/join, and ClickBench &mdash; with verified geometric-mean speedups of 1.152&ndash;1.237&times; per suite over the stock release build and a largest single-query win of ~1.73&times;. Three of the five suites were held out from all profile training.</p>
+          <div class="paper-actions">
+            <a class="paper-pill primary" href="blog/duckdb-optimization-blog.html">Read post</a>
+          </div>
+        </div>
+        <div class="inner-card paper-card" style="--i:2">
+          <div class="k">9 Aug 2026 &middot; AI Discovery</div>
+          <h3>Reaching 99+ on Biomni &times; TusoAI-Style Biology Benchmarks with AI Discovery</h3>
+          <p>Reconstructs the two benchmark families from Phylo&rsquo;s Biomni &times; TusoAI blog &mdash; perturbation-response prediction (Replogle, Adamson, Norman) and pgBoost-style enhancer&ndash;gene linking &mdash; then runs an AI-discovery loop until one evolved method scores at least 99/100 on every task. Code and full protocol at github.com/ksenxx/biomni_tuso.</p>
+          <div class="paper-actions">
+            <a class="paper-pill primary" href="blog/tuso-evolved-blog.html">Read post</a>
+          </div>
+        </div>
+        <div class="inner-card paper-card" style="--i:3">
+          <div class="k">8 Aug 2026 &middot; Systems</div>
+          <h3>Optimizing SQLite Against Its Official and Academic Benchmarks</h3>
+          <p>Speeds up the SQLite 3.54.0 development trunk on speedtest1, kvtest, TATP (OLTP), and the Star Schema Benchmark (OLAP), reaching a verified geometric-mean speedup of 1.59&times;. Full source published at github.com/ksenxx/sqlite-optimized.</p>
+          <div class="paper-actions">
+            <a class="paper-pill primary" href="blog/sqlite-optimization-blog.html">Read post</a>
+          </div>
+        </div>
+        <div class="inner-card paper-card" style="--i:4">
+          <div class="k">8 Aug 2026 &middot; Audit</div>
+          <h3>Verification of the sqlite-optimized Repository</h3>
+          <p>An independent rebuild-and-reproduce audit of the sqlite-optimized repository: builds cleanly from scratch, no code or wiring missing, and the claimed benchmark results reproduce. A companion piece to the SQLite optimization post.</p>
+          <div class="paper-actions">
+            <a class="paper-pill primary" href="blog/sqlite-optimized-verification-report.html">Read post</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+  </div>
+
+  <!-- ================ § 05 — AI Software Engineering ================ -->
   <div class="section-wrap">
   <section id="ai-software-engineering" class="section-card">
-    <span class="num">§ 04 — AI Software Engineering</span>
+    <span class="num">§ 05 — AI Software Engineering</span>
     <h2>🛠️ AI Software Engineering.<a href="#ai-software-engineering" class="anchor">¶</a></h2>
     <p class="sub">Talks, demos, and case studies on doing real software engineering with KISS Sorcar.</p>
     <div class="section-body">
@@ -2578,10 +2632,10 @@ In each step, keep track of the best prompt which has the maximum number of succ
   </section>
   </div>
 
-  <!-- ================ § 05 — What is in the Name ================ -->
+  <!-- ================ § 06 — What is in the Name ================ -->
   <div class="section-wrap">
   <section id="name" class="section-card">
-    <span class="num">§ 05 — What is in the Name</span>
+    <span class="num">§ 06 — What is in the Name</span>
     <h2>What is in the Name?<a href="#name" class="anchor">¶</a></h2>
     <p class="sub">Two names. One principle. A nod to a Bengali magician.</p>
     <div class="section-body">
@@ -2601,10 +2655,10 @@ In each step, keep track of the best prompt which has the maximum number of succ
   </section>
   </div>
 
-  <!-- ================ § 06 — Installation ================ -->
+  <!-- ================ § 07 — Installation ================ -->
   <div class="section-wrap">
   <section id="install" class="section-card">
-    <span class="num">§ 06 — Installation</span>
+    <span class="num">§ 07 — Installation</span>
     <h2>Install in one line.<a href="#install" class="anchor">¶</a></h2>
     <p class="sub">Pick the install path that fits you &mdash; full source, Python package, or the VS Code extension. All you need is at least one API key from a major LLM provider. <strong>The one-line install script below is the recommended way to install the full KISS Sorcar stack.</strong></p>
     <div class="section-body">
@@ -2652,10 +2706,10 @@ In each step, keep track of the best prompt which has the maximum number of succ
   </section>
   </div>
 
-  <!-- ================ § 07 — CLI Interface (condensed) ================ -->
+  <!-- ================ § 08 — CLI Interface (condensed) ================ -->
   <div class="section-wrap">
   <section id="cli" class="section-card">
-    <span class="num">§ 07 — CLI in 30 seconds</span>
+    <span class="num">§ 08 — CLI in 30 seconds</span>
     <h2>The <code style="background:var(--surface);padding:0.05rem 0.45rem;border-radius:6px;font-size:0.85em;color:var(--primary-dark);">sorcar</code> CLI.<a href="#cli" class="anchor">¶</a></h2>
     <p class="sub">
       Run <code>sorcar</code> alone for an interactive Claude-Code-style REPL with worktree-isolated tasks, slash commands, and chat history; pass <code>-t "…"</code> or <code>-f task.md</code> for a one-shot non-interactive run. Pick any model with <code>-m</code>, point at a self-hosted endpoint with <code>-e</code>, cap spend with <code>-b</code>, and add MCP servers with <code>sorcar mcp add</code>.
@@ -2685,10 +2739,10 @@ In each step, keep track of the best prompt which has the maximum number of succ
   </section>
   </div>
 
-  <!-- ================ § 08 — Messaging & Third-Party Agents ================ -->
+  <!-- ================ § 09 — Messaging & Third-Party Agents ================ -->
   <div class="section-wrap">
   <section id="agents" class="section-card">
-    <span class="num">§ 08 — Messaging &amp; Third-Party Agents</span>
+    <span class="num">§ 09 — Messaging &amp; Third-Party Agents</span>
     <h2>💬 Reach the agent from anywhere.<a href="#agents" class="anchor">¶</a></h2>
     <p class="sub">KISS Sorcar includes <strong>23 third-party messaging agents</strong> that can send and receive messages on your behalf. It also ships a <strong>Govee smart-home CLI</strong> for controlling IoT lights (on/off, brightness, color, and color temperature) via the Govee Developer API. These agents live in <code>src/kiss/agents/third_party_agents/</code>.</p>
     <div class="section-body">
@@ -2728,10 +2782,10 @@ In each step, keep track of the best prompt which has the maximum number of succ
   </section>
   </div>
 
-  <!-- ================ § 09 — Models Supported ================ -->
+  <!-- ================ § 10 — Models Supported ================ -->
   <div class="section-wrap">
   <section id="models" class="section-card">
-    <span class="num">§ 09 — Models Supported</span>
+    <span class="num">§ 10 — Models Supported</span>
     <h2>🤖 538 models. 9 provider categories.<a href="#models" class="anchor">¶</a></h2>
     <p class="sub">KISS Sorcar ships a catalog of <strong>538 models</strong> across <strong>9 provider categories</strong>, with built-in prices, context lengths, and capability flags (<code>fc</code> function calling, <code>gen</code> generation, <code>emb</code> embedding). The source of truth is <a href="https://github.com/ksenxx/kiss_ai/blob/main/src/kiss/core/models/MODEL_INFO.json">src/kiss/core/models/MODEL_INFO.json</a>.</p>
 
@@ -2776,10 +2830,10 @@ In each step, keep track of the best prompt which has the maximum number of succ
   </section>
   </div>
 
-  <!-- ================ § 10 — Contributing ================ -->
+  <!-- ================ § 11 — Contributing ================ -->
   <div class="section-wrap">
   <section id="contributing" class="section-card">
-    <span class="num">§ 10 — Contributing</span>
+    <span class="num">§ 11 — Contributing</span>
     <h2>🤗 Contributing.<a href="#contributing" class="anchor">¶</a></h2>
     <p class="sub">Contributions in the form of issues are welcome. KISS Sorcar should be able to help implement and review them.</p>
     <div class="section-body">
@@ -2799,10 +2853,10 @@ In each step, keep track of the best prompt which has the maximum number of succ
   </section>
   </div>
 
-  <!-- ================ § 11 — License ================ -->
+  <!-- ================ § 12 — License ================ -->
   <div class="section-wrap">
   <section id="license" class="section-card">
-    <span class="num">§ 11 — License</span>
+    <span class="num">§ 12 — License</span>
     <h2>📄 License.<a href="#license" class="anchor">¶</a></h2>
     <p class="sub">KISS Sorcar is released under a permissive open-source license.</p>
     <div class="section-body">
@@ -2815,10 +2869,10 @@ In each step, keep track of the best prompt which has the maximum number of succ
   </section>
   </div>
 
-  <!-- ================ § 12 — Citation ================ -->
+  <!-- ================ § 13 — Citation ================ -->
   <div class="section-wrap">
   <section id="citation" class="section-card">
-    <span class="num">§ 12 — Citation</span>
+    <span class="num">§ 13 — Citation</span>
     <h2>📚 Cite the paper.<a href="#citation" class="anchor">¶</a></h2>
     <p class="sub">If you use KISS Sorcar in your research, please cite:</p>
     <div class="section-body">
@@ -2847,6 +2901,7 @@ In each step, keep track of the best prompt which has the maximum number of succ
       KISS Sorcar &middot; Apache 2.0 &middot;
       <a href="https://github.com/ksenxx/kiss_ai">GitHub</a> &middot;
       <a href="#papers">Papers</a> &middot;
+      <a href="#blog">Blog</a> &middot;
       <a href="assets/kiss_sorcar.pdf">Main paper</a> &middot;
       <a href="assets/se_kiss_sorcar.pdf">SE paper</a> &middot;
       <a href="assets/writing_paper.pdf">Writing paper</a> &middot;

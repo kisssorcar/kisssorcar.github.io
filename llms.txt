@@ -32,6 +32,14 @@ Key facts for assistants and coding agents:
 - [Software Engineering KISS Sorcar with KISS Sorcar (PDF)](https://kisssorcar.github.io/assets/se_kiss_sorcar.pdf): 44-day, 3,099-task case study of the system building itself
 - [Writing a Research Paper with an AI Agent (PDF)](https://kisssorcar.github.io/assets/writing_paper.pdf): Chronicle of KISS Sorcar writing its own paper
 
+## Blog
+
+- [Making LZ4's Multithreaded File Compression Scale](https://kisssorcar.github.io/blog/lz4-optimization-blog.html): 1.88–2.57× stock lz4 file-mode throughput with byte-identical output
+- [Optimizing DuckDB Against Its Official and Academic Benchmarks](https://kisssorcar.github.io/blog/duckdb-optimization-blog.html): Verified 1.152–1.237× geomean speedups on TPC-H, TPC-DS, IMDB/JOB, h2oai, ClickBench
+- [Reaching 99+ on Biomni × TusoAI-Style Biology Benchmarks with AI Discovery](https://kisssorcar.github.io/blog/tuso-evolved-blog.html): AI-discovery loop evolving one method to ≥99/100 on all tasks
+- [Optimizing SQLite Against Its Official and Academic Benchmarks](https://kisssorcar.github.io/blog/sqlite-optimization-blog.html): Verified 1.59× geomean speedup on speedtest1, kvtest, TATP, SSB
+- [Verification of the sqlite-optimized Repository](https://kisssorcar.github.io/blog/sqlite-optimized-verification-report.html): Independent rebuild-and-reproduce audit of the SQLite work
+
 ## Source & Install
 
 - [GitHub repository](https://github.com/ksenxx/kiss_ai): Full source code, issues, and commit history

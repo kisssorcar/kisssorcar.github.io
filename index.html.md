@@ -45,6 +45,14 @@ sorcar -t "What is 2435*234?"
 - **Software Engineering KISS Sorcar with KISS Sorcar** — [PDF](assets/se_kiss_sorcar.pdf). A case study of building KISS Sorcar with KISS Sorcar itself: over 44 days the developer issued 3,099 tasks through the system's own interface; nine recurring human–AI collaboration patterns are surfaced from the SQLite usage log.
 - **Writing a Research Paper with an AI Agent** — [PDF](assets/writing_paper.pdf). A nine-day, hundred-task chronicle of KISS Sorcar drafting, citing, compiling, and debugging its own research paper.
 
+## Blog
+
+- **[Making LZ4's Multithreaded File Compression Scale](blog/lz4-optimization-blog.html)** (10 Aug 2026). Rewires lz4 v1.10.0's multithreaded file-mode pipeline to 1.88–2.57× stock throughput at level -1, byte-identical output, head-to-head vs pigz/pzstd/zstd -T.
+- **[Optimizing DuckDB Against Its Official and Academic Benchmarks](blog/duckdb-optimization-blog.html)** (10 Aug 2026). Verified 1.152–1.237× geometric-mean speedups per suite on TPC-H, TPC-DS, IMDB/JOB, h2oai, and ClickBench.
+- **[Reaching 99+ on Biomni × TusoAI-Style Biology Benchmarks with AI Discovery](blog/tuso-evolved-blog.html)** (9 Aug 2026). An AI-discovery loop evolves one method scoring ≥99/100 on perturbation-response and enhancer–gene-linking benchmarks.
+- **[Optimizing SQLite Against Its Official and Academic Benchmarks](blog/sqlite-optimization-blog.html)** (8 Aug 2026). Verified 1.59× geometric-mean speedup on speedtest1, kvtest, TATP, and the Star Schema Benchmark.
+- **[Verification of the sqlite-optimized Repository](blog/sqlite-optimized-verification-report.html)** (8 Aug 2026). Independent rebuild-and-reproduce audit of the SQLite optimization work.
+
 ## Citation
 
 ```bibtex
