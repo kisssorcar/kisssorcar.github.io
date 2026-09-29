@@ -68,7 +68,7 @@
   <p>KISS Sorcar keeps its state under <code>~/.kiss/</code> (or the directory named by <code>KISS_HOME</code>): a Composio API key passed as a tool argument, the connected-account identifier of each Google service, and the task history in a local database (your prompts, the agent's replies and tool results, which may include Google content the agent retrieved). If you configured the Google Chat agent as a bot with a Google service account instead of a Composio connection, a copy of that service account's key file is stored there too and the agent calls Google Chat directly with it. The Google agents store no Google OAuth token on your machine; the separate Google Workspace MCP connector mentioned above does cache its own tokens locally. Nothing is uploaded to the developer.</p>
 
   <h2>Sharing</h2>
-  <p>Your data is shared with nobody except Composio, which relays the Google API calls as described above; Google itself, which serves them; and the model provider you chose, which receives what the agent decides to put into a prompt. Naturally, a task that sends an email, posts to a Chat space or shares a Drive file discloses that content to the recipients you named.</p>
+  <p>Your data is shared with nobody except Composio, which relays the Google API calls as described above; Google itself, which serves them; and the model provider you chose, which receives what the agent decides to put into a prompt. A task that sends an email, posts to a Chat space or shares a Drive file discloses that content to the recipients you named.</p>
 
   <h2>Revoking access and deleting data</h2>
   <ul>
