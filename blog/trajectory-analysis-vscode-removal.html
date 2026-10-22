@@ -25,7 +25,7 @@
 <body>
 
 <h1>What 48 agents did in 4 hours 45 minutes: a trajectory analysis</h1>
-<p class="small">Source: the shared-chat export at the Google Drive link (23 MB HTML, title "can you completely get rid of …"). Parsed with a small stdlib HTML parser into 3,677 events across 48 task panels. Figures are in <code>reports/traj-analysis-figs/</code>; the parser and figure scripts are in <code>reports/traj-analysis-tools/</code> (run <code>parse_traj.py &lt;export.html&gt; tmp/traj/traj.json</code>, then <code>figures.py</code> and <code>interaction_graph.py</code> with <code>uv run --with matplotlib</code>).</p>
+<p class="small">Source: the <a href="removing-vscode-extension.html">shared-chat export of the full trajectory</a> (23 MB HTML, title "can you completely get rid of …"). Parsed with a small stdlib HTML parser into 3,677 events across 48 task panels. Figures are in <code>reports/traj-analysis-figs/</code>; the parser and figure scripts are in <code>reports/traj-analysis-tools/</code> (run <code>parse_traj.py &lt;export.html&gt; tmp/traj/traj.json</code>, then <code>figures.py</code> and <code>interaction_graph.py</code> with <code>uv run --with matplotlib</code>).</p>
 
 <h2>1. The job and how it ended</h2>
 <p>On Oct 14, 2026 at 12:24 PM the user asked Sorcar, in one sentence, to remove the VS Code extension from the <code>kiss</code> repository and keep the remote web app working. The main agent (claude-fable-5-1, budget $5,000) finished at 5:09 PM. The merged result: <strong>1,297 files changed, +20,398 / −90,888 lines</strong>, 311/311 jsdom suites and 12,377 Python tests green, <code>uv run check --full</code> clean, then a second one-file commit for a bug the first merge had hidden.</p>
