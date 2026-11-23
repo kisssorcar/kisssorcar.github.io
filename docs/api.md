@@ -1,6 +1,6 @@
 # KISS Sorcar Python API Reference
 
-> The core Python classes of the KISS Agent Framework (`kiss-agent-framework` on PyPI): KISSAgent, RelentlessAgent, SorcarAgent, ChatSorcarAgent, WorktreeSorcarAgent, and GitWorktreeOps. Auto-generated from source; the canonical version lives at <https://github.com/ksenxx/kiss_ai/blob/main/API.md>.
+> The core Python classes of the KISS Agent Framework (`kiss-agent-framework` on PyPI): KISSAgent, RelentlessAgent, SorcarAgent, ChatSorcarAgent, and GitWorktreeOps. Auto-generated from source; the canonical version lives at <https://github.com/ksenxx/kiss_ai/blob/main/API.md>.
 
 ## `kiss.core.kiss_agent` — Core KISS agent with native function calling
 
@@ -20,10 +20,10 @@ A KISS agent using native function calling.
       verbose: bool | None = None, attachments: list[Attachment] | None = None,
       print_prompts: bool = True,
       llm_call_hook: Callable[[list[dict[str, Any]]], list[dict[str, Any]]] | None = None,
-      tool_call_hook: Callable[[str, dict[str, Any]], str] | None = None) -> str
+      tool_call_hook: Callable[[str, dict[str, Any]], Verdict] | None = None) -> str
   ```
 
-  Key parameters: `model_name` (LLM to use), `prompt_template` + `arguments` (task prompt with substitutions), `tools` (callables exposed to the model; a built-in `finish` tool is always added), `max_steps` (default 10000), `max_budget` (default $10), `attachments` (images/PDFs for the initial prompt), `llm_call_hook` (called before every LLM call with the new messages about to be sent; its return value replaces them), `tool_call_hook` (called before every tool call with the tool's name and arguments; returning `"OK"` lets the tool execute, any other string suppresses the call and is returned to the model as the tool's result). Returns the result string of the agent's task.
+  Key parameters: `model_name` (LLM to use), `prompt_template` + `arguments` (task prompt with substitutions), `tools` (callables exposed to the model; a built-in `finish` tool is always added), `max_steps` (default 10000), `max_budget` (default $10), `attachments` (images/PDFs for the initial prompt), `llm_call_hook` (called before every LLM call with the new messages about to be sent; its return value replaces them), `tool_call_hook` (called before every tool call with the tool's name and arguments and returns a `kiss.core.tool_verdict.Verdict`: `ALLOW` lets the tool execute, `refuse(text)` suppresses the call and *text* is returned to the model as the tool's result). Returns the result string of the agent's task.
 
 - **finish** — `finish(result: str) -> str`. The agent must call this with the final answer.
 
@@ -41,17 +41,26 @@ Base agent with auto-continuation across multiple sub-sessions for long-horizon 
 
 ### `class SorcarAgent(RelentlessAgent)`
 
-Agent with both coding tools and browser automation for web + code tasks.
+Agent with coding tools, browser automation and git-worktree isolation. A task starts in the caller's `work_dir`; the agent's `create_worktree` tool moves it into a fresh `<repo>/.kiss-worktrees/kiss_wt-*` worktree (one per repository, each on its own `kiss/wt-*` branch) and `commit_and_merge` commits every worktree's changes and squash-merges each branch into the branch the task started from. `Write` / `Edit` of a tracked checkout path that no worktree isolates are refused, and the first `finish` with an unmerged worktree is refused once. A worktree the task leaves unmerged is kept for the user's decision (the server's merge / discard / leave-as-is bar) and retired by the next run on the same agent.
 
 **Constructor:** `SorcarAgent(name: str) -> None`
 
+- **create_worktree(path='') -> str** *(tool)* — Isolate the repository of `path` (default: the work dir) in a new worktree on a fresh `kiss/wt-*` branch; the work dir moves into it when it was inside that repository's checkout. One worktree per repository; a repository a calling task already isolates is edited in place.
+- **commit_and_merge() -> str** *(tool)* — Commit every worktree's changes on its task branch (generated commit message), squash-merge each branch into the branch the task started from, delete the branch and remove the worktree; the work dir returns to the checkout. A conflict leaves the branch in place for the merge bar.
+- **merge(conflict_resolver=None) -> str** — Merge the pending task branches into their original branches (the merge bar's "Merge"). Idempotent; commits uncommitted worktree changes, stashes/restores user edits on the original branch, and hands a conflicted merge to `conflict_resolver` (the daemon's merge SEA) when given.
+- **discard() -> str** — Throw away the pending task branches and worktrees. Idempotent.
+- **leave_as_is() -> str** — Detach from the pending worktrees, leaving branch, directory and uncommitted changes untouched on disk (the "Do nothing" button); a preserve-for-review marker keeps future processes from silently merging them.
+- **retire_for_disposal() -> bool** — Retire the pending worktrees because their tab is going away (committed to their own branches, kept for review); False when the keep decision could not be made durable.
+- **inherit_worktrees(worktrees)** / **isolated_repos** *(property)* — A sub-agent inherits the repositories its calling task already isolates (repository root → worktree directory) and edits those worktrees in place; the calling task merges.
+- **worktrees** *(property)* — The pending worktrees (`GitWorktree` snapshots), in creation order.
+- **new_chat()** — Retire any pending worktree (kept for review, never merged) and flush its warnings to the attached printer.
+
 - **classify_task_for_run** — `classify_task_for_run(model_name, task, model_config=None, enabled=None) -> TaskClassification | None`. Classify the task now (one lightweight model call: a typed question to a decisions model when an OpenRouter key is configured and the `classify_with_decisions` setting — the settings panel's "Use Jev" checkbox — is on, else a non-agentic call on the run's own LLM) and pre-seed the verdict for the coming run, so an external driver can know the run's effective worktree mode before calling `run` — the verdict decides worktree gating and lite-vs-full system prompt selection. `enabled` is a per-run override of the persisted `classify_tasks` setting (`True` forces classification, `False` skips it, `None` follows the config); the `KISS_DISABLE_TASK_CLASSIFIER` environment kill switch wins over any override. Returns `None` when classification is disabled or failed.
-- **run** — Adds on top of `RelentlessAgent.run`: `web_tools: bool = True` (set False for terminal-only), `is_parallel: bool = True` (enables the `run_parallel` tool for spawning parallel sub-agents), `current_editor_file` (path appended to the prompt), `ask_user_question_callback` (collects a text response from the user), `base_system_prompt` (replaces the default system prompt for this agent and its `run_parallel` sub-agents), `append_basic_tools` (set False to run with only `finish` plus the caller's tools), `llm_call_hook`, `tool_call_hook` (forwarded to every sub-session's `KISSAgent`), `use_memory: bool | None = None` (per-run persistent-memory toggle: `True` gives the run the `memory_*` tools and the memory protocol prompt block, `False` withholds them, `None` follows the `KISS_USE_MEMORY` environment variable / stored setting; forwarded to every `run_parallel` sub-agent, and a boolean never bypasses the memory hard gates — stripped basic tools, Docker runs, `cc/*`/`codex/*` models, a caller-supplied `model_config["system_instruction"]`). Returns YAML with `success` and `summary`.
+- **run** — Adds on top of `RelentlessAgent.run`: `web_tools: bool = True` (set False for terminal-only), `is_parallel: bool = True` (includes the `run_parallel(tasks, agent="", model="", tool_profile="", max_budget="", timeout="", options="")` tool, which is `run_agent` once per task — N daemon sub-tasks in their own tabs — and `number_of_cores`; `run_agent(task, agent="", model="", tool_profile="", max_budget="", timeout="", options="", wait="")`, which dispatches one SEA, channel agent, slash-command SEA or the cron agent as a sub-task on the daemon, and `agent_job(job_id, action, timeout_seconds)`, which waits for, inspects or kills a `run_agent(wait="false")` job, are part of the built-in toolset whatever `is_parallel` says (a `tool_profile` without the `agents` group removes all of them) — see [Client Interfaces](cli.md#dispatching-seas-from-a-task-with-run_agent-and-run_parallel)), `current_editor_file` (path appended to the prompt), `ask_user_question_callback` (collects a text response from the user), `base_system_prompt` (replaces the default system prompt for this agent; its `run_agent` / `run_parallel` sub-tasks inherit it), `append_basic_tools` (set False to run with only `finish` plus the caller's tools), `llm_call_hook`, `tool_call_hook` (forwarded to every sub-session's `KISSAgent`), `use_memory: bool | None = None` (per-run persistent-memory toggle: `True` gives the run the `memory_*` tools and the memory protocol prompt block, `False` withholds them, `None` follows the `KISS_USE_MEMORY` environment variable / stored setting; inherited by every `run_agent` / `run_parallel` sub-task, and a boolean never bypasses the memory hard gates — stripped basic tools, Docker runs, `cc/*`/`codex/*` models, a caller-supplied `model_config["system_instruction"]`). Returns YAML with `success` and `summary`.
 
 ### Module helpers
 
 - **`auto_commit_changes(commit_dir, user_prompt, message_fn, notify_fn=None, task_result=None) -> bool`** — Stage all changes, generate a commit message (typically via an LLM), and commit. Re-stages just before committing so late-arriving files are included. Falls back to a generic message if `message_fn` raises. Returns True if a commit was created.
-- **`run_tasks_parallel(tasks, max_workers=None, model_name=None, work_dir=None, printer=None, totals_out=None, max_budget=None, model_config=None, usage_monitor=None, parent_agent=None, chat_id='', parent_tab_id='', base_system_prompt='', system_prompt_suffix='', web_tools=True, use_memory=None) -> list[str]`** — Execute multiple SorcarAgent tasks concurrently with a thread pool; each task gets its own `ChatSorcarAgent`. `web_tools=False` denies each sub-agent the browser tools, so a parent running without web tools spawns children that cannot re-acquire them. `use_memory` forwards a parent run's persistent-memory override to each sub-agent's `run` (`None`, the default, lets each sub-agent fall back to the environment/config default). Returns YAML result strings in the same order as `tasks`.
 
 ## `kiss.agents.sorcar.chat_sorcar_agent` — Chat-session persistence
 
@@ -60,11 +69,11 @@ Agent with both coding tools and browser automation for web + code tasks.
 SorcarAgent with chat-session state management.
 
 - **chat_id** *(property)* — Current chat session ID ("" means new session).
-- **new_chat()** — Reset to a new chat session.
+- **new_chat()** — Reset to a new chat session (retires any pending worktree first).
 - **resume_chat_by_id(chat_id)** — Resume a chat session by stable identifier.
-- **resume_from_task_id(task_id)** — One-shot seed of the next prompt's context from a task's parent chain.
-- **build_chat_prompt(prompt) -> str** — Load chat context and prepend previous tasks/results to the prompt.
-- **`run(prompt_template='', **kwargs) -> str`** — Run with chat-session context: loads prior context, persists the new task, runs the underlying agent, and saves the result to history.
+- **resume_from_task_id(task_id)** — One-shot: the next task continues *task_id* in the chat's tree of tasks instead of the chat's last task.
+- **build_chat_prompt(prompt) -> str** — Prepend the tasks and results on the path from the chat's first task to the task being continued (at most 10).
+- **`run(prompt_template='', **kwargs) -> str`** — Run with chat-session context: loads prior context, persists the new task, runs the underlying agent, and saves the result to history. A worktree still pending from an earlier run is retired first (committed to its own branch, kept for review); a run that ends with a worktree unmerged marks its branch preserved so no other process merges it; an unexpected exception becomes a `success: false` result.
 
 ## `kiss.agents.sorcar.git_worktree` — Git worktree operations
 
@@ -90,15 +99,3 @@ Highlights (all methods take explicit `repo`/`wt_dir` paths):
 
 - **`repo_lock(repo) -> threading.RLock`** — Per-repo re-entrant lock serializing multi-step git operations across concurrent tabs.
 - **`strip_worktree_suffix(path) -> str`** — Strip the ephemeral `.kiss-worktrees/kiss_wt-<slug>` suffix so persisted paths always point at the parent repo.
-
-## `kiss.agents.sorcar.worktree_sorcar_agent` — Isolated task branches
-
-### `class WorktreeSorcarAgent(ChatSorcarAgent)`
-
-SorcarAgent that isolates every task in a git worktree.
-
-- **`run(prompt_template='', **kwargs) -> str`** — Creates a new worktree and branch, redirects `work_dir` into the worktree, and delegates to `ChatSorcarAgent.run()`. Any previously pending branch from an earlier run is retired first: finished work is auto-committed and squash-merged into its original branch (kept in git for manual resolution when that merge fails or conflicts), while a failed or stopped run's work is committed only to its own `kiss/wt-*` branch, never touching the original. Falls back to direct execution when `use_worktree=False`, when the pre-run task classifier is enabled and reports the task is not a development task (the verdict can only demote a run that asked for a worktree, never promote an explicitly pinned-off one), when `work_dir` is not in a git repo, when the repo has no commits, or when HEAD is detached.
-- **merge() -> str** — Merge the task branch into the original branch. Idempotent; auto-commits uncommitted worktree changes and stashes/restores user edits on main.
-- **discard() -> str** — Throw away the task branch and worktree, checkout the original branch. Idempotent.
-- **leave_as_is() -> str** — Detach from the pending worktree, leaving the branch, directory, and uncommitted changes untouched on disk (the "Do nothing" button of the post-task worktree bar); a preserve-for-review marker keeps future processes from silently publishing it.
-- **new_chat()** — Reset to a new chat session, retiring any pending worktree first (finished work is auto-committed and squash-merged; failed or stopped work is committed only to its own branch).

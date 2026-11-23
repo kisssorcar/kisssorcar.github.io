@@ -52,7 +52,7 @@ security vulnerabilities, create a POC and test it. Create a report.
 ## AI Discovery
 
 ```text
-Sorcar for AI Discovery: Can you AI-discover the lightest and fastest AI model that will give
+/discover Sorcar for AI Discovery: Can you AI-discover the lightest and fastest AI model that will give
 the best accuracy and recall on the data at <</path/to/data>> at the lowest price? Use 'modal'
 CLI to train your models on GPUs and evaluate if needed. The total budget for Modal.com is
 $ 1,000. Do not STOP until accuracy/recall reaches 99% and the model's price per query is less
@@ -62,7 +62,7 @@ than $0.50. Create a report.
 ## Software Optimization
 
 ```text
-Sorcar for Optimization: Can you run the command <<command>> and optimize it with respect to the
+/discover Sorcar for Optimization: Can you run the command <<command>> and optimize it with respect to the
 following metrics: <<speed, accuracy, recall, cost>>. Then use AI discovery to optimize. You can
 add a diagnostic code that prints metrics, such as running time, at a finer granularity. Do not
 forget to remove the diagnostic code after the optimization is complete. You MUST NOT STOP until
@@ -75,7 +75,7 @@ the metrics achieve the following values: <<give_concrete_values_for_metrics>>. 
 Sorcar GEPA Prompt Optimizer: Can you optimize a prompt for a ChatSorcarAgent of the
 kiss-agent-framework Python library using the following GEPA algorithm on the data at
 <<url_or_db_file_of_data>> using claude-fable-5? You can find the trajectory events of an agent
-execution in ~/.kiss/sorcar.db after the agent has finished its execution. Split the dataset
+execution in ~/.kiss/history.db after the agent has finished its execution. Split the dataset
 into a 50% dev set and a 50% val set.
 
 RUN_GEPA: Sample 100 data points from the val set and call it the sval set. Maintain a Pareto
@@ -92,7 +92,7 @@ following algorithm.
    a. sample a minibatch of 5 data points from the dev set
    b. run the agent with the prompt from the node on the minibatch
    c. If the agent incorrectly predicts for some data points, analyze and reflect on the
-      trajectory events of the agent on those data points available at ~/.kiss/sorcar.db and
+      trajectory events of the agent on those data points available at ~/.kiss/history.db and
       propose a new prompt that will fix the mistakes made by the agent on data points
       incorrectly predicted
    d. If the agent predicts correctly on the minibatch, then evaluate it on the sval set and

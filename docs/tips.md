@@ -10,17 +10,13 @@ If the Update button in settings fails, run the full installation command again.
 curl -fsSL https://raw.githubusercontent.com/ksenxx/kiss_ai/main/scripts/install.sh | bash
 ```
 
-## Chat in the Editor or in the Sidebar
-
-In VS Code, you can run KISS Sorcar in two modes: full editor mode, where the chats open as editor tabs, and non-editor mode, where the chats open in the sidebar. You can switch between the two modes by selecting/deselecting the "Chat in the editor" option on the KISS Sorcar settings page.
-
 ## Task Classifier
 
-KISS Sorcar now uses a quick task classifier to determine whether the task should run with git worktree mode and whether the task is complex or simple. You can toggle the task classifier in the settings by selecting/deselecting the option "Classify tasks before running". With an OpenRouter API key and "Use Jev (decisions model)" selected, the classifier asks the `~typesafe/jev-latest` decisions model (about 0.2 s and $0.00003 per task) and the agent gets the `decide` tool for its own classification, routing and scoring questions; deselect "Use Jev" (the default) to pin the LLM classifier, one non-agentic call on the run's own model (skipped for `cc/*` and `codex/*` models), and to keep every task from calling Jev.
+KISS Sorcar now uses a quick task classifier to determine whether the task should run with git worktree mode and whether the task is complex or simple. You can toggle the task classifier in the settings by selecting/deselecting the option "Classify tasks before running". With an OpenRouter API key and "Use Jev (decisions model)" selected (the default), the classifier asks the `~typesafe/jev-latest` decisions model (about 0.2 s and $0.00003 per task) and the agent gets the `decide` tool for its own classification, routing and scoring questions; deselect "Use Jev" to pin the LLM classifier, one non-agentic call on the run's own model (skipped for `cc/*` and `codex/*` models), and to keep every task from calling Jev.
 
 ## Sorcar Extension Agents (SEAs)
 
-A **Sorcar Extension Agent (SEA)** is a plain Python file that defines a complete custom agent: its top-level `X()` functions — named after `sorcar.run()`'s parameters — compute the run's task prompt, system prompt, model, budget, tools, and safety hooks. Pass the file's path as `extension_agent_path` to `sorcar.run()` and the daemon imports it on every run. All third-party agents, such as the Slack and Gmail agents, are implemented in KISS Sorcar as SEAs. See the "Sorcar Extension Agents (SEAs)" section in the [README](https://github.com/ksenxx/kiss_ai#sorcar-extension-agents-seas) for a full example, and the detailed SEA guide at [`src/kiss/server/README.md`](https://github.com/ksenxx/kiss_ai/blob/main/src/kiss/server/README.md).
+A **Sorcar Extension Agent (SEA)** is a Python file that defines a complete custom agent as one class deriving from `kiss.agents.seas.base.base_sea.BaseSea` — directly for an ordinary session, through `WorkerSea` for a focused tool-bound run without worktree, browser or memory, through `ChannelSea` for an agent of an external service: its `settings(settings)` returns a dict with the run's per-run settings (model, budget, tool profile, dispatch timeout, ...; the list is in [Client Interfaces](cli.md#sorcar-extension-agents-seas)), and its `prompt(task)`, `system_prompt(system_prompt)`, `tools(tools)`, `llm_call_hook(new_messages)` and `tool_call_hook(name, args)` methods supply the prompts, tools and safety hooks; a SEA extends another by deriving from its class. Pass the file's path as `sea_path` to `sorcar.run()` and the daemon executes it on every run; in the chat, `/<name> <text>` runs it directly and a running task dispatches it with `run_agent(agent="<name>", task=...)`. All third-party agents, such as the Slack and Gmail agents, are implemented in KISS Sorcar as SEAs. See the "Sorcar Extension Agents (SEAs)" section in the [README](https://github.com/ksenxx/kiss_ai#sorcar-extension-agents-seas) for a full example, and the detailed SEA guide at [`src/kiss/server/README.md`](https://github.com/ksenxx/kiss_ai/blob/main/src/kiss/server/README.md).
 
 ## Prompt KISS Sorcar Like the Developer of KISS Sorcar
 
@@ -88,7 +84,7 @@ print(result.text, result.success, result.cost)
 sorcar.run("Now fix the typos you found", chat_id=result.chat_id)
 ```
 
-You can also pass a Python file of extra tools via `tools="/path/to/my_tools.py"`.
+Extra tools come from a Sorcar Extension Agent: pass `sea_path="/path/to/my_agent.py"`, a Python file whose `BaseSea` subclass defines `tools(self, tools)` returning `tools + [the extra tool functions]` (added to the built-in toolset; return `settings | {"tool_profile": "none"}` from its `settings()` to run with those tools and `finish` only).
 
 ## Run KISS Sorcar in a Docker Container
 
@@ -98,7 +94,7 @@ Just run:
 sorcar-docker
 ```
 
-It runs KISS Sorcar in a Docker container and exposes a VS Code interface in the host machine's browser.
+It runs KISS Sorcar in a Docker container and serves the web app at `https://localhost:8787` in the host machine's browser (the certificate is self-signed; accept it once or install `/ca.crt`).
 
 ## Run KISS Sorcar on a Server via SSH
 
@@ -122,10 +118,11 @@ Just type or speak your shell command in the chat input textbox.
 
 ## AI Discovery and Auto Research
 
-All you need to do is use a variant of the following prompt with KISS Sorcar:
+All you need to do is use a variant of the following prompt with KISS Sorcar (the `/discover`
+command runs the AI discovery loop):
 
 ```text
-Can you AI discover the lightest and fastest AI model that will give >95% accuracy and
+/discover Can you AI discover the lightest and fastest AI model that will give >95% accuracy and
 recall on the data at <</path/to/data>> at the cost of $0.25 per query? Use 'modal' CLI to
 train your models on GPUs and evaluate if needed. Your total budget for Modal.com is $1,000.
 Experiment with a smaller data subset and fewer model parameters to run experiments quickly,
@@ -134,10 +131,11 @@ then extrapolate. Do not STOP until you reach the goals. Create a detailed repor
 
 ## AI Optimization of Software and AI Systems
 
-All you need to do is use a variant of the following prompt with KISS Sorcar:
+All you need to do is use a variant of the following prompt with KISS Sorcar (the `/discover`
+command runs the AI discovery loop):
 
 ```text
-Can you run the command <<command>> in the background and monitor its output in real time
+/discover Can you run the command <<command>> in the background and monitor its output in real time
 to optimize the code at <<folder_name_or_url>> for the following metrics: <<speed, accuracy,
 recall, cost>>. Then use AI discovery to optimize. You may add diagnostic code that prints
 metrics, such as running time, at a finer granularity. Don't forget to remove the diagnostic
@@ -159,7 +157,7 @@ Click the burger menu button in the bottom-left corner to see all agents in KISS
 
 ## Settings
 
-Click on the settings button in the "..." menu. Use the Settings interface to get the URL for the remote web/mobile app, set the remote web app access password, set the budget limit per task, set the working directory, and set various API keys and a custom model endpoint.
+Click on the settings button in the "..." menu. Use the Settings interface to get the URL for the remote web/mobile app, set the budget limit per task, set the working directory, and set various API keys and a custom model endpoint.
 
 ## Use Optimized Multi-Model Routing to Save Cost or Improve Quality
 
