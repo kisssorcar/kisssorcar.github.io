@@ -421,7 +421,10 @@
 
     /* Download for Mac, for Windows, for Linux: the big buttons at the top
        of the hero, each with how to open the download and a note below;
-       side by side, stacked on a narrow screen. */
+       side by side, stacked on a narrow screen. Each option is as wide as
+       its longest text line (the lines are broken by hand), and its button
+       stretches to that width: contain: inline-size keeps the button's own
+       content from widening the option. */
     .hero-download {
       margin: 1.6rem auto 2.2rem;
       display: flex;
@@ -429,18 +432,23 @@
       justify-content: center;
       gap: 1.5rem 1rem;
     }
-    .hero-download-option { flex: 0 1 21rem; }
+    .hero-download-option {
+      width: max-content;
+      max-width: 100%;
+      display: flex;
+      flex-direction: column;
+    }
     .cta-download {
-      font-size: 1.3rem;
+      font-size: 1.1rem;
       font-weight: 600;
-      padding: 1.05rem 2.3rem 1.05rem 2rem;
+      padding: 1.17rem 0.75rem;
       border-radius: 14px;
       gap: 0.75rem;
-      min-width: min(20.5rem, 100%);
       justify-content: center;
+      contain: inline-size;
     }
-    .cta-download svg { width: 28px; height: 28px; margin-top: -4px; }
-    .cta-download svg.windows-logo { width: 24px; height: 24px; margin-top: 0; }
+    .cta-download svg { width: 24px; height: 24px; margin-top: -4px; }
+    .cta-download svg.windows-logo { width: 20px; height: 20px; margin-top: 0; }
     .cta-download svg.linux-logo { margin-top: -2px; }
     .hero-download-how { margin: 0.75rem 0 0; font-size: 0.92rem; text-wrap: balance; }
     .hero-download-how code { font-family: 'Roboto Mono', ui-monospace, monospace; font-size: 0.8rem; white-space: nowrap; }
@@ -1778,8 +1786,8 @@
         <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12.152 6.896c-.948 0-2.415-1.078-3.96-1.04-2.04.027-3.91 1.183-4.961 3.014-2.117 3.675-.546 9.103 1.519 12.09 1.013 1.454 2.208 3.09 3.792 3.039 1.52-.065 2.09-.987 3.935-.987 1.831 0 2.35.987 3.96.948 1.637-.026 2.676-1.48 3.676-2.948 1.156-1.688 1.636-3.325 1.662-3.415-.039-.013-3.182-1.221-3.22-4.857-.026-3.04 2.48-4.494 2.597-4.559-1.429-2.09-3.623-2.324-4.39-2.376-2-.156-3.675 1.09-4.61 1.09zM15.53 3.83c.843-1.012 1.4-2.427 1.245-3.83-1.207.052-2.662.805-3.532 1.818-.78.896-1.454 2.338-1.273 3.714 1.338.104 2.715-.688 3.559-1.701"/></svg>
         Download for Mac
       </a>
-      <p class="hero-download-how">System Settings &rarr; Privacy &amp; Security, click Open Anyway.</p>
-      <p class="hero-download-note">macOS 14 or later &middot; Apple silicon and Intel &middot; <a href="#mac-package">how to open it</a></p>
+      <p class="hero-download-how">System Settings &rarr; Privacy &amp; Security,<br>click Open Anyway.</p>
+      <p class="hero-download-note">macOS 14 or later &middot; Apple silicon and Intel<br><a href="#mac-package">how to open it</a></p>
       </div>
       <div class="hero-download-option">
       <a class="cta-btn cta-install cta-download"
